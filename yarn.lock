@@ -941,6 +941,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
+"@nartc/react-native-barcode-mask@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@nartc/react-native-barcode-mask/-/react-native-barcode-mask-1.1.8.tgz#a2994fbc520457194d5e105ada08805539533b52"
+  integrity sha512-9+R3AHa9clAy/9OsXs445sCUt0SAanLFZStty1KgsoC9nXRkV596QlbdzJrfY9Uxe3SDrEHefriWCybiEFXIfg==
+
 "@react-native-community/cli-debugger-ui@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-3.0.0.tgz#d01d08d1e5ddc1633d82c7d84d48fff07bd39416"

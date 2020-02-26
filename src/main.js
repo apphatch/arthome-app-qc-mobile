@@ -4,7 +4,10 @@ import {I18nManager} from 'react-native';
 import {useColorScheme} from 'react-native-appearance';
 
 import {PreferencesContext} from './context/preferencesContext';
-import {defaultTheme, darkTheme} from './theme';
+import {
+  defaultTheme,
+  // darkTheme
+} from './theme';
 
 import {RootNavigator} from './rootNavigator';
 
@@ -35,7 +38,7 @@ export const Main = () => {
 
   return (
     <PreferencesContext.Provider value={preferences}>
-      <PaperProvider theme={theme === 'light' ? defaultTheme : darkTheme}>
+      <PaperProvider theme={defaultTheme}>
         <RootNavigator />
       </PaperProvider>
     </PreferencesContext.Provider>
