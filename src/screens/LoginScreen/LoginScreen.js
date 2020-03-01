@@ -1,5 +1,5 @@
-import React, {memo, useState} from 'react';
-// import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
+import React, { memo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ### components
 import Background from '../../components/Background';
@@ -9,23 +9,33 @@ import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 
 // ### validations
-import {emailValidator, passwordValidator} from './validations';
+import { emailValidator, passwordValidator } from './validations';
 
-const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
+import * as actions from './actions';
+import * as selectors from './selectors';
 
-  const _onLoginPressed = () => {
-    // const emailError = emailValidator(email.value);
-    // const passwordError = passwordValidator(password.value);
+const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
 
-    // if (emailError || passwordError) {
-    //   setEmail({...email, error: emailError});
-    //   setPassword({...password, error: passwordError});
-    //   return;
-    // }
+  const [username, setUsername] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
 
-    navigation.navigate('ShopScreen');
+  const _onLoginPressed = React.useCallback(() => {
+    const usernameError = emailValidator(username.value);
+    const passwordError = passwordValidator(password.value);
+
+    if (usernameError || passwordError) {
+      setUsername({ ...username, error: usernameError });
+      setPassword({ ...password, error: passwordError });
+      return;
+    }
+
+    dispatch(actions.requestLogin(username.value, password.value, navigation));
+  }, [dispatch, password, username, navigation]);
+
+  const _onSubmitEditing = () => {
+    _onLoginPressed();
   };
 
   return (
@@ -37,27 +47,32 @@ const LoginScreen = ({navigation}) => {
       <TextInput
         label="Tài khoản"
         returnKeyType="next"
-        value={email.value}
-        onChangeText={text => setEmail({value: text, error: ''})}
-        error={!!email.error}
-        errorText={email.error}
+        value={username.value}
+        onChangeText={text => setUsername({ value: text, error: '' })}
+        error={!!username.error}
+        errorText={username.error}
         autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
+        textContentType="none"
+        disabled={isLoading}
       />
 
       <TextInput
         label="Mật khẩu"
         returnKeyType="done"
         value={password.value}
-        onChangeText={text => setPassword({value: text, error: ''})}
+        onChangeText={text => setPassword({ value: text, error: '' })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
+        disabled={isLoading}
+        onSubmitEditing={_onSubmitEditing}
       />
 
-      <Button mode="contained" onPress={_onLoginPressed}>
+      <Button
+        mode="contained"
+        onPress={_onLoginPressed}
+        loading={isLoading}
+        disabled={isLoading}>
         Đăng nhập
       </Button>
     </Background>

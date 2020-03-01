@@ -1,9 +1,9 @@
-import React, {memo} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import {TextInput as Input} from 'react-native-paper';
-import {defaultTheme} from '../../theme';
+import React, { memo } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { TextInput as Input } from 'react-native-paper';
+import { defaultTheme } from '../../theme';
 
-const TextInput = ({errorText, ...props}) => (
+const TextInput = ({ errorText, ...props }) => (
   <View style={styles.container}>
     <Input
       style={styles.input}

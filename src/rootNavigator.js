@@ -1,11 +1,11 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {DefaultTheme, DarkTheme} from '@react-navigation/native';
-import {useTheme} from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { useTheme } from 'react-native-paper';
 
 // ### screens
-import {LoginScreen, ShopNavigator} from './screens';
+import { LoginScreen, ShopNavigator } from './screens';
 
 const Stack = createStackNavigator();
 

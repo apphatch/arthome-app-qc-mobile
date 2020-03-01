@@ -1,28 +1,17 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
-import {
-  Avatar,
-  Caption,
-  Drawer,
-  // Paragraph,
-  // Switch,
-  Text,
-  Title,
-  // TouchableRipple,
-  useTheme,
-} from 'react-native-paper';
+import { DrawerItem, DrawerContentScrollView } from '@react-navigation/drawer';
+import { Avatar, Caption, Drawer, Title, useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch } from 'react-redux';
 
-// import {PreferencesContext} from '../../context/preferencesContext';
-import {AppInfoService} from '../../services/app-info';
+import { AppInfoService } from '../../services/app-info';
+import { actions as loginActions } from '../LoginScreen';
 
 export default function DrawerContent(props) {
   const paperTheme = useTheme();
-  // const {rtl, theme, toggleRTL, toggleTheme} = React.useContext(
-  //   PreferencesContext,
-  // );
+  const dispatch = useDispatch();
 
   const translateX = Animated.interpolate(props.progress, {
     inputRange: [0, 0.5, 0.7, 0.8, 1],
@@ -36,13 +25,13 @@ export default function DrawerContent(props) {
           styles.drawerContent,
           {
             backgroundColor: paperTheme.colors.surface,
-            transform: [{translateX}],
+            transform: [{ translateX }],
           },
         ]}>
         <View style={styles.userInfoSection}>
           <TouchableOpacity
             // eslint-disable-next-line react-native/no-inline-styles
-            style={{marginLeft: 10}}
+            style={{ marginLeft: 10 }}
             onPress={() => {
               props.navigation.toggleDrawer();
             }}>
@@ -53,7 +42,7 @@ export default function DrawerContent(props) {
 
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
-            icon={({color, size}) => (
+            icon={({ color, size }) => (
               <MaterialCommunityIcons
                 name="lock-open-outline"
                 color={color}
@@ -61,7 +50,7 @@ export default function DrawerContent(props) {
               />
             )}
             label="Đăng xuất"
-            onPress={() => props.navigation.navigate('LoginScreen')}
+            onPress={() => dispatch(loginActions.logout(props.navigation))}
           />
         </Drawer.Section>
 

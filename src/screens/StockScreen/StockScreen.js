@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 import {
   Appbar,
   List,
@@ -8,31 +8,57 @@ import {
   Caption,
   IconButton,
 } from 'react-native-paper';
-import {View, StyleSheet, FlatList, Vibration} from 'react-native';
-import {useSafeArea} from 'react-native-safe-area-context';
-import {RNCamera} from 'react-native-camera';
+import { View, StyleSheet, FlatList, Vibration } from 'react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
+import { RNCamera } from 'react-native-camera';
 import {
   useBarcodeRead,
   BarcodeMaskWithOuterLayout,
 } from '@nartc/react-native-barcode-mask';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ###
-import {data} from './data';
-import {defaultTheme} from '../../theme';
 
-const ShopScreen = ({navigation, route}) => {
+import { defaultTheme } from '../../theme';
+import { LoadingIndicator } from '../../components/LoadingIndicator';
+import * as selectors from './selectors';
+import * as actions from './actions';
+import { useDebounce } from '../../utils';
+
+const ShopScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const stocks = useSelector(selectors.makeSelectStocks());
+
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const [isShowScanBarCode, setIsShowScanBarCode] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
   const [isBarcodeRead, setIsBarcodeRead] = React.useState(false);
+  const debouncedSearchTerm = useDebounce(searchText, 500);
+  console.log('TCL: ShopScreen -> debouncedSearchTerm', debouncedSearchTerm);
+
+  const searchRef = React.createRef();
+
+  const {
+    params: {
+      shop: { title, id: shopId },
+    },
+  } = route;
 
   React.useEffect(() => {
-    if (route.params?.barCode) {
-      setSearchText(route.params.barCode);
+    if (debouncedSearchTerm) {
+      dispatch(
+        actions.fetchStocks({
+          params: {
+            shopId,
+            stockKey: debouncedSearchTerm,
+          },
+        }),
+      );
     }
-  }, [route.params]);
+  }, [debouncedSearchTerm, dispatch, shopId]);
 
   const {
     // barcodeRead,
@@ -59,7 +85,7 @@ const ShopScreen = ({navigation, route}) => {
     [isBarcodeRead],
   );
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <List.Item
       title={item.title}
       description={item.description}
@@ -74,9 +100,16 @@ const ShopScreen = ({navigation, route}) => {
     setSearchText(text);
   };
 
-  const _onSubmitEditing = event => {
-    console.log('TCL: ShopScreen -> text', event.target.value);
-  };
+  // const _onSubmitEditing = React.useCallback(() => {
+  //   dispatch(
+  //     actions.fetchStocks({
+  //       params: {
+  //         shopId,
+  //         stockKey: searchText,
+  //       },
+  //     }),
+  //   );
+  // }, [dispatch, searchText, shopId]);
 
   const _onHandleScanBarCode = React.useCallback(() => {
     setIsShowScanBarCode(true);
@@ -89,6 +122,9 @@ const ShopScreen = ({navigation, route}) => {
   const _onBlur = () => {
     setIsFocusSearchInput(false);
   };
+  const _onIconPress = () => {
+    searchRef.current && searchRef.current.blur();
+  };
 
   return (
     <>
@@ -100,7 +136,7 @@ const ShopScreen = ({navigation, route}) => {
               : navigation.goBack()
           }
         />
-        <Appbar.Content title="Của hàng 01" subtitle="" />
+        <Appbar.Content title={title} subtitle="" />
       </Appbar.Header>
       <View style={[styles.container]}>
         {isShowScanBarCode ? (
@@ -137,35 +173,44 @@ const ShopScreen = ({navigation, route}) => {
             <Caption style={styles.caption}>
               Tìm kiếm bằng cách nhập tên hoặc quét barcode
             </Caption>
-            <FlatList
-              data={data}
-              renderItem={renderItem}
-              ItemSeparatorComponent={Divider}
-              keyExtractor={keyExtractor}
-              contentContainerStyle={{
-                backgroundColor: colors.background,
-                paddingBottom: safeArea.bottom + 16,
-              }}
-              ListHeaderComponent={
-                <View style={styles.row}>
-                  <Searchbar
-                    placeholder="Tìm kiếm sản phẩm"
-                    onChangeText={_onSearchStockItem}
-                    value={searchText}
-                    style={styles.searchbar}
-                    onSubmitEditing={_onSubmitEditing}
-                    icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
-                    onFocus={_onFocus}
-                    onBlur={_onBlur}
-                  />
-                  <IconButton
-                    icon="barcode-scan"
-                    onPress={_onHandleScanBarCode}
-                    size={28}
-                  />
-                </View>
-              }
-            />
+
+            <View style={styles.row}>
+              <Searchbar
+                placeholder="Tìm kiếm sản phẩm"
+                onChangeText={_onSearchStockItem}
+                value={searchText}
+                style={styles.searchbar}
+                // onSubmitEditing={_onSubmitEditing}
+                icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
+                onFocus={_onFocus}
+                onBlur={_onBlur}
+                onIconPress={_onIconPress}
+                ref={searchRef}
+              />
+              <IconButton
+                icon="barcode-scan"
+                onPress={_onHandleScanBarCode}
+                size={28}
+              />
+            </View>
+            {isLoading ? (
+              <LoadingIndicator />
+            ) : (
+              <FlatList
+                data={stocks}
+                renderItem={renderItem}
+                ItemSeparatorComponent={Divider}
+                keyExtractor={keyExtractor}
+                contentContainerStyle={{
+                  backgroundColor: colors.background,
+                  paddingBottom: safeArea.bottom + 16,
+                }}
+                // ListHeaderComponent={
+
+                // }
+                // stickyHeaderIndices={[0]}
+              />
+            )}
           </>
         )}
       </View>
@@ -193,6 +238,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: 10,
     alignItems: 'center',
+    backgroundColor: defaultTheme.colors.background,
   },
   camContainer: {
     flex: 1,
