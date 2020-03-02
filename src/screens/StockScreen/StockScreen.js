@@ -25,7 +25,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import { useDebounce } from '../../utils';
 
-const ShopScreen = ({ navigation, route }) => {
+const StockScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
   const { colors } = useTheme();
   const dispatch = useDispatch();
@@ -89,8 +89,13 @@ const ShopScreen = ({ navigation, route }) => {
     <List.Item
       title={item.title}
       description={item.description}
-      // onPress={() => navigation.navigate('StockDetail')}
-      onPress={() => {}}
+      onPress={() =>
+        navigation.navigate('StockCheckListScreen', {
+          shopId,
+          stock: item,
+        })
+      }
+      // onPress={() => {}}
     />
   );
 
@@ -99,17 +104,6 @@ const ShopScreen = ({ navigation, route }) => {
   const _onSearchStockItem = text => {
     setSearchText(text);
   };
-
-  // const _onSubmitEditing = React.useCallback(() => {
-  //   dispatch(
-  //     actions.fetchStocks({
-  //       params: {
-  //         shopId,
-  //         stockKey: searchText,
-  //       },
-  //     }),
-  //   );
-  // }, [dispatch, searchText, shopId]);
 
   const _onHandleScanBarCode = React.useCallback(() => {
     setIsShowScanBarCode(true);
@@ -180,12 +174,14 @@ const ShopScreen = ({ navigation, route }) => {
                 onChangeText={_onSearchStockItem}
                 value={searchText}
                 style={styles.searchbar}
-                // onSubmitEditing={_onSubmitEditing}
                 icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
                 onFocus={_onFocus}
                 onBlur={_onBlur}
                 onIconPress={_onIconPress}
                 ref={searchRef}
+                autoCorrect={false}
+                autoCompleteType="off"
+                spellCheck={false}
               />
               <IconButton
                 icon="barcode-scan"
@@ -252,4 +248,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(ShopScreen);
+export default memo(StockScreen);

@@ -13,21 +13,17 @@ import * as actionTypes from './actionTypes';
 // ## API
 // import * as API from './services';
 
-// dump
-import { data } from './data';
-
-export function* fetchShops() {
+export function* submitCheckList() {
   try {
-    // const response = yield call(API.fetchShops);
-    yield delay(2000);
-    yield put(actions.fetchShopsSuccess({ shops: data }));
+    yield delay(3000);
+    yield put(actions.submitSuccess({}));
   } catch (error) {
-    yield put(actions.fetchShopsFailed(error.message));
+    yield put(actions.submitFailed(error.message));
   }
 }
 
 export default function root() {
   return function* watch() {
-    yield all([yield takeLatest(actionTypes.FETCH_SHOPS, fetchShops)]);
+    yield all([yield takeLatest(actionTypes.SUBMIT, submitCheckList)]);
   };
 }
