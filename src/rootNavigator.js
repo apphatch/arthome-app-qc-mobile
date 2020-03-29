@@ -5,7 +5,13 @@ import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
 
 // ### screens
-import { LoginScreen, ShopNavigator } from './screens';
+import {
+  LoginScreen,
+  ShopNavigator,
+  CheckInScreen,
+  StockCheckListScreen,
+  CheckOutScreen,
+} from './screens';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +23,26 @@ export const RootNavigator = () => {
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="ShopScreen" component={ShopNavigator} />
+        <Stack.Screen
+          name="ShopScreen"
+          component={ShopNavigator}
+          options={{ gestureEnabled: false, animationEnabled: false }}
+        />
+        <Stack.Screen
+          name="CheckInScreen"
+          component={CheckInScreen}
+          options={{ gestureEnabled: false, animationEnabled: false }}
+        />
+        <Stack.Screen
+          name="CheckOutScreen"
+          component={CheckOutScreen}
+          options={{ gestureEnabled: false, animationEnabled: false }}
+        />
+        <Stack.Screen
+          name="StockCheckListScreen"
+          component={StockCheckListScreen}
+          options={{ gestureEnabled: false, animationEnabled: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -4,6 +4,7 @@ import { saga as loginSaga } from '../screens/LoginScreen';
 import { shopSaga } from '../screens/ShopScreen';
 import { stockSaga } from '../screens/StockScreen';
 import { stockCheckListSaga } from '../screens/StockCheckListScreen';
+import { checkInSaga } from '../screens/CheckInScreen';
 
 const rootSaga = function* rootSaga() {
   yield all(
@@ -12,6 +13,7 @@ const rootSaga = function* rootSaga() {
       shopSaga(),
       stockSaga(),
       stockCheckListSaga(),
+      checkInSaga(),
       // sagas
     ].map(saga => fork(saga)),
   );

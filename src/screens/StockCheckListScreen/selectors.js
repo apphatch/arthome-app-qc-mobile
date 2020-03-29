@@ -5,4 +5,7 @@ const selectStockCheckListDomain = () => state => state.stockCheckList;
 const makeSelectIsLoading = () =>
   createSelector(selectStockCheckListDomain(), state => state.isLoading);
 
-export { makeSelectIsLoading };
+const makeSelectCheckList = () =>
+  createSelector(selectStockCheckListDomain(), state => state.checkList);
+
+export { makeSelectIsLoading, makeSelectCheckList };

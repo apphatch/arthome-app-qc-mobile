@@ -4,8 +4,8 @@ const internals = {};
 
 // create an instance of axios
 const instance = axios.create({
-  baseURL: 'http://localhost:3000',
-  headers: {'Content-Type': 'application/json'},
+  baseURL: 'http://45.117.168.169:8080',
+  headers: { 'Content-Type': 'application/json' },
 });
 
 instance.interceptors.request.use(
@@ -18,7 +18,7 @@ instance.interceptors.request.use(
 );
 instance.interceptors.response.use(
   response => {
-    return response.data;
+    return response;
   },
   error => {
     return Promise.reject(error);
@@ -83,4 +83,4 @@ internals.put = (url, payload, options) => {
 };
 
 export default internals;
-export {instance};
+export { instance };

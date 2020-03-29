@@ -1,3 +1,3 @@
 export const ENDPOINTS = {
-  shop: 'shop',
+  shop: 'shops/index_by_user',
 };

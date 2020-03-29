@@ -8,4 +8,15 @@ const makeSelectIsLoading = () =>
 const makeSelectIsLoggedIn = () =>
   createSelector(selectLoginDomain(), state => state.isLoggedIn);
 
-export { makeSelectIsLoading, makeSelectIsLoggedIn };
+const makeSelectToken = () =>
+  createSelector(selectLoginDomain(), state => state.token);
+
+const makeSelectUserId = () =>
+  createSelector(selectLoginDomain(), state => state.user_id);
+
+export {
+  makeSelectIsLoading,
+  makeSelectIsLoggedIn,
+  makeSelectToken,
+  makeSelectUserId,
+};

@@ -15,7 +15,7 @@ import rootSagas from './sagas';
 const config = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['login', 'stock', 'shop'],
+  blacklist: ['stock'],
   debug: true, //to get useful logging,
   version: 2,
 };

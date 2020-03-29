@@ -15,28 +15,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as actions from './actions';
 import * as selectors from './selectors';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
+import { selectors as loginSelectors } from '../LoginScreen';
+import { selectors as checkInSelectors } from '../CheckInScreen';
 
-const ShopScreen = ({ navigation }) => {
+const ShopScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
   const { colors } = useTheme();
   const dispatch = useDispatch();
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const shops = useSelector(selectors.makeSelectShops());
+  const userId = useSelector(loginSelectors.makeSelectUserId());
+  const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
+  const checkInData = useSelector(checkInSelectors.makeSelectCheckInData());
 
   React.useEffect(() => {
-    dispatch(actions.fetchShops());
-  }, [dispatch]);
+    dispatch(actions.fetchShops({ userId }));
+  }, [dispatch, userId]);
+
+  React.useEffect(() => {
+    if (isCheckIn) {
+      const { shopId } = checkInData;
+      navigation.navigate('StockCheckListScreen', { shopId });
+    }
+  }, [checkInData, isCheckIn, navigation]);
 
   const renderItem = ({ item }) => (
     <List.Item
-      title={item.title}
-      description={item.description}
-      onPress={() => navigation.navigate('StockScreen', { shop: item })}
+      title={item.name}
+      description={item.full_address}
+      onPress={() => navigation.navigate('CheckInScreen', { shopId: item.id })}
     />
   );
 
-  const keyExtractor = item => item.id;
+  const keyExtractor = item => item.id.toString();
 
   return (
     <>

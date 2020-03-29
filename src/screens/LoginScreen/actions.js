@@ -5,7 +5,7 @@ export const requestLogin = (username, password, navigation) =>
   createAction(actionTypes.LOGIN_REQUEST, { username, password, navigation });
 
 export const onLoginResponse = response =>
-  createAction(actionTypes.LOGIN_RESPONSE, { response });
+  createAction(actionTypes.LOGIN_RESPONSE, { ...response });
 
 export const loginFailed = () => createAction(actionTypes.LOGIN_FAILED);
 

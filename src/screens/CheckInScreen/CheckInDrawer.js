@@ -41,7 +41,7 @@ export default function DrawerContent(props) {
         </View>
 
         <Drawer.Section style={styles.drawerSection}>
-          {/* <DrawerItem
+          <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons
                 name="account-check-outline"
@@ -51,7 +51,7 @@ export default function DrawerContent(props) {
             )}
             label="Check in"
             // onPress={() => dispatch(loginActions.logout(props.navigation))}
-          /> */}
+          />
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons

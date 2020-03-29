@@ -1,13 +1,12 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-// import ShopScreen from './ShopScreen';
-import DrawerContent from './ShopDrawer';
-import { ShopScreenStack } from './Stack';
+import DrawerContent from './CheckInDrawer';
+import { ShopScreenStack } from '../ShopScreen/Stack';
 
 const Drawer = createDrawerNavigator();
 
-export default function ShopNavigator() {
+export default function CheckInNavigator() {
   return (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen name="ShopScreen" component={ShopScreenStack} />
