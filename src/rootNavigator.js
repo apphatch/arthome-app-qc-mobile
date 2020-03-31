@@ -9,9 +9,10 @@ import {
   LoginScreen,
   ShopNavigator,
   CheckInScreen,
-  StockCheckListScreen,
   CheckOutScreen,
 } from './screens';
+
+import { StockStack } from './screens/StockCheckListScreen/Stack';
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,7 @@ export const RootNavigator = () => {
         />
         <Stack.Screen
           name="StockCheckListScreen"
-          component={StockCheckListScreen}
+          component={StockStack}
           options={{ gestureEnabled: false, animationEnabled: false }}
         />
       </Stack.Navigator>

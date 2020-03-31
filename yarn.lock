@@ -4547,6 +4547,11 @@ lodash-es@^4.17.14:
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
   integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -5695,7 +5700,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.5.10, prop-types@^15.5.9, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5818,37 +5823,6 @@ react-native-keyboard-aware-scroll-view@^0.9.1:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-material-buttons@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-material-buttons/-/react-native-material-buttons-0.5.0.tgz#ab2b3e3fc3f500ca713f51e9d75978aff602152a"
-  integrity sha1-qys+P8P1AMpxP1Hp11l4r/YCFSo=
-  dependencies:
-    prop-types "^15.5.9"
-    react-native-material-ripple "^0.7.0"
-
-react-native-material-dropdown-v2@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/react-native-material-dropdown-v2/-/react-native-material-dropdown-v2-0.11.1.tgz#f77a9d83db9f9ba3b6114bdc8b28840a9ca5d279"
-  integrity sha512-fLom8DJ7tkB1wZsjkU3lPBcDdNRcLBZTKoRojolMOnD3AHfS+POkORh2g6VToMfhnz4rHBeLGzScu7VGsf8jow==
-  dependencies:
-    prop-types "^15.5.9"
-    react-native-material-buttons "^0.5.0"
-    react-native-material-ripple "^0.8.0"
-
-react-native-material-ripple@^0.7.0:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.7.5.tgz#e2af5110680532f14aea3c3a438247be2ffef659"
-  integrity sha1-4q9REGgFMvFK6jw6Q4JHvi/+9lk=
-  dependencies:
-    prop-types "^15.5.10"
-
-react-native-material-ripple@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.8.0.tgz#b8c24e6fdea2af2a21e8468b1f40b35483019e2f"
-  integrity sha1-uMJOb96iryoh6EaLH0CzVIMBni8=
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-paper@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.6.0.tgz#9f8452387bc6e6dae84db90c9c4715af5c7bd142"
@@ -5857,6 +5831,13 @@ react-native-paper@^3.6.0:
     "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
     react-native-safe-area-view "^0.14.6"
+
+react-native-picker-select@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.6.0.tgz#a424e2a68dae228c492684a41745c0194cee01f0"
+  integrity sha512-dC+tJc4iv7gjOxXuc2R59rrAAZ/qg8k6HU2xRC65s1uhqflViUPBG1uaHqE/E2D62vntt9+u1qRGbkcYkqOx8g==
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-reanimated@^1.7.0:
   version "1.7.0"

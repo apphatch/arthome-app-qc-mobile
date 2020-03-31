@@ -20,7 +20,6 @@ const TakePhoto = props => {
   const { setValue, isSubmitting, register, triggerValidation } = props;
   const [photo, setPhoto] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  console.log('photo', photo);
 
   React.useEffect(() => {
     register({ name: 'photo' }, { required: true });

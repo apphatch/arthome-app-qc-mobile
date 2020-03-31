@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   errorMessage: '',
   checkList: [],
+  isSubmitted: false,
 };
 
 const handlers = {
@@ -19,10 +20,12 @@ export default createReducer(initialState, handlers);
 
 function submit(state, action) {
   state.isLoading = true;
+  state.isSubmitted = false;
 }
 
 function submitSuccess(state, action) {
   state.isLoading = false;
+  state.isSubmitted = true;
 }
 function submitFailed(state, action) {
   state.isLoading = false;

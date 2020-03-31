@@ -7,17 +7,12 @@ import createSagaMiddleware from 'redux-saga';
 import rootReducers from './reducers';
 import rootSagas from './sagas';
 
-// const storage = createSensitiveStorage({
-//   keychainService: 'myKeychain',
-//   sharedPreferencesName: 'mySharedPrefs',
-// });
-
 const config = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['stock'],
+  blacklist: [],
   debug: true, //to get useful logging,
-  version: 2,
+  version: 4,
 };
 
 const middleware = [];
@@ -33,6 +28,7 @@ const reducers = persistReducer(config, rootReducers());
 const enhancers = [applyMiddleware(...middleware)];
 const store = createStore(reducers, undefined, compose(...enhancers));
 
+// const persistor = persistStore(store).purge();
 const persistor = persistStore(store);
 const configureStore = () => {
   return { persistor, store };

@@ -1,6 +1,9 @@
 package com.arthomeqc;
 
 import com.facebook.react.ReactActivity;
+import android.content.Intent; // <--- import
+import android.content.res.Configuration; // <--- import
+
 
 public class MainActivity extends ReactActivity {
 
@@ -12,4 +15,13 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "arthomeqc";
   }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    Intent intent = new Intent("onConfigurationChanged");
+    intent.putExtra("newConfig", newConfig);
+    sendBroadcast(intent);
+  }
+
 }

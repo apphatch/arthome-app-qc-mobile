@@ -38,13 +38,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Arthome QC to use the camera</string>
-  <key>NSMicrophoneUsageDescription</key>
-	<string>Allow Arthome QC to access your microphone</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-	<string>Give Arthome QC periences permission to access your photos</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Give Arthome QC periences permission to save photos</string>
+	<string>Allow An Hoà QC to use the camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow An Hoà QC to access your microphone</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Give An Hoà QC periences permission to access your photos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Give An Hoà QC periences permission to save photos</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>

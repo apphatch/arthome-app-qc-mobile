@@ -6,6 +6,7 @@ const initialState = {
   isLoading: false,
   token: null,
   user_id: null,
+  errorMessage: '',
 };
 
 const handlers = {
@@ -21,11 +22,15 @@ export default createReducer(initialState, handlers);
 function loginRequest(state, action) {
   state.isLoading = true;
   state.isLoggedIn = false;
+  state.errorMessage = '';
 }
 
 function loginFailed(state, action) {
   state.isLoggedIn = false;
   state.isLoading = false;
+  state.token = null;
+  state.user_id = null;
+  state.errorMessage = action.payload.errorMessage;
 }
 function loginResponse(state, action) {
   state.isLoggedIn = true;
@@ -37,4 +42,5 @@ function loginResponse(state, action) {
 function logoutRequest(state, action) {
   state.token = null;
   state.isLoggedIn = false;
+  state.user_id = null;
 }

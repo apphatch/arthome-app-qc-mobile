@@ -2,7 +2,6 @@ import {
   put,
   call,
   // select,
-  delay,
   all,
   takeLatest,
 } from 'redux-saga/effects';
@@ -13,11 +12,15 @@ import * as actionTypes from './actionTypes';
 // ## API
 import * as API from './services';
 
-export function* submitCheckList() {
+export function* submitCheckList({ payload }) {
+  console.log('function*submitCheckList -> payload', payload);
+  const { itemId, data } = payload;
   try {
-    yield delay(3000);
+    const res = yield call(API.submitCheckListItemData, { itemId, data });
+    console.log('function*submitCheckList -> res', res);
     yield put(actions.submitSuccess({}));
   } catch (error) {
+    console.log('function*submitCheckList -> error', error);
     yield put(actions.submitFailed(error.message));
   }
 }

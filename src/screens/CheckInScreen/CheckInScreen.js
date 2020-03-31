@@ -35,15 +35,20 @@ const CheckInScreen = ({ navigation, route }) => {
     mode: 'onChange',
   });
 
+  const [error, setError] = React.useState('');
+
   React.useEffect(() => {
     if (isCheckIn) {
-      navigation.navigate('StockCheckListScreen', { shopId });
+      navigation.navigate('StockCheckListScreen', {
+        screen: 'StockCheckListScreen',
+        params: { shopId },
+      });
     }
   }, [isCheckIn, navigation, shopId]);
 
   const onSubmitCheckList = React.useCallback(
     values => {
-      dispatch(actions.requestCheckIn({ ...values, shopId }));
+      dispatch(actions.requestCheckIn({ ...values, shopId, setError }));
     },
     [dispatch, shopId],
   );

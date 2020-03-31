@@ -37,10 +37,8 @@ internals.get = (url, params, options) => {
       return response;
     })
     .catch(error => {
-      if (error && error.response) {
-        throw error.response.data;
-      }
-      throw error;
+      console.log('internals.post -> error', error);
+      throw new Error(error);
     });
 };
 
@@ -56,10 +54,8 @@ internals.post = (url, payload, options) => {
       return response;
     })
     .catch(error => {
-      if (error && error.response) {
-        throw error.response.data;
-      }
-      throw error;
+      console.log('internals.post -> error', error);
+      throw new Error(error);
     });
 };
 
@@ -75,10 +71,8 @@ internals.put = (url, payload, options) => {
       return response;
     })
     .catch(error => {
-      if (error && error.response) {
-        throw error.response.data;
-      }
-      throw error;
+      console.log('internals.put -> error', error);
+      throw new Error(error);
     });
 };
 

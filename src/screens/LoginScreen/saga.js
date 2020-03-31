@@ -6,7 +6,6 @@ import {
   all,
   takeLatest,
 } from 'redux-saga/effects';
-import { CommonActions } from '@react-navigation/native';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -15,10 +14,9 @@ import * as actionTypes from './actionTypes';
 import * as API from './services';
 
 export function* login({ payload }) {
+  const { username, password, setError } = payload;
   try {
-    const { username, password } = payload;
     const response = yield call(API.login, { username, password });
-    console.log('function*login -> response', response);
     const {
       data: { user_id },
     } = response;
@@ -30,19 +28,14 @@ export function* login({ payload }) {
       }),
     );
   } catch (error) {
-    console.log('function*login -> error', error);
     yield put(actions.loginFailed(error.message));
+    setError('Đăng nhập không thành công');
   }
 }
 
 export function* logout({ payload: { navigation } }) {
   try {
-    // yield call(API.logout, {});
-    navigation.dispatch(
-      CommonActions.navigate({
-        name: 'LoginScreen',
-      }),
-    );
+    yield call(API.logout, {});
   } catch (error) {
     console.log('TCL: function*logout -> error', error);
   }

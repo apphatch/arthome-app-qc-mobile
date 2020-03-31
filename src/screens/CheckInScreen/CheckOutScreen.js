@@ -12,11 +12,11 @@ import Paragraph from '../../components/Paragraph';
 import TakePhoto from './components/TakePhoto';
 
 import { defaultTheme } from '../../theme';
-// import { BUG_LIST } from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
 const CheckOutScreen = ({ navigation, route }) => {
+  console.log('CheckOutScreen -> route', route);
   const dispatch = useDispatch();
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());

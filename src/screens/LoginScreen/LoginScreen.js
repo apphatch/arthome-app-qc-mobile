@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Snackbar } from 'react-native-paper';
 
 // ### components
 import Background from '../../components/Background';
@@ -22,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
 
   const [username, setUsername] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const [error, setError] = useState('');
 
   React.useEffect(() => {
     if (isLoggedIn) {
@@ -42,7 +44,7 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    dispatch(actions.requestLogin(username.value, password.value));
+    dispatch(actions.requestLogin(username.value, password.value, setError));
   }, [dispatch, password, username]);
 
   const _onSubmitEditing = () => {
@@ -86,6 +88,13 @@ const LoginScreen = ({ navigation }) => {
         disabled={isLoading}>
         Đăng nhập
       </Button>
+
+      <Snackbar
+        visible={!!error}
+        onDismiss={() => setError('')}
+        duration={4000}>
+        {error}
+      </Snackbar>
     </Background>
   );
 };
