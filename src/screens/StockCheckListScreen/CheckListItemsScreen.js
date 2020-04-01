@@ -14,7 +14,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   const { colors } = useTheme();
 
   const {
-    params: { clId },
+    params: { clId, shopId },
   } = route;
 
   const currentCheckList = useSelector(selectors.makeSelectCheckListById(clId));
@@ -35,7 +35,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     <List.Item
       title={item.stock_name}
       onPress={() => {
-        navigation.navigate('FormScreen', { itemId: item.id, clId });
+        navigation.navigate('FormScreen', { itemId: item.id, clId, shopId });
       }}
       right={props =>
         item.data ? (

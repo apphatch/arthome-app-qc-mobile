@@ -54,7 +54,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
     <List.Item
       title={item.reference}
       onPress={() =>
-        navigation.navigate('CheckListItemsScreen', { clId: item.id })
+        navigation.navigate('CheckListItemsScreen', { clId: item.id, shopId })
       }
     />
   );

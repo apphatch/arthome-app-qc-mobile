@@ -22,6 +22,11 @@ const makeSelectTemplate = id =>
     selectStockCheckListDomain(),
     state => state.checkList.filter(item => item.id === id)[0]?.template,
   );
+export const makeSelectCheckListItemById = (clId, itemId) =>
+  createSelector(
+    makeSelectCheckListById(clId),
+    cl => cl.checklist_items.filter(item => item.id === itemId)[0],
+  );
 
 export {
   makeSelectIsLoading,

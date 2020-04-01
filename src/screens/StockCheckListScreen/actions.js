@@ -1,10 +1,10 @@
 import { createAction } from '../../utils';
 import * as actionTypes from './actionTypes';
 
-export const submit = ({ itemId, data }) =>
-  createAction(actionTypes.SUBMIT, { itemId, data });
+export const submit = ({ itemId, data, shopId }) =>
+  createAction(actionTypes.SUBMIT, { itemId, data, shopId });
 export const submitSuccess = response =>
-  createAction(actionTypes.SUBMIT_SUCCESS, { response });
+  createAction(actionTypes.SUBMIT_SUCCESS, { ...response });
 export const submitFailed = errorMessage =>
   createAction(actionTypes.SUBMIT_FAILED, { errorMessage });
 
@@ -16,3 +16,4 @@ export const fetchCheckListFailed = mes =>
   createAction(actionTypes.FETCH_CHECK_LIST_FAILED, { mes });
 
 export const getItems = id => createAction(actionTypes.GET_ITEMS, { id });
+export const resetProps = () => createAction(actionTypes.RESET_PROPS, {});

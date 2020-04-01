@@ -9,3 +9,4 @@ export const CHECK_LIST_RESPONSE = `${prefix}/CHECK_LIST_RESPONSE`;
 export const FETCH_CHECK_LIST_FAILED = `${prefix}/FETCH_CHECK_LIST_FAILED`;
 
 export const GET_ITEMS = `${prefix}/GET_ITEMS`;
+export const RESET_PROPS = `${prefix}/RESET_PROPS`;

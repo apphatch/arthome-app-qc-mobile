@@ -4,9 +4,19 @@ import { StyleSheet, View } from 'react-native';
 import { Caption, Text } from 'react-native-paper';
 
 const CustomSelect = props => {
-  const { options, register, setValue, name, label = '', rules, error } = props;
+  const {
+    options,
+    register,
+    setValue,
+    name,
+    label = '',
+    rules,
+    error,
+    value,
+    disabled = false,
+  } = props;
 
-  console.log('error', name, error);
+  const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
     register({ name }, rules);
@@ -17,8 +27,9 @@ const CustomSelect = props => {
       <View style={[styles.container]}>
         <Caption>{label}</Caption>
         <RNPickerSelect
-          onValueChange={value => {
-            setValue(name, value, true);
+          onValueChange={val => {
+            setValue(name, val, true);
+            setLocalValue(val);
           }}
           items={options}
           placeholder={{
@@ -26,6 +37,8 @@ const CustomSelect = props => {
             value: null,
             color: '#9EA0A4',
           }}
+          value={localValue}
+          disabled={disabled}
         />
       </View>
       {error ? (

@@ -11,8 +11,9 @@ const CustomSwitch = props => {
     label = 'Switch',
     rules,
     error,
+    disabled = false,
   } = props;
-  console.log('error', name, error);
+  console.log('error', name, error, value);
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(value);
 
@@ -30,6 +31,7 @@ const CustomSwitch = props => {
             setValue(name, !isSwitchOn, true);
           }}
           value={isSwitchOn}
+          disabled={disabled}
         />
       </View>
       {error ? (

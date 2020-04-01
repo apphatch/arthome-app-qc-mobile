@@ -1,13 +1,13 @@
 import React, { memo } from 'react';
-import { Appbar, FAB, Caption } from 'react-native-paper';
+import { Appbar, FAB, Caption, Snackbar } from 'react-native-paper';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 // ###
-import TextInput from '../../components/TextInput';
 import CustomSwitch from '../../components/Switch';
 import CustomSelect from '../../components/Select';
+import FormTextInput from '../../components/FormTextInput';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
@@ -18,22 +18,36 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId },
+    params: { clId, itemId, shopId },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const template = useSelector(selectors.makeSelectTemplate(clId));
+  const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
+  console.log('StockCheckListScreen -> item', item);
 
   const [openFAB, setOpenFAB] = React.useState(false);
+  const [showSnack, setShowSnack] = React.useState(false);
 
-  const { handleSubmit, register, setValue, errors } = useForm();
+  const { handleSubmit, register, setValue, errors } = useForm({});
+
+  React.useEffect(() => {
+    if (!isLoading && isSubmitted) {
+      setShowSnack(true);
+    }
+  }, [isLoading, isSubmitted]);
+
+  React.useEffect(() => {
+    return () => dispatch(actions.resetProps());
+  }, [dispatch]);
 
   const onSubmitCheckList = React.useCallback(
     values => {
       console.log('StockCheckListScreen -> values', values);
-      dispatch(actions.submit({ itemId, data: values }));
+      dispatch(actions.submit({ itemId, data: values, shopId }));
     },
-    [dispatch, itemId],
+    [dispatch, itemId, shopId],
   );
 
   return (
@@ -49,11 +63,14 @@ const StockCheckListScreen = ({ navigation, route }) => {
             const type = template[fieldName].type;
             if (type === 'text') {
               return (
-                <TextInput
+                <FormTextInput
                   key={fieldName}
+                  name={fieldName}
                   label={fieldName}
-                  ref={register({ name: fieldName })}
-                  onChangeText={text => setValue(fieldName, text, true)}
+                  register={register}
+                  setValue={setValue}
+                  value={item.data ? item.data[fieldName] : ''}
+                  disabled={!!item.data || isLoading}
                 />
               );
             }
@@ -67,6 +84,8 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   key={fieldName}
                   rules={{ required: true }}
                   error={errors[fieldName]}
+                  value={item.data ? item.data[fieldName] : false}
+                  disabled={!!item.data || isLoading}
                 />
               );
             }
@@ -83,28 +102,38 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   label={fieldName}
                   rules={{ required: true }}
                   error={errors[fieldName]}
+                  value={item.data ? item.data[fieldName] : undefined}
+                  disabled={!!item.data || isLoading}
                 />
               );
             }
           })}
         </View>
-
-        <FAB.Group
-          style={[styles.fab]}
-          icon={openFAB ? 'close' : 'format-list-bulleted-type'}
-          onPress={() => {}}
-          onStateChange={({ open }) => setOpenFAB(open)}
-          open={openFAB}
-          actions={[
-            {
-              icon: 'check-all',
-              label: 'Gửi',
-              onPress: handleSubmit(onSubmitCheckList),
-            },
-          ]}
-          visible={true}
-        />
+        {item.data ? null : (
+          <FAB.Group
+            style={[styles.fab]}
+            icon={openFAB ? 'close' : 'format-list-bulleted-type'}
+            onPress={() => {}}
+            onStateChange={({ open }) => setOpenFAB(open)}
+            open={openFAB}
+            actions={[
+              {
+                icon: 'check-all',
+                label: 'Gửi',
+                onPress: handleSubmit(onSubmitCheckList),
+              },
+            ]}
+            visible={true}
+          />
+        )}
       </KeyboardAvoidingView>
+
+      <Snackbar
+        visible={showSnack}
+        onDismiss={() => setShowSnack(false)}
+        duration={4000}>
+        Gửi lỗi thành công
+      </Snackbar>
     </>
   );
 };

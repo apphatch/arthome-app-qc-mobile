@@ -1,10 +1,4 @@
-import {
-  put,
-  call,
-  // select,
-  all,
-  takeLatest,
-} from 'redux-saga/effects';
+import { put, call, select, all, takeLatest } from 'redux-saga/effects';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -12,12 +6,23 @@ import * as actionTypes from './actionTypes';
 // ## API
 import * as API from './services';
 
+import { selectors as loginSelectors } from '../LoginScreen';
+
 export function* submitCheckList({ payload }) {
-  console.log('function*submitCheckList -> payload', payload);
-  const { itemId, data } = payload;
+  const { itemId, data, shopId } = payload;
   try {
-    const res = yield call(API.submitCheckListItemData, { itemId, data });
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    const token = yield select(loginSelectors.makeSelectToken());
+
+    const res = yield call(API.submitCheckListItemData, {
+      itemId,
+      data: formData,
+      token,
+    });
     console.log('function*submitCheckList -> res', res);
+    const response = yield call(API.fetchCheckList, { shopId });
+    yield put(actions.checkListResponse({ checkList: response.data }));
     yield put(actions.submitSuccess({}));
   } catch (error) {
     console.log('function*submitCheckList -> error', error);
@@ -26,6 +31,7 @@ export function* submitCheckList({ payload }) {
 }
 
 export function* fetchCheckList({ payload }) {
+  console.log('function*fetchCheckList -> payload', payload);
   try {
     const { shopId } = payload;
     const response = yield call(API.fetchCheckList, { shopId });

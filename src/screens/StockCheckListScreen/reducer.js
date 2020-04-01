@@ -14,6 +14,7 @@ const handlers = {
   [actionTypes.SUBMIT_FAILED]: submitFailed,
 
   [actionTypes.CHECK_LIST_RESPONSE]: checkListResponse,
+  [actionTypes.RESET_PROPS]: resetProps,
 };
 
 export default createReducer(initialState, handlers);
@@ -34,4 +35,10 @@ function submitFailed(state, action) {
 function checkListResponse(state, action) {
   state.isLoading = false;
   state.checkList = action.payload.checkList;
+}
+
+function resetProps(state, action) {
+  state.isLoading = false;
+  state.errorMessage = '';
+  state.isSubmitted = false;
 }
