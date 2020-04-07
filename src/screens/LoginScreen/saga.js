@@ -33,11 +33,13 @@ export function* login({ payload }) {
   }
 }
 
-export function* logout({ payload: { navigation } }) {
+export function* logout() {
   try {
-    yield call(API.logout, {});
+    // yield call(API.logout, {});
+    yield put(actions.onLogoutSuccess());
   } catch (error) {
     console.log('TCL: function*logout -> error', error);
+    yield put(actions.logoutFailed(''));
   }
 }
 

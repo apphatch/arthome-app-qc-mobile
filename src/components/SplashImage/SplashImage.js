@@ -1,5 +1,5 @@
 // import React from 'react';
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
 const SplashImage = props => {
   if (!props.loading) {

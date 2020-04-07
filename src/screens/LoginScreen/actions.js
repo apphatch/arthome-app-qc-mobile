@@ -10,5 +10,7 @@ export const onLoginResponse = response =>
 export const loginFailed = errorMessage =>
   createAction(actionTypes.LOGIN_FAILED, { errorMessage });
 
-export const logout = navigation =>
-  createAction(actionTypes.LOGOUT_REQUEST, { navigation });
+export const logout = () => createAction(actionTypes.LOGOUT_REQUEST, {});
+export const onLogoutSuccess = () => createAction(actionTypes.LOGOUT_RESPONSE);
+export const logoutFailed = errorMessage =>
+  createAction(actionTypes.LOGOUT_FAILED, { errorMessage });

@@ -15,6 +15,8 @@ const handlers = {
   [actionTypes.LOGIN_RESPONSE]: loginResponse,
 
   [actionTypes.LOGOUT_REQUEST]: logoutRequest,
+  [actionTypes.LOGOUT_RESPONSE]: logoutResponse,
+  [actionTypes.LOGOUT_FAILED]: logoutFailed,
 };
 
 export default createReducer(initialState, handlers);
@@ -40,7 +42,14 @@ function loginResponse(state, action) {
 }
 
 function logoutRequest(state, action) {
+  state.isLoading = true;
+}
+function logoutResponse(state, action) {
   state.token = null;
   state.isLoggedIn = false;
   state.user_id = null;
+  state.isLoading = false;
+}
+function logoutFailed(state, action) {
+  state.isLoading = false;
 }
