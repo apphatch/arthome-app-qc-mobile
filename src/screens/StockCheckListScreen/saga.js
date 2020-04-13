@@ -1,4 +1,4 @@
-import { put, call, select, all, takeLatest } from 'redux-saga/effects';
+import { put, call, select, all, takeLatest, delay } from 'redux-saga/effects';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -42,11 +42,23 @@ export function* fetchCheckList({ payload }) {
   }
 }
 
+export function* markDoneAllCheckListItems({ payload }) {
+  const { clId } = payload;
+  try {
+    yield delay(5000);
+    const res = yield call(API.markDoneAll, { clId });
+    yield put(actions.markDoneAllSuccess(res));
+  } catch (error) {
+    yield put(actions.markDoneAllFailed(error.message));
+  }
+}
+
 export default function root() {
   return function* watch() {
     yield all([
       yield takeLatest(actionTypes.SUBMIT, submitCheckList),
       yield takeLatest(actionTypes.FETCH_CHECK_LIST, fetchCheckList),
+      yield takeLatest(actionTypes.MARK_DONE_ALL, markDoneAllCheckListItems),
     ]);
   };
 }

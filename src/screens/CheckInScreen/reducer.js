@@ -26,7 +26,7 @@ function checkInRequest(state, action) {
 
 function checkInResponse(state, action) {
   state.isLoading = false;
-  state.isCheckIn = true;
+  state.isCheckIn = action.payload.isCheckIn;
   state.checkInData = action.payload.checkInData;
 }
 

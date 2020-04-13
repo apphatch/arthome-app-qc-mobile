@@ -11,6 +11,8 @@ import {
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import Reactotron from 'reactotron-react-native';
+import _ from 'lodash';
 
 // ###
 import { defaultTheme } from '../../theme';
@@ -69,8 +71,14 @@ const ShopScreen = ({ navigation, route }) => {
           }
         } else {
           //
+          Reactotron.log(isCheckIn);
+          Reactotron.log(checkInData);
           if (!isCheckIn) {
             navigation.navigate('CheckInScreen', { shopId: item.id });
+          } else {
+            if (_.isEmpty(checkInData)) {
+              navigation.navigate('CheckInScreen', { shopId: item.id });
+            }
           }
         }
       }}

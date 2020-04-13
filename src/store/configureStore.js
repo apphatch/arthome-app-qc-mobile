@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
+import Reactotron from 'reactotron-react-native';
 
 import rootReducers from './reducers';
 import rootSagas from './sagas';
@@ -16,7 +17,9 @@ const config = {
 };
 
 const middleware = [];
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware({
+  sagaMonitor: Reactotron.createSagaMonitor(),
+});
 
 middleware.push(sagaMiddleware);
 
@@ -26,7 +29,14 @@ if (__DEV__) {
 
 const reducers = persistReducer(config, rootReducers());
 const enhancers = [applyMiddleware(...middleware)];
-const store = createStore(reducers, undefined, compose(...enhancers));
+const store = createStore(
+  reducers,
+  undefined,
+  compose(
+    ...enhancers,
+    Reactotron.createEnhancer(),
+  ),
+);
 
 // const persistor = persistStore(store).purge();
 const persistor = persistStore(store);

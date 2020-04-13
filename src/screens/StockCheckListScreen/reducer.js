@@ -6,9 +6,14 @@ const initialState = {
   errorMessage: '',
   checkList: [],
   isSubmitted: false,
+  isDoneAll: false,
 };
 
 const handlers = {
+  [actionTypes.MARK_DONE_ALL]: markDoneAll,
+  [actionTypes.MARK_DONE_ALL_RESPONSE]: markDoneAllSuccess,
+  [actionTypes.MARK_DONE_ALL_FAILED]: markDoneAllFailed,
+
   [actionTypes.SUBMIT]: submit,
   [actionTypes.SUBMIT_SUCCESS]: submitSuccess,
   [actionTypes.SUBMIT_FAILED]: submitFailed,
@@ -41,4 +46,16 @@ function resetProps(state, action) {
   state.isLoading = false;
   state.errorMessage = '';
   state.isSubmitted = false;
+  state.isDoneAll = false;
+}
+
+function markDoneAll(state, action) {
+  state.isLoading = true;
+}
+function markDoneAllSuccess(state, action) {
+  state.isLoading = false;
+  state.isDoneAll = true;
+}
+function markDoneAllFailed(state, action) {
+  state.isLoading = false;
 }

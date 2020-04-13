@@ -1,6 +1,7 @@
 import { put, call, select, all, takeLatest } from 'redux-saga/effects';
 import UUIDGenerator from 'react-native-uuid-generator';
 import moment from 'moment';
+import _ from 'lodash';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -26,7 +27,12 @@ export function* checkIn({ payload }) {
     formData.append('time', moment().format('DD/MM/YYYY'));
     const response = yield call(API.checkIn, { formData, token, shopId });
     console.log('function*checkIn -> response', response);
-    yield put(actions.onCheckInResponse({ checkInData: response.data }));
+    yield put(
+      actions.onCheckInResponse({
+        checkInData: response.data.last_checkin_checkout,
+        isCheckIn: !_.isEmpty(response.data.last_checkin_checkout),
+      }),
+    );
   } catch (error) {
     console.log('function*login -> error', error);
     yield put(actions.checkInFailed(error.message));

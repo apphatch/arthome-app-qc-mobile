@@ -1,33 +1,37 @@
 import React, { memo } from 'react';
 import { Appbar, useTheme, List, Divider, Searchbar } from 'react-native-paper';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, Alert } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
-import { useDebounce } from '../../utils';
+import {
+  logger,
+  // useDebounce,
+} from '../../utils';
+import * as actions from './actions';
+import { LoadingIndicator } from '../../components/LoadingIndicator';
 
 const CheckListItemsScreen = ({ navigation, route }) => {
-  console.log('Check list items -> route', route);
   const safeArea = useSafeArea();
   const { colors } = useTheme();
+  const dispatch = useDispatch();
 
   const {
     params: { clId, shopId },
   } = route;
 
   const currentCheckList = useSelector(selectors.makeSelectCheckListById(clId));
-  console.log('CheckListItemsScreen -> currentCheckList', currentCheckList);
+  const countDone = useSelector(selectors.makeSelectIsDoneAll(clId));
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
+  logger('countDone: ', countDone);
   const { checklist_items: checkListItems } = currentCheckList;
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
-  const debouncedSearchTerm = useDebounce(searchText, 500);
-  console.log(
-    'CheckListItemsScreen -> debouncedSearchTerm',
-    debouncedSearchTerm,
-  );
+  // const debouncedSearchTerm = useDebounce(searchText, 500);
 
   const searchRef = React.createRef();
 
@@ -40,7 +44,9 @@ const CheckListItemsScreen = ({ navigation, route }) => {
       right={props =>
         item.data ? (
           <List.Icon {...props} icon="check-circle" color="green" />
-        ) : null
+        ) : (
+          <List.Icon {...props} icon="square-edit-outline" />
+        )
       }
     />
   );
@@ -61,40 +67,73 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     searchRef.current && searchRef.current.blur();
   };
 
+  const onDoneAll = React.useCallback(() => {
+    dispatch(actions.markDoneAll({ clId }));
+  }, [dispatch, clId]);
+
+  const showAlert = React.useCallback(() => {
+    Alert.alert(
+      'Thông báo',
+      'Gửi báo cáo thành công',
+      [{ text: 'OK', onPress: () => dispatch(actions.resetProps()) }],
+      { cancelable: false },
+    );
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    if (isSubmittedDoneAll) {
+      showAlert();
+    }
+  }, [isSubmittedDoneAll, showAlert]);
+
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          disabled={isLoading}
+        />
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
+        <Appbar.Action
+          icon={'upload'}
+          disabled={countDone ? countDone.length > 0 : isLoading || true}
+          onPress={onDoneAll}
+        />
       </Appbar.Header>
-      <View style={styles.row}>
-        <Searchbar
-          placeholder="Tìm kiếm..."
-          onChangeText={_onSearchStockItem}
-          value={searchText}
-          style={styles.searchbar}
-          icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
-          onFocus={_onFocus}
-          onBlur={_onBlur}
-          onIconPress={_onIconPress}
-          ref={searchRef}
-          autoCorrect={false}
-          autoCompleteType="off"
-          spellCheck={false}
-        />
-      </View>
-      <View style={[styles.container]}>
-        <FlatList
-          data={checkListItems}
-          renderItem={renderItem}
-          ItemSeparatorComponent={Divider}
-          keyExtractor={keyExtractor}
-          contentContainerStyle={{
-            backgroundColor: colors.background,
-            paddingBottom: safeArea.bottom,
-          }}
-        />
-      </View>
+      {isLoading ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <View style={styles.row}>
+            <Searchbar
+              placeholder="Tìm kiếm..."
+              onChangeText={_onSearchStockItem}
+              value={searchText}
+              style={styles.searchbar}
+              icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
+              onFocus={_onFocus}
+              onBlur={_onBlur}
+              onIconPress={_onIconPress}
+              ref={searchRef}
+              autoCorrect={false}
+              autoCompleteType="off"
+              spellCheck={false}
+            />
+          </View>
+          <View style={[styles.container]}>
+            <FlatList
+              data={checkListItems}
+              renderItem={renderItem}
+              ItemSeparatorComponent={Divider}
+              keyExtractor={keyExtractor}
+              contentContainerStyle={{
+                backgroundColor: colors.background,
+                paddingBottom: safeArea.bottom,
+              }}
+            />
+          </View>
+        </>
+      )}
     </>
   );
 };

@@ -10,3 +10,7 @@ export const submitCheckListItemData = ({ itemId, data, token }) => {
     headers: { 'X-CSRF-Token': token },
   });
 };
+
+export const markDoneAll = ({ clId }) => {
+  return httpClient.get(`checklists/${clId}/show_incomplete_items`);
+};

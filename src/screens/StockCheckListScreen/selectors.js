@@ -3,18 +3,38 @@ import { createSelector } from 'reselect';
 const selectStockCheckListDomain = () => state => state.stockCheckList;
 
 const makeSelectIsLoading = () =>
-  createSelector(selectStockCheckListDomain(), state => state.isLoading);
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.isLoading,
+  );
 
 const makeSelectIsSubmitted = () =>
-  createSelector(selectStockCheckListDomain(), state => state.isSubmitted);
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.isSubmitted,
+  );
+
+const makeSelectIsDoneAlled = () =>
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.isDoneAll,
+  );
 
 const makeSelectCheckList = () =>
-  createSelector(selectStockCheckListDomain(), state => state.checkList);
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.checkList,
+  );
 
 const makeSelectCheckListById = id =>
   createSelector(
     selectStockCheckListDomain(),
     state => state.checkList.filter(item => item.id === id)[0],
+  );
+const makeSelectIsDoneAll = id =>
+  createSelector(
+    makeSelectCheckListById(id),
+    cl => cl.checklist_items.filter(item => !item.data),
   );
 
 const makeSelectTemplate = id =>
@@ -34,4 +54,6 @@ export {
   makeSelectCheckListById,
   makeSelectTemplate,
   makeSelectIsSubmitted,
+  makeSelectIsDoneAll,
+  makeSelectIsDoneAlled,
 };

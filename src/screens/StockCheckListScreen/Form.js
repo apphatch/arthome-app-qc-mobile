@@ -125,6 +125,13 @@ const StockCheckListScreen = ({ navigation, route }) => {
             ]}
             visible={true}
           />
+          // <FAB
+          //   style={[styles.fab]}
+          //   icon={'upload-outline'}
+          //   onPress={() => {}}
+          //   visible={true}
+          //   label="Gửi"
+          // />
         )}
       </KeyboardAvoidingView>
 
@@ -148,6 +155,8 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
+    // bottom: 32,
+    // right: 16,
   },
   form: {
     paddingHorizontal: 16,
