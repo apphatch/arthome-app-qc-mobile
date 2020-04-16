@@ -2,7 +2,7 @@ import {
   put,
   call,
   // select,
-  delay,
+  // delay,
   all,
   takeLatest,
 } from 'redux-saga/effects';
@@ -16,12 +16,19 @@ import * as API from './services';
 // dump
 // import { data } from './data';
 
-export function* fetchShops({ payload: { userId } }) {
+export function* fetchShops({ payload: { userId, search } }) {
   try {
-    const response = yield call(API.fetchShops, { userId });
-    console.log('function*fetchShops -> response', response);
-    yield delay(2000);
-    yield put(actions.fetchShopsSuccess({ shops: response.data }));
+    let shops = [];
+    const { data } = yield call(API.searchShops, { search });
+    shops = data;
+    // if (search) {
+    //   const { data } = yield call(API.searchShops, { search });
+    //   shops = data;
+    // } else {
+    //   const { data } = yield call(API.fetchShops, { userId });
+    //   shops = data;
+    // }
+    yield put(actions.fetchShopsSuccess({ shops }));
   } catch (error) {
     yield put(actions.fetchShopsFailed(error.message));
   }

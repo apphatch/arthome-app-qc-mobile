@@ -14,7 +14,6 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 const StockCheckListScreen = ({ navigation, route }) => {
-  console.log('StockCheckListScreen -> route', route);
   const dispatch = useDispatch();
 
   const {
@@ -25,7 +24,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const template = useSelector(selectors.makeSelectTemplate(clId));
   const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
-  console.log('StockCheckListScreen -> item', item);
 
   const [openFAB, setOpenFAB] = React.useState(false);
   const [showSnack, setShowSnack] = React.useState(false);
@@ -33,10 +31,14 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const { handleSubmit, register, setValue, errors } = useForm({});
 
   React.useEffect(() => {
-    if (!isLoading && isSubmitted) {
-      setShowSnack(true);
+    if (!isLoading) {
+      if (isSubmitted) {
+        navigation.goBack();
+      } else {
+        setShowSnack(true);
+      }
     }
-  }, [isLoading, isSubmitted]);
+  }, [isLoading, isSubmitted, navigation]);
 
   React.useEffect(() => {
     return () => dispatch(actions.resetProps());
@@ -44,7 +46,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const onSubmitCheckList = React.useCallback(
     values => {
-      console.log('StockCheckListScreen -> values', values);
       dispatch(actions.submit({ itemId, data: values, shopId }));
     },
     [dispatch, itemId, shopId],
@@ -139,7 +140,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
         visible={showSnack}
         onDismiss={() => setShowSnack(false)}
         duration={4000}>
-        Gửi lỗi thành công
+        Gửi lỗi không thành công
       </Snackbar>
     </>
   );

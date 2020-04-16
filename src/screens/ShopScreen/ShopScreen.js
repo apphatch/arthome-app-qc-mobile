@@ -7,6 +7,7 @@ import {
   Divider,
   useTheme,
   Searchbar,
+  Caption,
 } from 'react-native-paper';
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -30,30 +31,29 @@ const ShopScreen = ({ navigation, route }) => {
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const shops = useSelector(selectors.makeSelectShops());
-  console.log('ShopScreen -> shops', shops);
-  const userId = useSelector(loginSelectors.makeSelectUserId());
+  // const userId = useSelector(loginSelectors.makeSelectUserId());
   const isLoggedIn = useSelector(loginSelectors.makeSelectIsLoggedIn());
   const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
   const checkInData = useSelector(checkInSelectors.makeSelectCheckInData());
-  console.log('ShopScreen -> checkInData', checkInData);
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
-  const debouncedSearchTerm = useDebounce(searchText, 500);
-  console.log(
-    'CheckListItemsScreen -> debouncedSearchTerm',
-    debouncedSearchTerm,
-  );
+  const debouncedSearchTerm = useDebounce(searchText, 1000);
 
   const searchRef = React.createRef();
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      dispatch(actions.fetchShops({ userId }));
+      // dispatch(actions.fetchShops({ userId }));
+      dispatch(actions.fetchShops({ search: debouncedSearchTerm }));
     } else {
       navigation.navigate('LoginScreen');
     }
-  }, [dispatch, userId, isLoggedIn, navigation]);
+  }, [dispatch, isLoggedIn, navigation, debouncedSearchTerm]);
+
+  // React.useEffect(() => {
+  //   dispatch(actions.fetchShops({ search: debouncedSearchTerm }));
+  // }, [debouncedSearchTerm, dispatch]);
 
   const renderItem = ({ item }) => (
     <List.Item
@@ -151,7 +151,9 @@ const ShopScreen = ({ navigation, route }) => {
               paddingBottom: safeArea.bottom,
             }}
           />
-        ) : null}
+        ) : (
+          <Caption style={styles.caption}>Không tìm thấy kết quả</Caption>
+        )}
       </View>
     </>
   );
@@ -174,6 +176,10 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 0,
     backgroundColor: 'transparent',
+  },
+  caption: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
 });
 

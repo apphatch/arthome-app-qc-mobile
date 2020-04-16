@@ -25,4 +25,5 @@ function fetchShopsSuccess(state, action) {
 }
 function fetchShopsFailed(state, action) {
   state.isLoading = false;
+  state.shops = [];
 }

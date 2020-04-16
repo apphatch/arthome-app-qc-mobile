@@ -35,6 +35,8 @@ function submitSuccess(state, action) {
 }
 function submitFailed(state, action) {
   state.isLoading = false;
+  state.isSubmitted = false;
+  state.errorMessage = action.payload.errorMessage;
 }
 
 function checkListResponse(state, action) {

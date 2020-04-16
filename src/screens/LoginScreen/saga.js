@@ -32,7 +32,9 @@ export function* login({ payload }) {
     yield put(
       checkInActions.onCheckInResponse({
         checkInData: last_checkin_checkout,
-        isCheckIn: !_.isEmpty(last_checkin_checkout),
+        isCheckIn: _.isEmpty(last_checkin_checkout)
+          ? false
+          : last_checkin_checkout.is_checkin,
       }),
     );
   } catch (error) {
