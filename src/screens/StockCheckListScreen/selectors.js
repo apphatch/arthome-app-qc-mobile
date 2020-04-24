@@ -26,6 +26,12 @@ const makeSelectCheckList = () =>
     state => state.checkList,
   );
 
+const makeSelectErrorMessage = () =>
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.errorMessage,
+  );
+
 const makeSelectCheckListById = id =>
   createSelector(
     selectStockCheckListDomain(),
@@ -56,4 +62,5 @@ export {
   makeSelectIsSubmitted,
   makeSelectIsDoneAll,
   makeSelectIsDoneAlled,
+  makeSelectErrorMessage,
 };

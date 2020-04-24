@@ -54,7 +54,11 @@ const StockCheckListScreen = ({ navigation, route }) => {
     <List.Item
       title={item.checklist_type}
       onPress={() =>
-        navigation.navigate('CheckListItemsScreen', { clId: item.id, shopId })
+        navigation.navigate('CheckListItemsScreen', {
+          clId: item.id,
+          shopId,
+          clType: item.checklist_type,
+        })
       }
     />
   );

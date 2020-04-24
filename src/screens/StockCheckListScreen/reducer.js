@@ -27,6 +27,7 @@ export default createReducer(initialState, handlers);
 function submit(state, action) {
   state.isLoading = true;
   state.isSubmitted = false;
+  state.errorMessage = '';
 }
 
 function submitSuccess(state, action) {

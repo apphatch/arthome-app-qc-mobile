@@ -3,25 +3,29 @@ import { Appbar, FAB, Caption, Snackbar } from 'react-native-paper';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { isEmpty } from 'lodash';
 
 // ###
 import CustomSwitch from '../../components/Switch';
 import CustomSelect from '../../components/Select';
 import FormTextInput from '../../components/FormTextInput';
+import NumberInput from '../../components/NumberInput';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
+// import { logger } from '../../utils';
 
 const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId, shopId },
+    params: { clId, itemId, shopId, clType },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
+  const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
   const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
 
@@ -35,10 +39,12 @@ const StockCheckListScreen = ({ navigation, route }) => {
       if (isSubmitted) {
         navigation.goBack();
       } else {
-        setShowSnack(true);
+        if (errorMessage && errorMessage.length) {
+          setShowSnack(true);
+        }
       }
     }
-  }, [isLoading, isSubmitted, navigation]);
+  }, [isLoading, isSubmitted, navigation, errorMessage]);
 
   React.useEffect(() => {
     return () => dispatch(actions.resetProps());
@@ -51,6 +57,8 @@ const StockCheckListScreen = ({ navigation, route }) => {
     [dispatch, itemId, shopId],
   );
 
+  const isSOS = clType === 'SOS';
+
   return (
     <>
       <Appbar.Header>
@@ -62,18 +70,34 @@ const StockCheckListScreen = ({ navigation, route }) => {
           <Caption style={styles.caption}>Danh sách lỗi</Caption>
           {Object.keys(template).map(fieldName => {
             const type = template[fieldName].type;
-            if (type === 'text') {
-              return (
-                <FormTextInput
-                  key={fieldName}
-                  name={fieldName}
-                  label={fieldName}
-                  register={register}
-                  setValue={setValue}
-                  value={item.data ? item.data[fieldName] : ''}
-                  disabled={!!item.data || isLoading}
-                />
-              );
+            if (type === 'input') {
+              if (isSOS) {
+                return (
+                  <NumberInput
+                    key={fieldName}
+                    name={fieldName}
+                    label={fieldName}
+                    register={register}
+                    setValue={setValue}
+                    value={item.data ? item.data[fieldName] : ''}
+                    disabled={!isEmpty(item.data) || isLoading}
+                    rules={{ required: true }}
+                    error={errors[fieldName]}
+                  />
+                );
+              } else {
+                return (
+                  <FormTextInput
+                    key={fieldName}
+                    name={fieldName}
+                    label={fieldName}
+                    register={register}
+                    setValue={setValue}
+                    value={item.data ? item.data[fieldName] : ''}
+                    disabled={!isEmpty(item.data) || isLoading}
+                  />
+                );
+              }
             }
             if (type === 'checkbox') {
               return (
@@ -86,7 +110,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   rules={{ required: true }}
                   error={errors[fieldName]}
                   value={item.data ? item.data[fieldName] : false}
-                  disabled={!!item.data || isLoading}
+                  disabled={!isEmpty(item.data) || isLoading}
                 />
               );
             }
@@ -104,13 +128,13 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   rules={{ required: true }}
                   error={errors[fieldName]}
                   value={item.data ? item.data[fieldName] : undefined}
-                  disabled={!!item.data || isLoading}
+                  disabled={!isEmpty(item.data) || isLoading}
                 />
               );
             }
           })}
         </View>
-        {item.data ? null : (
+        {!isEmpty(item.data) ? null : (
           <FAB.Group
             style={[styles.fab]}
             icon={openFAB ? 'close' : 'format-list-bulleted-type'}

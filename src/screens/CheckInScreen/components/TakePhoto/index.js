@@ -27,7 +27,7 @@ const TakePhoto = props => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.launchCamera(options, response => {
+    ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
         setIsLoading(false);

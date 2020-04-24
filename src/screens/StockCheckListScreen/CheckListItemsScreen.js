@@ -3,6 +3,7 @@ import { Appbar, useTheme, List, Divider, Searchbar } from 'react-native-paper';
 import { StyleSheet, View, FlatList, Alert } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
+import { isEmpty } from 'lodash';
 
 import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
@@ -19,7 +20,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, shopId },
+    params: { clId, shopId, clType },
   } = route;
 
   const currentCheckList = useSelector(selectors.makeSelectCheckListById(clId));
@@ -39,10 +40,15 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     <List.Item
       title={item.stock_name}
       onPress={() => {
-        navigation.navigate('FormScreen', { itemId: item.id, clId, shopId });
+        navigation.navigate('FormScreen', {
+          itemId: item.id,
+          clId,
+          shopId,
+          clType,
+        });
       }}
       right={props =>
-        item.data ? (
+        !isEmpty(item.data) ? (
           <List.Icon {...props} icon="check-circle" color="green" />
         ) : (
           <List.Icon {...props} icon="square-edit-outline" />

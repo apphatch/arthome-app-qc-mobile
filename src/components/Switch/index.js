@@ -13,7 +13,6 @@ const CustomSwitch = props => {
     error,
     disabled = false,
   } = props;
-  console.log('error', name, error, value);
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(value);
 
