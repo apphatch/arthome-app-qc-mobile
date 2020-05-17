@@ -11,12 +11,14 @@ export const submitCheckListItemData = ({ itemId, data, token }) => {
   });
 };
 
-export const markDoneAll = ({ clId }) => {
-  return httpClient.get(`checklists/${clId}/show_incomplete_items`);
+export const markDoneAll = ({ data, token, clId }) => {
+  return httpClient.post(`checklists/${clId}/update_checklist_items`, data, {
+    headers: { 'X-CSRF-Token': token },
+  });
 };
 
 export const fetchStockByCheckList = ({ checkListId = 1, search = '' }) => {
   return httpClient.get(
-    `stocks/search_by_checklist?checklist_id=${checkListId}&search_term=${search}`,
+    `checklists/${checkListId}/search_checklist_items?search_term=${search}`,
   );
 };

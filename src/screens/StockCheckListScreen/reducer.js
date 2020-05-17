@@ -39,6 +39,16 @@ function submit(state, action) {
 function submitSuccess(state, action) {
   state.isLoading = false;
   state.isSubmitted = true;
+  const { itemId, data } = action.payload;
+  state.stocks = state.stocks.map(stock => {
+    if (stock.id === itemId) {
+      return {
+        ...stock,
+        data,
+      };
+    }
+    return stock;
+  });
 }
 function submitFailed(state, action) {
   state.isLoading = false;

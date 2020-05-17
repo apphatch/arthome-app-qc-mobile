@@ -23,9 +23,11 @@ const CheckListItemsScreen = ({ navigation, route }) => {
 
   const stocks = useSelector(selectors.makeSelectStocks());
   logger('CheckListItemsScreen -> stocks', stocks);
-  // const countDone = useSelector(selectors.makeSelectIsDoneAll(clId));
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
+  const stocksHasDataNull = useSelector(
+    selectors.makeSelectStocksHasDataNull(),
+  );
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
@@ -41,7 +43,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
 
   const renderItem = ({ item }) => (
     <List.Item
-      title={item.name}
+      title={item.stock_name}
       titleNumberOfLines={3}
       onPress={() => {
         navigation.navigate('FormScreen', {
@@ -49,7 +51,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           clId,
           shopId,
           clType,
-          stockName: item.name,
+          stockName: item.stock_name,
         });
       }}
       right={props =>
@@ -79,8 +81,8 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   };
 
   const onDoneAll = React.useCallback(() => {
-    dispatch(actions.markDoneAll({ clId }));
-  }, [dispatch, clId]);
+    dispatch(actions.markDoneAll({ clId, clType }));
+  }, [dispatch, clId, clType]);
 
   const showAlert = React.useCallback(() => {
     Alert.alert(
@@ -107,8 +109,9 @@ const CheckListItemsScreen = ({ navigation, route }) => {
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
         <Appbar.Action
           icon={'upload'}
-          // disabled={countDone ? countDone.length > 0 : isLoading || true}
-          disabled={isLoading}
+          disabled={
+            stocksHasDataNull ? !stocksHasDataNull.length : isLoading || true
+          }
           onPress={onDoneAll}
         />
       </Appbar.Header>

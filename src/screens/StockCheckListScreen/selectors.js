@@ -51,6 +51,18 @@ const makeSelectStocks = () =>
     state => state.stocks,
   );
 
+const makeSelectStockById = stockId =>
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.stocks.filter(stock => stockId === stock.id)[0],
+  );
+
+const makeSelectStocksHasDataNull = () =>
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.stocks.filter(stock => stock.data === null),
+  );
+
 const makeSelectIsDoneAll = id =>
   createSelector(
     makeSelectCheckListById(id),
@@ -79,4 +91,6 @@ export {
   makeSelectErrorMessage,
   orderStocks,
   makeSelectStocks,
+  makeSelectStockById,
+  makeSelectStocksHasDataNull,
 };

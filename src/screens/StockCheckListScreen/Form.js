@@ -28,7 +28,8 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
   logger('StockCheckListScreen -> template', template);
-  const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
+  // const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
+  const item = useSelector(selectors.makeSelectStockById(itemId));
   logger('StockCheckListScreen -> item', item);
 
   const [showSnack, setShowSnack] = React.useState(false);
@@ -53,6 +54,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const onSubmitCheckList = React.useCallback(
     values => {
+      logger('StockCheckListScreen -> values', values);
       dispatch(actions.submit({ itemId, data: values, shopId }));
     },
     [dispatch, itemId, shopId],
