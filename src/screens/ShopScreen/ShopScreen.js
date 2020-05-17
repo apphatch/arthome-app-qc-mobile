@@ -12,7 +12,7 @@ import {
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import Reactotron from 'reactotron-react-native';
+// import Reactotron from 'reactotron-react-native';
 import _ from 'lodash';
 
 // ###
@@ -38,22 +38,17 @@ const ShopScreen = ({ navigation, route }) => {
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
-  const debouncedSearchTerm = useDebounce(searchText, 1000);
+  const debounceSearchTerm = useDebounce(searchText, 1000);
 
   const searchRef = React.createRef();
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      // dispatch(actions.fetchShops({ userId }));
-      dispatch(actions.fetchShops({ search: debouncedSearchTerm }));
+      dispatch(actions.fetchShops({ search: debounceSearchTerm }));
     } else {
       navigation.navigate('LoginScreen');
     }
-  }, [dispatch, isLoggedIn, navigation, debouncedSearchTerm]);
-
-  // React.useEffect(() => {
-  //   dispatch(actions.fetchShops({ search: debouncedSearchTerm }));
-  // }, [debouncedSearchTerm, dispatch]);
+  }, [dispatch, isLoggedIn, navigation, debounceSearchTerm]);
 
   const renderItem = ({ item }) => (
     <List.Item
@@ -64,20 +59,26 @@ const ShopScreen = ({ navigation, route }) => {
           if (isCheckIn) {
             navigation.navigate('StockCheckListScreen', {
               screen: 'StockCheckListScreen',
-              params: { shopId: item.id },
+              params: { shopId: item.id, shopName: item.name },
             });
           } else {
-            navigation.navigate('CheckInScreen', { shopId: item.id });
+            navigation.navigate('CheckInScreen', {
+              shopId: item.id,
+              shopName: item.name,
+            });
           }
         } else {
-          //
-          Reactotron.log(isCheckIn);
-          Reactotron.log(checkInData);
           if (!isCheckIn) {
-            navigation.navigate('CheckInScreen', { shopId: item.id });
+            navigation.navigate('CheckInScreen', {
+              shopId: item.id,
+              shopName: item.name,
+            });
           } else {
             if (_.isEmpty(checkInData)) {
-              navigation.navigate('CheckInScreen', { shopId: item.id });
+              navigation.navigate('CheckInScreen', {
+                shopId: item.id,
+                shopName: item.name,
+              });
             }
           }
         }

@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import Marker, { Position } from 'react-native-image-marker';
+import moment from 'moment-timezone';
+
+import { View, StyleSheet, Platform } from 'react-native';
 import {
   IconButton,
   Colors,
@@ -7,7 +12,8 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native-paper';
-import ImagePicker from 'react-native-image-picker';
+
+import { logger } from '../../../../utils';
 
 const options = {
   storageOptions: {
@@ -17,7 +23,8 @@ const options = {
 };
 
 const TakePhoto = props => {
-  const { setValue, isSubmitting, register, triggerValidation } = props;
+  const { setValue, isSubmitting, register, triggerValidation, shop } = props;
+
   const [photo, setPhoto] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -27,7 +34,7 @@ const TakePhoto = props => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.launchImageLibrary(options, response => {
+    ImagePicker.launchCamera(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
         setIsLoading(false);
@@ -37,14 +44,56 @@ const TakePhoto = props => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = { uri: response.uri };
-        setIsLoading(false);
-        setPhoto(source);
-        setValue('photo', source.uri);
-        triggerValidation('photo');
+        const now = moment()
+          .tz('Asia/Ho_Chi_Minh')
+          .format('HH:mm:ss DD-MM-YYYY');
+        const { name: shopName } = shop;
+        const { uri, error, originalRotation } = response;
+        let rotation = 0;
+        if (uri && !error) {
+          if (originalRotation === 90) {
+            rotation = 90;
+          } else if (originalRotation === 270) {
+            rotation = -90;
+          }
+        }
+
+        ImageResizer.createResizedImage(uri, 640, 480, 'JPEG', 100, rotation)
+          .then(res => {
+            Marker.markText({
+              src: res.uri,
+              color: '#FF0000',
+              fontSize: 14,
+              X: 30,
+              Y: 30,
+              scale: 1,
+              quality: 100,
+              text: `${shopName}
+              ${now}`,
+              position: Position.topLeft,
+            })
+              .then(path => {
+                const source = {
+                  uri: Platform.OS === 'android' ? 'file://' + path : path,
+                };
+                logger('source', source);
+                setIsLoading(false);
+                setPhoto(source);
+                setValue('photo', source.uri);
+                triggerValidation('photo');
+              })
+              .catch(err => {
+                console.log(err, 'err');
+                setIsLoading(false);
+              });
+          })
+          .catch(err => {
+            console.log(err, 'err');
+            setIsLoading(false);
+          });
       }
     });
-  }, [setValue, triggerValidation]);
+  }, [setValue, shop, triggerValidation]);
 
   const onRemovePhoto = React.useCallback(() => {
     setPhoto(null);

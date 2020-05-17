@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { orderBy } from 'lodash';
 
 const selectStockCheckListDomain = () => state => state.stockCheckList;
 
@@ -37,6 +38,19 @@ const makeSelectCheckListById = id =>
     selectStockCheckListDomain(),
     state => state.checkList.filter(item => item.id === id)[0],
   );
+const orderStocks = id => {
+  return createSelector(
+    [makeSelectCheckListById(id)],
+    ({ checklist_items }) => orderBy(checklist_items, ['stock_name']),
+  );
+};
+
+const makeSelectStocks = () =>
+  createSelector(
+    selectStockCheckListDomain(),
+    state => state.stocks,
+  );
+
 const makeSelectIsDoneAll = id =>
   createSelector(
     makeSelectCheckListById(id),
@@ -63,4 +77,6 @@ export {
   makeSelectIsDoneAll,
   makeSelectIsDoneAlled,
   makeSelectErrorMessage,
+  orderStocks,
+  makeSelectStocks,
 };

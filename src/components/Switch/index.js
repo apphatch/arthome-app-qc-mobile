@@ -12,6 +12,7 @@ const CustomSwitch = props => {
     rules,
     error,
     disabled = false,
+    clearError,
   } = props;
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(value);
@@ -28,6 +29,7 @@ const CustomSwitch = props => {
           onValueChange={() => {
             setIsSwitchOn(!isSwitchOn);
             setValue(name, !isSwitchOn, true);
+            clearError(name);
           }}
           value={isSwitchOn}
           disabled={disabled}

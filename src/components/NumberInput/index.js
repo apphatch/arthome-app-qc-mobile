@@ -13,6 +13,7 @@ const NumberInput = props => {
     label,
     rules,
     error,
+    clearError,
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
@@ -22,9 +23,10 @@ const NumberInput = props => {
       if (val.match(/^\d{0,}(\.\d{0,2})?$/)) {
         setValue(name, val, true);
         setLocalValue(val);
+        clearError(name);
       }
     },
-    [name, setValue],
+    [name, setValue, clearError],
   );
 
   return (

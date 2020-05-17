@@ -11,14 +11,15 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1D13AA5844258276245F8701 /* libPods-arthomeqc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0023C577C5E5E74D59E27E /* libPods-arthomeqc.a */; };
 		53E83C4F23FDC498002D31BB /* SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E83C4E23FDC498002D31BB /* SplashScreen.m */; };
 		53E83C5323FDD3A2002D31BB /* roboto-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 53E83C5123FDD3A2002D31BB /* roboto-regular.ttf */; };
 		53E83C5423FDD3A2002D31BB /* opensans-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 53E83C5223FDD3A2002D31BB /* opensans-regular.ttf */; };
+		7300D2C3F3282F0C5A3F533C /* libPods-arthomeqc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA691E46FDAE6FB94F6D83E /* libPods-arthomeqc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		08860B3E95F210D6A3ACD98C /* Pods-arthomeqc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arthomeqc.release.xcconfig"; path = "Target Support Files/Pods-arthomeqc/Pods-arthomeqc.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* An Hoà QC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "An Hoà QC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = arthomeqc/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = arthomeqc/AppDelegate.m; sourceTree = "<group>"; };
@@ -31,9 +32,8 @@
 		53E83C4E23FDC498002D31BB /* SplashScreen.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashScreen.m; sourceTree = "<group>"; };
 		53E83C5123FDD3A2002D31BB /* roboto-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "roboto-regular.ttf"; path = "../../src/assets/fonts/roboto-regular.ttf"; sourceTree = "<group>"; };
 		53E83C5223FDD3A2002D31BB /* opensans-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "opensans-regular.ttf"; path = "../../src/assets/fonts/opensans-regular.ttf"; sourceTree = "<group>"; };
-		6B0023C577C5E5E74D59E27E /* libPods-arthomeqc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arthomeqc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F45EDE23816915C25233856 /* Pods-arthomeqc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arthomeqc.debug.xcconfig"; path = "Target Support Files/Pods-arthomeqc/Pods-arthomeqc.debug.xcconfig"; sourceTree = "<group>"; };
-		C918A103C672EFAEAE591DE1 /* Pods-arthomeqc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arthomeqc.release.xcconfig"; path = "Target Support Files/Pods-arthomeqc/Pods-arthomeqc.release.xcconfig"; sourceTree = "<group>"; };
+		8BA691E46FDAE6FB94F6D83E /* libPods-arthomeqc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-arthomeqc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A17089FAB3096350559FE57A /* Pods-arthomeqc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-arthomeqc.debug.xcconfig"; path = "Target Support Files/Pods-arthomeqc/Pods-arthomeqc.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -43,7 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D13AA5844258276245F8701 /* libPods-arthomeqc.a in Frameworks */,
+				7300D2C3F3282F0C5A3F533C /* libPods-arthomeqc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				6B0023C577C5E5E74D59E27E /* libPods-arthomeqc.a */,
+				8BA691E46FDAE6FB94F6D83E /* libPods-arthomeqc.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -78,8 +78,8 @@
 		531AD6EF96158A4C348C56F0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6F45EDE23816915C25233856 /* Pods-arthomeqc.debug.xcconfig */,
-				C918A103C672EFAEAE591DE1 /* Pods-arthomeqc.release.xcconfig */,
+				A17089FAB3096350559FE57A /* Pods-arthomeqc.debug.xcconfig */,
+				08860B3E95F210D6A3ACD98C /* Pods-arthomeqc.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -156,13 +156,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "arthomeqc" */;
 			buildPhases = (
-				A4D439BB9671EDB8B11BCE7E /* [CP] Check Pods Manifest.lock */,
+				4A5097631E7385D38AB62DC2 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				DB5C0BD653449ED12DA04137 /* [CP] Copy Pods Resources */,
+				71DE4A554C6654265B979B19 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -236,7 +236,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		A4D439BB9671EDB8B11BCE7E /* [CP] Check Pods Manifest.lock */ = {
+		4A5097631E7385D38AB62DC2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -258,7 +258,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DB5C0BD653449ED12DA04137 /* [CP] Copy Pods Resources */ = {
+		71DE4A554C6654265B979B19 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -355,7 +355,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F45EDE23816915C25233856 /* Pods-arthomeqc.debug.xcconfig */;
+			baseConfigurationReference = A17089FAB3096350559FE57A /* Pods-arthomeqc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -381,7 +381,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C918A103C672EFAEAE591DE1 /* Pods-arthomeqc.release.xcconfig */;
+			baseConfigurationReference = 08860B3E95F210D6A3ACD98C /* Pods-arthomeqc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";

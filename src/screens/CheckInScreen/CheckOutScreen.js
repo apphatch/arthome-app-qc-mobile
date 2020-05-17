@@ -14,16 +14,22 @@ import TakePhoto from './components/TakePhoto';
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
+import * as shopSelectors from '../ShopScreen/selectors';
+
+import { logger } from '../../utils';
 
 const CheckOutScreen = ({ navigation, route }) => {
-  console.log('CheckOutScreen -> route', route);
-  const dispatch = useDispatch();
-  const isLoading = useSelector(selectors.makeSelectIsLoading());
-  const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());
-
   const {
     params: { shopId },
   } = route;
+
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());
+  const currentShopChecked = useSelector(
+    shopSelectors.makeSelectShopById(shopId),
+  );
+  logger('CheckOutScreen -> currentShopChecked', currentShopChecked);
 
   const {
     register,
@@ -68,6 +74,7 @@ const CheckOutScreen = ({ navigation, route }) => {
           isSubmitting={isLoading}
           register={register}
           triggerValidation={triggerValidation}
+          shop={currentShopChecked}
         />
         {errors.photo ? <Paragraph>Cần chụp hình</Paragraph> : null}
 

@@ -5,14 +5,12 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
 
+import { LoadingIndicator } from '../../components/LoadingIndicator';
+
 import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
-import {
-  logger,
-  // useDebounce,
-} from '../../utils';
+import { logger, useDebounce } from '../../utils';
 import * as actions from './actions';
-import { LoadingIndicator } from '../../components/LoadingIndicator';
 
 const CheckListItemsScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
@@ -23,28 +21,35 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     params: { clId, shopId, clType },
   } = route;
 
-  const currentCheckList = useSelector(selectors.makeSelectCheckListById(clId));
-  const countDone = useSelector(selectors.makeSelectIsDoneAll(clId));
+  const stocks = useSelector(selectors.makeSelectStocks());
+  logger('CheckListItemsScreen -> stocks', stocks);
+  // const countDone = useSelector(selectors.makeSelectIsDoneAll(clId));
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
-  logger('countDone: ', countDone);
-  const { checklist_items: checkListItems } = currentCheckList;
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
-  // const debouncedSearchTerm = useDebounce(searchText, 500);
+  const debounceSearchTerm = useDebounce(searchText, 1000);
 
   const searchRef = React.createRef();
 
+  React.useEffect(() => {
+    dispatch(
+      actions.fetchStocks({ search: debounceSearchTerm, checkListId: clId }),
+    );
+  }, [debounceSearchTerm, clId, dispatch]);
+
   const renderItem = ({ item }) => (
     <List.Item
-      title={item.stock_name}
+      title={item.name}
+      titleNumberOfLines={3}
       onPress={() => {
         navigation.navigate('FormScreen', {
           itemId: item.id,
           clId,
           shopId,
           clType,
+          stockName: item.name,
         });
       }}
       right={props =>
@@ -102,7 +107,8 @@ const CheckListItemsScreen = ({ navigation, route }) => {
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
         <Appbar.Action
           icon={'upload'}
-          disabled={countDone ? countDone.length > 0 : isLoading || true}
+          // disabled={countDone ? countDone.length > 0 : isLoading || true}
+          disabled={isLoading}
           onPress={onDoneAll}
         />
       </Appbar.Header>
@@ -128,7 +134,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           </View>
           <View style={[styles.container]}>
             <FlatList
-              data={checkListItems}
+              data={stocks}
               renderItem={renderItem}
               ItemSeparatorComponent={Divider}
               keyExtractor={keyExtractor}

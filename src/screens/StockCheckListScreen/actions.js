@@ -22,5 +22,12 @@ export const checkListResponse = res =>
 export const fetchCheckListFailed = errorMessage =>
   createAction(actionTypes.FETCH_CHECK_LIST_FAILED, { errorMessage });
 
+export const fetchStocks = data =>
+  createAction(actionTypes.FETCH_STOCKS, { ...data });
+export const stocksResponse = res =>
+  createAction(actionTypes.FETCH_STOCKS_RESPONSE, { ...res });
+export const fetchStocksFailed = errorMessage =>
+  createAction(actionTypes.FETCH_STOCKS_FAILED, { errorMessage });
+
 export const getItems = id => createAction(actionTypes.GET_ITEMS, { id });
 export const resetProps = () => createAction(actionTypes.RESET_PROPS, {});

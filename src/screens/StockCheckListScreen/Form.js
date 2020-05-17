@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Appbar, FAB, Caption, Snackbar } from 'react-native-paper';
+import { Appbar, FAB, Snackbar, Title } from 'react-native-paper';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
@@ -14,25 +14,26 @@ import NumberInput from '../../components/NumberInput';
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
-// import { logger } from '../../utils';
+import { logger } from '../../utils';
 
 const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId, shopId, clType },
+    params: { clId, itemId, shopId, clType, stockName },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
+  logger('StockCheckListScreen -> template', template);
   const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
+  logger('StockCheckListScreen -> item', item);
 
-  const [openFAB, setOpenFAB] = React.useState(false);
   const [showSnack, setShowSnack] = React.useState(false);
 
-  const { handleSubmit, register, setValue, errors } = useForm({});
+  const { handleSubmit, register, setValue, errors, clearError } = useForm({});
 
   React.useEffect(() => {
     if (!isLoading) {
@@ -67,7 +68,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
       </Appbar.Header>
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.form}>
-          <Caption style={styles.caption}>Danh sách lỗi</Caption>
+          <Title style={styles.caption}>{stockName}</Title>
           {Object.keys(template).map(fieldName => {
             const type = template[fieldName].type;
             if (type === 'input') {
@@ -83,6 +84,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                     disabled={!isEmpty(item.data) || isLoading}
                     rules={{ required: true }}
                     error={errors[fieldName]}
+                    clearError={clearError}
                   />
                 );
               } else {
@@ -95,6 +97,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                     setValue={setValue}
                     value={item.data ? item.data[fieldName] : ''}
                     disabled={!isEmpty(item.data) || isLoading}
+                    clearError={clearError}
                   />
                 );
               }
@@ -111,6 +114,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   error={errors[fieldName]}
                   value={item.data ? item.data[fieldName] : false}
                   disabled={!isEmpty(item.data) || isLoading}
+                  clearError={clearError}
                 />
               );
             }
@@ -129,34 +133,20 @@ const StockCheckListScreen = ({ navigation, route }) => {
                   error={errors[fieldName]}
                   value={item.data ? item.data[fieldName] : undefined}
                   disabled={!isEmpty(item.data) || isLoading}
+                  clearError={clearError}
                 />
               );
             }
           })}
         </View>
         {!isEmpty(item.data) ? null : (
-          <FAB.Group
-            style={[styles.fab]}
-            icon={openFAB ? 'close' : 'format-list-bulleted-type'}
-            onPress={() => {}}
-            onStateChange={({ open }) => setOpenFAB(open)}
-            open={openFAB}
-            actions={[
-              {
-                icon: 'check-all',
-                label: 'Gửi',
-                onPress: handleSubmit(onSubmitCheckList),
-              },
-            ]}
+          <FAB
             visible={true}
+            style={[styles.fab]}
+            icon="check-all"
+            label="Gửi"
+            onPress={handleSubmit(onSubmitCheckList)}
           />
-          // <FAB
-          //   style={[styles.fab]}
-          //   icon={'upload-outline'}
-          //   onPress={() => {}}
-          //   visible={true}
-          //   label="Gửi"
-          // />
         )}
       </KeyboardAvoidingView>
 
@@ -180,8 +170,8 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    // bottom: 32,
-    // right: 16,
+    bottom: 32,
+    right: 16,
   },
   form: {
     paddingHorizontal: 16,

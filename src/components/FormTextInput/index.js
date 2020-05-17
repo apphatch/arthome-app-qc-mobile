@@ -2,7 +2,15 @@ import React from 'react';
 import TextInput from '../TextInput';
 
 const FormTextInput = props => {
-  const { name, register, setValue, value, disabled, label } = props;
+  const {
+    name,
+    register,
+    setValue,
+    value,
+    disabled,
+    label,
+    clearError,
+  } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
 
@@ -13,6 +21,7 @@ const FormTextInput = props => {
       onChangeText={text => {
         setValue(name, text, true);
         setLocalValue(text);
+        clearError(name);
       }}
       value={localValue}
       disabled={disabled}

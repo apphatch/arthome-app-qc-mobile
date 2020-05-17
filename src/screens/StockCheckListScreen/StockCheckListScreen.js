@@ -30,7 +30,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
 
   const {
-    params: { shopId },
+    params: { shopId, shopName },
   } = route;
 
   React.useEffect(() => {
@@ -58,6 +58,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
           clId: item.id,
           shopId,
           clType: item.checklist_type,
+          shopName,
         })
       }
     />
@@ -137,7 +138,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
             icon: 'account-off-outline',
             label: 'Check out',
             onPress: () => {
-              navigation.navigate('CheckOutScreen', { shopId });
+              navigation.navigate('CheckOutScreen', { shopId, shopName });
             },
           },
         ]}

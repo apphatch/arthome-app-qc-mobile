@@ -14,15 +14,19 @@ import TakePhoto from './components/TakePhoto';
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
+import * as shopSelectors from '../ShopScreen/selectors';
 
 const CheckInScreen = ({ navigation, route }) => {
-  const dispatch = useDispatch();
-  const isLoading = useSelector(selectors.makeSelectIsLoading());
-  const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());
-
   const {
     params: { shopId },
   } = route;
+
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());
+  const currentShopChecked = useSelector(
+    shopSelectors.makeSelectShopById(shopId),
+  );
 
   const {
     register,
@@ -74,6 +78,7 @@ const CheckInScreen = ({ navigation, route }) => {
           isSubmitting={isLoading}
           register={register}
           triggerValidation={triggerValidation}
+          shop={currentShopChecked}
         />
         {errors.photo ? <Paragraph>Cần chụp hình</Paragraph> : null}
 

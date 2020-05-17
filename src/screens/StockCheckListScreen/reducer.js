@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   errorMessage: '',
   checkList: [],
+  stocks: [],
   isSubmitted: false,
   isDoneAll: false,
 };
@@ -19,6 +20,11 @@ const handlers = {
   [actionTypes.SUBMIT_FAILED]: submitFailed,
 
   [actionTypes.CHECK_LIST_RESPONSE]: checkListResponse,
+
+  [actionTypes.FETCH_STOCKS]: fetchStocks,
+  [actionTypes.FETCH_STOCKS_RESPONSE]: stocksResponse,
+  [actionTypes.FETCH_STOCKS_FAILED]: fetchStocksFailed,
+
   [actionTypes.RESET_PROPS]: resetProps,
 };
 
@@ -43,6 +49,20 @@ function submitFailed(state, action) {
 function checkListResponse(state, action) {
   state.isLoading = false;
   state.checkList = action.payload.checkList;
+}
+
+function fetchStocks(state, action) {
+  state.isLoading = true;
+}
+
+function stocksResponse(state, action) {
+  state.isLoading = false;
+  state.stocks = action.payload.stocks;
+}
+
+function fetchStocksFailed(state, action) {
+  state.isLoading = false;
+  state.stocks = [];
 }
 
 function resetProps(state, action) {

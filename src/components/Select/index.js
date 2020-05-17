@@ -14,6 +14,7 @@ const CustomSelect = props => {
     error,
     value,
     disabled = false,
+    clearError,
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
@@ -30,6 +31,7 @@ const CustomSelect = props => {
           onValueChange={val => {
             setValue(name, val, true);
             setLocalValue(val);
+            clearError(name);
           }}
           items={options}
           placeholder={{

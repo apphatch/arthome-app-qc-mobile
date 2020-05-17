@@ -20,7 +20,6 @@ export function* submitCheckList({ payload }) {
       data: formData,
       token,
     });
-    console.log('function*submitCheckList -> res', res);
     const response = yield call(API.fetchCheckList, { shopId });
     yield put(actions.checkListResponse({ checkList: response.data }));
     yield put(actions.submitSuccess({}));
@@ -31,7 +30,6 @@ export function* submitCheckList({ payload }) {
 }
 
 export function* fetchCheckList({ payload }) {
-  console.log('function*fetchCheckList -> payload', payload);
   try {
     const { shopId } = payload;
     const response = yield call(API.fetchCheckList, { shopId });
@@ -52,12 +50,22 @@ export function* markDoneAllCheckListItems({ payload }) {
   }
 }
 
+export function* fetchStocks({ payload }) {
+  try {
+    const res = yield call(API.fetchStockByCheckList, { ...payload });
+    yield put(actions.stocksResponse({ stocks: res.data }));
+  } catch (error) {
+    yield put(actions.fetchStocksFailed(error.message));
+  }
+}
+
 export default function root() {
   return function* watch() {
     yield all([
       yield takeLatest(actionTypes.SUBMIT, submitCheckList),
       yield takeLatest(actionTypes.FETCH_CHECK_LIST, fetchCheckList),
       yield takeLatest(actionTypes.MARK_DONE_ALL, markDoneAllCheckListItems),
+      yield takeLatest(actionTypes.FETCH_STOCKS, fetchStocks),
     ]);
   };
 }
