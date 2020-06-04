@@ -135,6 +135,13 @@ const StockCheckListScreen = ({ navigation, route }) => {
         open={openFAB}
         actions={[
           {
+            icon: 'camera',
+            label: 'Chụp hình',
+            onPress: () => {
+              navigation.navigate('ShopCaptureScreen', { shopId, shopName });
+            },
+          },
+          {
             icon: 'account-off-outline',
             label: 'Check out',
             onPress: () => {

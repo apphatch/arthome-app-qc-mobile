@@ -21,8 +21,8 @@ const LoginScreen = ({ navigation }) => {
   // const isLoggedIn = useSelector(selectors.makeSelectIsLoggedIn());
   // const userId = useSelector(selectors.makeSelectUserId());
 
-  const [username, setUsername] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+  const [username, setUsername] = useState({ value: 'tvv08', error: '' });
+  const [password, setPassword] = useState({ value: 'password', error: '' });
   const [error, setError] = useState('');
 
   // React.useEffect(() => {

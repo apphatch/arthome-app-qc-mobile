@@ -11,6 +11,7 @@ import {
   ShopNavigator,
   CheckInScreen,
   CheckOutScreen,
+  ShopCaptureScreen,
 } from './screens';
 
 import { StockStack } from './screens/StockCheckListScreen/Stack';
@@ -48,6 +49,11 @@ export const RootNavigator = () => {
             <Stack.Screen
               name="StockCheckListScreen"
               component={StockStack}
+              options={{ gestureEnabled: false, animationEnabled: false }}
+            />
+            <Stack.Screen
+              name="ShopCaptureScreen"
+              component={ShopCaptureScreen}
               options={{ gestureEnabled: false, animationEnabled: false }}
             />
           </>

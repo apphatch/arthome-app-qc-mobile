@@ -22,7 +22,7 @@ import * as selectors from './selectors';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
 import { selectors as loginSelectors } from '../LoginScreen';
 import { selectors as checkInSelectors } from '../CheckInScreen';
-import { useDebounce } from '../../utils';
+import { useDebounce, logger } from '../../utils';
 
 const ShopScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();

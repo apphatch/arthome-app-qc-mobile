@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Appbar, Caption } from 'react-native-paper';
+import { Appbar, Caption, Snackbar } from 'react-native-paper';
 import { StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
@@ -9,21 +9,24 @@ import TextInput from '../../components/TextInput';
 import Button from '../../components/Button';
 import Paragraph from '../../components/Paragraph';
 
-import TakePhoto from './components/TakePhoto';
+import TakePhoto from '../CheckInScreen/components/TakePhoto';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
 import * as shopSelectors from '../ShopScreen/selectors';
 
-const CheckInScreen = ({ navigation, route }) => {
+import { logger } from '../../utils';
+
+const ShopCaptureScreen = ({ navigation, route }) => {
   const {
     params: { shopId, shopName },
   } = route;
 
   const dispatch = useDispatch();
   const isLoading = useSelector(selectors.makeSelectIsLoading());
-  const isCheckIn = useSelector(selectors.makeSelectIsCheckIn());
+  const errorMessage = useSelector(selectors.makeSelectErrorMessage());
+
   const currentShopChecked = useSelector(
     shopSelectors.makeSelectShopById(shopId),
   );
@@ -39,23 +42,16 @@ const CheckInScreen = ({ navigation, route }) => {
     mode: 'onChange',
   });
 
-  const [error, setError] = React.useState('');
-
-  React.useEffect(() => {
-    if (isCheckIn) {
-      navigation.navigate('StockCheckListScreen', {
-        screen: 'StockCheckListScreen',
-        params: { shopId, shopName },
-      });
-    }
-  }, [isCheckIn, navigation, shopId, shopName]);
-
   const onSubmitCheckList = React.useCallback(
     values => {
-      dispatch(actions.requestCheckIn({ ...values, shopId, setError }));
+      dispatch(actions.requestShopPicture({ ...values, shopId, navigation }));
     },
-    [dispatch, shopId],
+    [dispatch, shopId, navigation],
   );
+
+  const onDismiss = React.useCallback(() => {
+    dispatch(actions.setError(''));
+  }, [dispatch]);
 
   return (
     <>
@@ -87,9 +83,15 @@ const CheckInScreen = ({ navigation, route }) => {
           onPress={handleSubmit(onSubmitCheckList)}
           loading={isLoading}
           disabled={isLoading || !formState.isValid}>
-          Check in
+          Gửi
         </Button>
       </KeyboardAvoidingView>
+      <Snackbar
+        visible={!isLoading && !!errorMessage}
+        onDismiss={onDismiss}
+        duration={4000}>
+        {errorMessage}
+      </Snackbar>
     </>
   );
 };
@@ -123,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(CheckInScreen);
+export default memo(ShopCaptureScreen);
