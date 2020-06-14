@@ -7,7 +7,7 @@ import {
   Searchbar,
   FAB,
 } from 'react-native-paper';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, BackHandler } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -38,6 +38,16 @@ const StockCheckListScreen = ({ navigation, route }) => {
       dispatch(actions.fetchCheckList({ shopId }));
     }
   }, [shopId, dispatch]);
+
+  const onBackPress = React.useCallback(() => {
+    return true;
+  }, []);
+
+  React.useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, [onBackPress]);
 
   const [openFAB, setOpenFAB] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');

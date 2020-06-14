@@ -364,7 +364,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.2;
+				CURRENT_PROJECT_VERSION = 0.0.5;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = TGZ6PH7BXW;
 				ENABLE_BITCODE = NO;
@@ -388,9 +388,9 @@
 			baseConfigurationReference = 08860B3E95F210D6A3ACD98C /* Pods-arthomeqc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0.0.2;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0.0.5;
 				DEVELOPMENT_TEAM = TGZ6PH7BXW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = arthomeqc/Info.plist;
@@ -403,7 +403,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.anhoa.qcapp;
 				PRODUCT_NAME = "OSA Checker";
-				PROVISIONING_PROFILE_SPECIFIER = "ED iOS dis";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

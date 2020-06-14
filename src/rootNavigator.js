@@ -49,7 +49,11 @@ export const RootNavigator = () => {
             <Stack.Screen
               name="StockCheckListScreen"
               component={StockStack}
-              options={{ gestureEnabled: false, animationEnabled: false }}
+              options={{
+                gestureEnabled: false,
+                animationEnabled: false,
+                headerLeft: null,
+              }}
             />
             <Stack.Screen
               name="ShopCaptureScreen"
