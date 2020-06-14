@@ -19,6 +19,12 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - Permission-Camera (2.1.5):
+    - RNPermissions
+  - Permission-MediaLibrary (2.1.5):
+    - RNPermissions
+  - Permission-PhotoLibrary (2.1.5):
+    - RNPermissions
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -245,7 +251,18 @@ PODS:
     - React
   - RNGestureHandler (1.6.0):
     - React
+  - RNImageCropPicker (0.32.0):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.32.0)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.32.0):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController
   - RNImageMarker (0.6.1):
+    - React
+  - RNPermissions (2.1.5):
     - React
   - RNReanimated (1.7.0):
     - React
@@ -255,6 +272,7 @@ PODS:
     - React
   - RNVectorIcons (6.6.0):
     - React
+  - TOCropViewController (2.5.3)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -263,6 +281,9 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary.podspec`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -296,7 +317,9 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNImageMarker (from `../node_modules/react-native-image-marker`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -306,6 +329,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -318,6 +342,12 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary.podspec"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -378,8 +408,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNImageMarker:
     :path: "../node_modules/react-native-image-marker"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -398,6 +432,9 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  Permission-Camera: afad27bf90337684d4a86f3825112d648c8c4d3b
+  Permission-MediaLibrary: dd1c48888cd95961fbfebdaebf8d4127c6e92e7d
+  Permission-PhotoLibrary: 4d2eff62c8f4b8a27bcf045c0e36f5047efbbf20
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -428,13 +465,16 @@ SPEC CHECKSUMS:
   RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
   RNDeviceInfo: 310c1f43d418d950a193c7650de2f9559c906048
   RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
+  RNImageCropPicker: fc4b4d2a4d7176eeb6442fa191ba56493c14b6d6
   RNImageMarker: 3d2ad96afe3db0965ecff23ca97d65b812d06b47
+  RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: d56b2da8367a56bbc9840e16d968339eb0ec7e7f
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  TOCropViewController: 20a14b6a7a098308bf369e7c8d700dc983a974e6
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 8cfccac9998b9846db55a68a1af279678c420b9c
+PODFILE CHECKSUM: f7c1057278fd7a3c49bffcbdb6c7b60d0f9cfd1c
 
 COCOAPODS: 1.9.0.beta.2

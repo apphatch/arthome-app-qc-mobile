@@ -14,17 +14,21 @@ import { selectors as loginSelectors } from '../LoginScreen';
 import { logger } from '../../utils';
 
 export function* checkOut({ payload }) {
-  const { note, photo, shopId, setError, navigation } = payload;
+  const { note, photos, shopId, setError, navigation } = payload;
   try {
     const formData = new FormData();
-    const photoName = yield UUIDGenerator.getRandomUUID();
+
     const token = yield select(loginSelectors.makeSelectToken());
 
-    formData.append('photos[]', {
-      uri: photo,
-      type: 'image/jpeg',
-      name: photoName,
-    });
+    for (let i = 0; i < photos.length; i++) {
+      const element = photos[i];
+      const photoName = yield UUIDGenerator.getRandomUUID();
+      formData.append('photos[]', {
+        uri: element.path,
+        type: 'image/jpeg',
+        name: photoName,
+      });
+    }
     formData.append('note', note);
     formData.append('time', moment().format('DD/MM/YYYY'));
     const response = yield call(API.checkOut, { formData, token, shopId });

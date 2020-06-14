@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -39,14 +39,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow An Hoà QC to use the camera</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow An Hoà QC to access your microphone</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give An Hoà QC periences permission to access your photos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give An Hoà QC periences permission to save photos</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Give An Hoà QC periences permission to access your photos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>opensans-regular.ttf</string>
