@@ -22,7 +22,7 @@ import * as selectors from './selectors';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
 import { selectors as loginSelectors } from '../LoginScreen';
 import { selectors as checkInSelectors } from '../CheckInScreen';
-import { useDebounce, logger } from '../../utils';
+import { useDebounce } from '../../utils';
 
 const ShopScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
@@ -44,11 +44,28 @@ const ShopScreen = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      dispatch(actions.fetchShops({ search: debounceSearchTerm }));
+      if (!isCheckIn) {
+        dispatch(actions.fetchShops({ search: debounceSearchTerm }));
+      }
     } else {
       navigation.navigate('LoginScreen');
     }
-  }, [dispatch, isLoggedIn, navigation, debounceSearchTerm]);
+  }, [
+    dispatch,
+    isLoggedIn,
+    navigation,
+    debounceSearchTerm,
+    isCheckIn,
+    checkInData.shop_id,
+    checkInData.name,
+  ]);
+
+  if (isCheckIn) {
+    navigation.navigate('StockCheckListScreen', {
+      screen: 'StockCheckListScreen',
+      params: { shopId: checkInData.shop_id, shopName: checkInData.name },
+    });
+  }
 
   const renderItem = ({ item }) => (
     <List.Item

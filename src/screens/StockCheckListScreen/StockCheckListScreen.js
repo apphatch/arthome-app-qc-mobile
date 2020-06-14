@@ -83,15 +83,18 @@ const StockCheckListScreen = ({ navigation, route }) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction
-          onPress={() => {
-            if (isCheckIn) {
-              navigation.navigate('ShopScreen');
-            } else {
-              navigation.goBack();
-            }
-          }}
-        />
+        {isCheckIn ? null : (
+          <Appbar.BackAction
+            onPress={() => {
+              if (isCheckIn) {
+                navigation.navigate('ShopScreen');
+              } else {
+                navigation.goBack();
+              }
+            }}
+          />
+        )}
+
         <Appbar.Content title={'Check list'} subtitle="" />
       </Appbar.Header>
       <View style={styles.row}>
