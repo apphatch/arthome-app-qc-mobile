@@ -99,13 +99,15 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     }
   }, [isSubmittedDoneAll, showAlert]);
 
+  const _onPressGoBack = () => {
+    navigation.goBack();
+    dispatch(actions.fetchCheckList({ shopId }));
+  };
+
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction
-          onPress={() => navigation.goBack()}
-          disabled={isLoading}
-        />
+        <Appbar.BackAction onPress={_onPressGoBack} disabled={isLoading} />
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
         <Appbar.Action
           icon={'upload'}

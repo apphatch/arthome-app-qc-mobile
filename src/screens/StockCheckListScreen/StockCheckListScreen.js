@@ -52,6 +52,39 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const [openFAB, setOpenFAB] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
+  const [FABItems, setFABItems] = React.useState([]);
+
+  React.useEffect(() => {
+    if (checkList && checkList.length > 0) {
+      setFABItems([
+        {
+          icon: 'camera',
+          label: 'Chụp hình',
+          onPress: () => {
+            navigation.navigate('ShopCaptureScreen', { shopId, shopName });
+          },
+        },
+      ]);
+    } else {
+      setFABItems([
+        {
+          icon: 'camera',
+          label: 'Chụp hình',
+          onPress: () => {
+            navigation.navigate('ShopCaptureScreen', { shopId, shopName });
+          },
+        },
+        {
+          icon: 'account-off-outline',
+          label: 'Check out',
+          onPress: () => {
+            navigation.navigate('CheckOutScreen', { shopId, shopName });
+          },
+        },
+      ]);
+    }
+  }, [checkList, navigation, shopId, shopName]);
+
   const debouncedSearchTerm = useDebounce(searchText, 500);
   console.log(
     'CheckListItemsScreen -> debouncedSearchTerm',
@@ -146,22 +179,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
         onPress={() => {}}
         onStateChange={({ open }) => setOpenFAB(open)}
         open={openFAB}
-        actions={[
-          {
-            icon: 'camera',
-            label: 'Chụp hình',
-            onPress: () => {
-              navigation.navigate('ShopCaptureScreen', { shopId, shopName });
-            },
-          },
-          {
-            icon: 'account-off-outline',
-            label: 'Check out',
-            onPress: () => {
-              navigation.navigate('CheckOutScreen', { shopId, shopName });
-            },
-          },
-        ]}
+        actions={FABItems}
         visible={true}
       />
     </>
