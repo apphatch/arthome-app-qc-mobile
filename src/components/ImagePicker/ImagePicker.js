@@ -2,7 +2,7 @@ import React from 'react';
 // import ImageResizer from 'react-native-image-resizer';
 // import Marker, { Position } from 'react-native-image-marker';
 // import moment from 'moment-timezone';
-import ActionSheet from 'react-native-actionsheet';
+// import ActionSheet from 'react-native-actionsheet';
 
 import {
   View,
@@ -32,9 +32,18 @@ const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
   const actionRef = React.useRef(null);
   const [isDeleting, setIsDeleting] = React.useState(false);
 
-  const onTakePhoto = React.useCallback(() => {
-    actionRef.current.show();
-  }, []);
+  const onTakePhoto = () => {
+    // actionRef.current.show();
+    ImagePicker.openCamera({
+      cropping: false,
+      includeExif: true,
+      mediaType: 'photo',
+    }).then(image => {
+      onTakePhoto();
+      photos = [...photos, { ...image, localIdentifier: objectId() }];
+      setPhotos(photos);
+    });
+  };
 
   const onRemovePhoto = React.useCallback(
     photo => {
@@ -62,7 +71,7 @@ const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
         <IconButton
           icon="camera"
           size={30}
-          onPress={onTakePhoto}
+          onPress={() => onTakePhoto()}
           disabled={isLoading || isDeleting}
         />
       </View>
@@ -83,37 +92,37 @@ const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
           );
         })}
       </ScrollView>
-      <ActionSheet
+      {/* <ActionSheet
         ref={actionRef}
         title={'Chọn hình từ...'}
-        options={['Camera', 'Photo Album', 'Cancel']}
-        cancelButtonIndex={2}
+        options={['Camera', 'Cancel']}
+        cancelButtonIndex={1}
         onPress={index => {
-          /* do something */
-          if (index === 1) {
-            ImagePicker.openPicker({
-              multiple: true,
-              waitAnimationEnd: false,
-              sortOrder: 'asc',
-              includeExif: true,
-              mediaType: 'photo',
-            }).then(images => {
-              console.log(images);
-              setPhotos([...photos, ...images]);
-            });
-          }
+          // if (index === 1) {
+          //   ImagePicker.openPicker({
+          //     multiple: true,
+          //     waitAnimationEnd: false,
+          //     sortOrder: 'asc',
+          //     includeExif: true,
+          //     mediaType: 'photo',
+          //   }).then(images => {
+          //     console.log(images);
+          //     setPhotos([...photos, ...images]);
+          //   });
+          // }
           if (index === 0) {
-            ImagePicker.openCamera({
-              cropping: false,
-              includeExif: true,
-              mediaType: 'photo',
-            }).then(image => {
-              console.log(image);
-              setPhotos([...photos, { ...image, localIdentifier: objectId() }]);
-            });
+            // () => pickImageFromCamera()
+            // ImagePicker.openCamera({
+            //   cropping: false,
+            //   includeExif: true,
+            //   mediaType: 'photo',
+            // }).then(image => {
+            //   console.log(image);
+            //   setPhotos([...photos, { ...image, localIdentifier: objectId() }]);
+            // });
           }
         }}
-      />
+      /> */}
     </View>
   );
 };

@@ -18,6 +18,10 @@ const NumberInput = props => {
 
   const [localValue, setLocalValue] = React.useState(value);
 
+  React.useEffect(() => {
+    setValue(name, localValue);
+  }, [name, register, rules]);
+
   const handleInputChange = React.useCallback(
     val => {
       if (val.match(/^\d{0,}(\.\d{0,2})?$/)) {

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Appbar, FAB, Snackbar, Title } from 'react-native-paper';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
@@ -27,14 +27,15 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
-  logger('StockCheckListScreen -> template', template);
+  
   // const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
   const item = useSelector(selectors.makeSelectStockById(itemId));
-  logger('StockCheckListScreen -> item', item);
 
   const [showSnack, setShowSnack] = React.useState(false);
 
-  const { handleSubmit, register, setValue, errors, clearError } = useForm({});
+  const { handleSubmit, register, setValue, errors, clearError, getValues } = useForm({});
+
+  console.log("data item", item);
 
   React.useEffect(() => {
     if (!isLoading) {
@@ -54,103 +55,104 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const onSubmitCheckList = React.useCallback(
     values => {
-      logger('StockCheckListScreen -> values', values);
       dispatch(actions.submit({ itemId, data: values, shopId }));
     },
     [dispatch, itemId, shopId],
   );
 
-  const isSOS = clType === 'SOS';
-
+  const isSOS = clType.toUpperCase() === 'SOS';
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Kiểm tra lỗi'} subtitle="" />
       </Appbar.Header>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View style={styles.form}>
-          <Title style={styles.caption}>{stockName}</Title>
-          {Object.keys(template).map(fieldName => {
-            const type = template[fieldName].type;
-            if (type === 'input') {
-              if (isSOS) {
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <View style={styles.form}>
+            <Title style={styles.caption}>{stockName}</Title>
+            {Object.keys(template).map(fieldName => {
+              const type = template[fieldName].type;
+              if (type === 'input') {
+                if (isSOS) {
+                  return (
+                    <NumberInput
+                      key={fieldName}
+                      name={fieldName}
+                      label={fieldName}
+                      register={register}
+                      setValue={setValue}
+                      value={item.data ? item.data[fieldName] : ''}
+                      disabled={isLoading}
+                      rules={{ required: true }}
+                      error={errors[fieldName]}
+                      clearError={clearError}
+                    />
+                  );
+                } else {
+                  return (
+                    <FormTextInput
+                      key={fieldName}
+                      name={fieldName}
+                      label={fieldName}
+                      register={register}
+                      setValue={setValue}
+                      value={item.data ? item.data[fieldName] : ''}
+                      disabled={isLoading}
+                      clearError={clearError}
+                    />
+                  );
+                }
+              }
+              if (type === 'checkbox') {
                 return (
-                  <NumberInput
-                    key={fieldName}
-                    name={fieldName}
-                    label={fieldName}
+                  <CustomSwitch
                     register={register}
                     setValue={setValue}
-                    value={item.data ? item.data[fieldName] : ''}
-                    disabled={!isEmpty(item.data) || isLoading}
+                    name={fieldName}
+                    label={fieldName}
+                    key={fieldName}
                     rules={{ required: true }}
                     error={errors[fieldName]}
-                    clearError={clearError}
-                  />
-                );
-              } else {
-                return (
-                  <FormTextInput
-                    key={fieldName}
-                    name={fieldName}
-                    label={fieldName}
-                    register={register}
-                    setValue={setValue}
-                    value={item.data ? item.data[fieldName] : ''}
-                    disabled={!isEmpty(item.data) || isLoading}
+                    value={item.data ? item.data[fieldName] : false}
+                    disabled={sLoading}
                     clearError={clearError}
                   />
                 );
               }
-            }
-            if (type === 'checkbox') {
-              return (
-                <CustomSwitch
-                  register={register}
-                  setValue={setValue}
-                  name={fieldName}
-                  label={fieldName}
-                  key={fieldName}
-                  rules={{ required: true }}
-                  error={errors[fieldName]}
-                  value={item.data ? item.data[fieldName] : false}
-                  disabled={!isEmpty(item.data) || isLoading}
-                  clearError={clearError}
-                />
-              );
-            }
-            if (type === 'select') {
-              return (
-                <CustomSelect
-                  key={fieldName}
-                  options={template[fieldName].values.map(val => {
-                    return { value: val, label: val };
-                  })}
-                  register={register}
-                  setValue={setValue}
-                  name={fieldName}
-                  label={fieldName}
-                  rules={{ required: true }}
-                  error={errors[fieldName]}
-                  value={item.data ? item.data[fieldName] : undefined}
-                  disabled={!isEmpty(item.data) || isLoading}
-                  clearError={clearError}
-                />
-              );
-            }
-          })}
-        </View>
-        {!isEmpty(item.data) ? null : (
-          <FAB
-            visible={true}
-            style={[styles.fab]}
-            icon="check-all"
-            label="Gửi"
-            onPress={handleSubmit(onSubmitCheckList)}
-          />
-        )}
-      </KeyboardAvoidingView>
+              if (type === 'select') {
+                return (
+                  <CustomSelect
+                    key={fieldName}
+                    options={template[fieldName].values.map(val => {
+                      return { value: val, label: val, color: (item.data != null && item.data[fieldName] == val) ? 'purple' : 'black'};
+                    })}
+                    register={register}
+                    setValue={setValue}
+                    name={fieldName}
+                    label={fieldName}
+                    rules={{ required: true }}
+                    error={errors[fieldName]}
+                    value={item.data ? item.data[fieldName] : undefined}
+                    disabled={isLoading}
+                    clearError={clearError}
+                  />
+                );
+              }
+            })}
+          </View>
+          {
+            <FAB
+              visible={true}
+              style={[styles.fab]}
+              icon="check-all"
+              label="Gửi"
+              onPress={handleSubmit(onSubmitCheckList)}
+            />
+          }
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+      
 
       <Snackbar
         visible={showSnack}

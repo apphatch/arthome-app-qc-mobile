@@ -66,12 +66,12 @@ const CheckInScreen = ({ navigation, route }) => {
 
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Caption style={styles.caption}>Thông tin</Caption>
-        <TextInput
+        {/* <TextInput
           label="Ghi chú"
           ref={register({ name: 'note' })}
           onChangeText={text => setValue('note', text, true)}
           disabled={isLoading}
-        />
+        /> */}
 
         <TakePhoto
           setValue={setValue}

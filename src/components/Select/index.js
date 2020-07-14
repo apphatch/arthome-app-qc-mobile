@@ -18,9 +18,23 @@ const CustomSelect = props => {
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
+  const [localOptions, setLocalOptions] = React.useState(options);
+
+  const updateStyleSelected = (val) => {
+    localOptions.forEach(ele => {
+      if(ele.value == val) {
+        ele.color = 'purple';
+      } else {
+        ele.color = 'black';
+      }
+    });
+
+    setLocalOptions(localOptions);
+  };
 
   React.useEffect(() => {
     register({ name }, rules);
+    setValue(name, localValue);
   }, [name, register, rules]);
 
   return (
@@ -32,8 +46,9 @@ const CustomSelect = props => {
             setValue(name, val, true);
             setLocalValue(val);
             clearError(name);
+            updateStyleSelected(val);
           }}
-          items={options}
+          items={localOptions}
           placeholder={{
             label: 'Chọn 1 item',
             value: null,
