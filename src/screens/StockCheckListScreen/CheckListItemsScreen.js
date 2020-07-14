@@ -22,7 +22,6 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   } = route;
 
   const stocks = useSelector(selectors.makeSelectStocks());
-  logger('CheckListItemsScreen -> stocks', stocks);
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
   const stocksHasDataNull = useSelector(
@@ -30,10 +29,12 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   );
 
   const [searchText, setSearchText] = React.useState('');
+  const [toIndex, setToIndex] = React.useState(0);
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const debounceSearchTerm = useDebounce(searchText, 1000);
-
   const searchRef = React.createRef();
+  const isOOS = clType.toUpperCase() === 'OOS';
+  let flatListRef = React.createRef();
 
   React.useEffect(() => {
     dispatch(
@@ -41,11 +42,12 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     );
   }, [debounceSearchTerm, clId, dispatch]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
     <List.Item
       title={item.stock_name}
       titleNumberOfLines={3}
       onPress={() => {
+        setToIndex(index);
         navigation.navigate('FormScreen', {
           itemId: item.id,
           clId,
@@ -104,18 +106,44 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     dispatch(actions.fetchCheckList({ shopId }));
   };
 
+  React.useEffect(() => {
+    if(toIndex > 0) {
+      scrollToOffset();
+    }
+  }, [stocks]);
+
+  const getItemLayout = (data, index) => {
+    return { length: stocks.length, offset: (56 * index), index };
+  }
+
+  const scrollToOffset = () => {
+    if(toIndex > 0 && flatListRef) {
+      let offset = 56 * toIndex;
+      flatListRef.scrollToOffset({animated: true, offset: offset});
+    }
+  }
+
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={_onPressGoBack} disabled={isLoading} />
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
-        <Appbar.Action
-          icon={'upload'}
-          disabled={
-            stocksHasDataNull ? !stocksHasDataNull.length : isLoading || true
-          }
-          onPress={onDoneAll}
-        />
+        {/* With clType is OOS then alway allow send report */}
+        {isOOS ? (
+          <Appbar.Action
+            icon={'upload'}
+            onPress={onDoneAll}
+          />
+          ) : (
+          <Appbar.Action
+            icon={'upload'}
+            disabled={
+              stocksHasDataNull ? stocksHasDataNull.length : isLoading || true
+            }
+            onPress={onDoneAll}
+          />
+        )}
+
       </Appbar.Header>
       {isLoading ? (
         <LoadingIndicator />
@@ -140,13 +168,16 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           <View style={[styles.container]}>
             <FlatList
               data={stocks}
+              ref={(ref) => {flatListRef = ref; }}
               renderItem={renderItem}
+              getItemLayout={getItemLayout}
               ItemSeparatorComponent={Divider}
               keyExtractor={keyExtractor}
               contentContainerStyle={{
                 backgroundColor: colors.background,
                 paddingBottom: safeArea.bottom,
               }}
+              initialNumToRender={toIndex || 15}
             />
           </View>
         </>

@@ -14,6 +14,10 @@ const FormTextInput = props => {
 
   const [localValue, setLocalValue] = React.useState(value);
 
+  React.useEffect(() => {
+    setValue(name, localValue);
+  }, [name, register]);
+
   return (
     <TextInput
       label={label}
