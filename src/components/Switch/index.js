@@ -19,6 +19,7 @@ const CustomSwitch = props => {
 
   React.useEffect(() => {
     register({ name }, rules);
+    setValue(name, isSwitchOn, true);
   }, [name, register, rules]);
 
   return (

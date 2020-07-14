@@ -56,11 +56,13 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
     let data = [];
     const formData = new FormData();
 
-    if (currentCl.checklist_type === 'OOS') {
+    console.log('currentCl.checklist_type', currentCl.checklist_type);
+    if (currentCl.checklist_type.toUpperCase() === 'OOS') {
       data = stocksHasDataNull.map(item => {
         return {
           id: item.id,
           data: mapValues(template, o => {
+            console.log('o.type', o.type);
             if (o.type === 'select') {
               return o.values[0];
             }
