@@ -24,7 +24,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const safeArea = useSafeArea();
   const { colors } = useTheme();
-
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const checkList = useSelector(selectors.makeSelectCheckList());
   const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
