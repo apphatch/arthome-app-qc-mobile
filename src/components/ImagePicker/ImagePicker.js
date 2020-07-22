@@ -1,69 +1,71 @@
 import React from 'react';
-// import ImageResizer from 'react-native-image-resizer';
-// import Marker, { Position } from 'react-native-image-marker';
-// import moment from 'moment-timezone';
-// import ActionSheet from 'react-native-actionsheet';
 
 import {
   View,
   StyleSheet,
-  // Platform,
   NativeModules,
   Image,
-  // Dimensions,
   ScrollView,
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import {
+  IconButton,
+  Button,
+  Paragraph,
+  Dialog,
+  Portal,
+} from 'react-native-paper';
 
 import { objectId } from '../../utils/uniqId';
-
-// const options = {
-//   storageOptions: {
-//     skipBackup: true,
-//     path: 'images',
-//   },
-// };
 
 const ImagePicker = NativeModules.ImageCropPicker;
 
 const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
-  const actionRef = React.useRef(null);
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
 
   const onTakePhoto = () => {
-    // actionRef.current.show();
     ImagePicker.openCamera({
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-    }).then(image => {
-      onTakePhoto();
-      photos = [...photos, { ...image, localIdentifier: objectId() }];
-      setPhotos(photos);
+    }).then((image) => {
+      if (image) {
+        photos = [...photos, { ...image, localIdentifier: objectId() }];
+        if (photos.length <= 10) {
+          onTakePhoto();
+          setPhotos(photos);
+        } else {
+          setVisible(true);
+        }
+      }
     });
   };
 
   const onRemovePhoto = React.useCallback(
-    photo => {
+    (photo) => {
       setIsDeleting(true);
       ImagePicker.cleanSingle(photo.path)
         .then(() => {
           console.log(`removed tmp image ${photo.path} from tmp directory`);
           setIsDeleting(false);
           const newPhotos = photos.filter(
-            item => item.localIdentifier !== photo.localIdentifier,
+            (item) => item.localIdentifier !== photo.localIdentifier,
           );
           setPhotos(newPhotos);
         })
-        .catch(e => {
+        .catch((e) => {
           setIsDeleting(false);
           alert(e);
         });
     },
     [photos, setPhotos],
   );
+
+  const hideDialog = () => {
+    setVisible(false);
+  };
 
   return (
     <View style={styles.root}>
@@ -76,7 +78,7 @@ const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
         />
       </View>
       <ScrollView containerStyle={styles.content} horizontal>
-        {photos.map(photo => {
+        {photos.map((photo) => {
           return (
             <View style={styles.itemBox} key={photo.localIdentifier}>
               <View style={[styles.item]}>
@@ -92,37 +94,18 @@ const CustomImagePicker = ({ photos, setPhotos, isLoading }) => {
           );
         })}
       </ScrollView>
-      {/* <ActionSheet
-        ref={actionRef}
-        title={'Chọn hình từ...'}
-        options={['Camera', 'Cancel']}
-        cancelButtonIndex={1}
-        onPress={index => {
-          // if (index === 1) {
-          //   ImagePicker.openPicker({
-          //     multiple: true,
-          //     waitAnimationEnd: false,
-          //     sortOrder: 'asc',
-          //     includeExif: true,
-          //     mediaType: 'photo',
-          //   }).then(images => {
-          //     console.log(images);
-          //     setPhotos([...photos, ...images]);
-          //   });
-          // }
-          if (index === 0) {
-            // () => pickImageFromCamera()
-            // ImagePicker.openCamera({
-            //   cropping: false,
-            //   includeExif: true,
-            //   mediaType: 'photo',
-            // }).then(image => {
-            //   console.log(image);
-            //   setPhotos([...photos, { ...image, localIdentifier: objectId() }]);
-            // });
-          }
-        }}
-      /> */}
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Content>
+            <Paragraph>
+              {'If you want to choose more images, please do it once more time'}
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };

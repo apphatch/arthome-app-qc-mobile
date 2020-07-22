@@ -53,7 +53,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
   const [photos, setPhotos] = React.useState([]);
 
   const onSubmitCheckList = React.useCallback(
-    values => {
+    (values) => {
       if (photos.length) {
         dispatch(
           actions.requestShopPicture({ ...values, photos, shopId, navigation }),
@@ -85,7 +85,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
           <TextInput
             label="Ghi chú"
             ref={register({ name: 'note' })}
-            onChangeText={text => setValue('note', text, true)}
+            onChangeText={(text) => setValue('note', text, true)}
             disabled={isLoading}
           />
 
@@ -106,7 +106,6 @@ const ShopCaptureScreen = ({ navigation, route }) => {
           <Button
             mode="contained"
             onPress={handleSubmit(onSubmitCheckList)}
-            // onPress={() => {}}
             loading={isLoading}
             disabled={isLoading}>
             Gửi

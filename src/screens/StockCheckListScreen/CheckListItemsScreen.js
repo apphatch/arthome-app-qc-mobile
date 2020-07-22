@@ -1,9 +1,20 @@
 import React, { memo } from 'react';
-import { Appbar, useTheme, List, Divider, Searchbar } from 'react-native-paper';
-import { StyleSheet, View, FlatList, Alert } from 'react-native';
+import {
+  Appbar,
+  useTheme,
+  List,
+  Divider,
+  Searchbar,
+  IconButton,
+  Dialog,
+  Portal,
+  RadioButton,
+  Button,
+} from 'react-native-paper';
+import { StyleSheet, View, FlatList, Alert, ScrollView } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { isEmpty, zipObjectDeep } from 'lodash';
 
 import { LoadingIndicator } from '../../components/LoadingIndicator';
 
@@ -22,53 +33,83 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   } = route;
 
   const stocks = useSelector(selectors.makeSelectStocks());
+  const categories = useSelector(selectors.makeSelectCategoriesOfStocks());
+  logger('CheckListItemsScreen -> stocks', stocks);
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
   const stocksHasDataNull = useSelector(
     selectors.makeSelectStocksHasDataNull(),
   );
 
+  const [visibleFilter, setVisibleFilter] = React.useState(false);
+  const [selectedOption, setSelectedOption] = React.useState('');
+  const [filterValue, setFilterValue] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
-  const [toIndex, setToIndex] = React.useState(0);
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const debounceSearchTerm = useDebounce(searchText, 1000);
+  const [toIndex, setToIndex] = React.useState(0);
+
   const searchRef = React.createRef();
   const isOOS = clType.toUpperCase() === 'OOS';
   let flatListRef = React.createRef();
 
   React.useEffect(() => {
+    if (toIndex > 0) {
+      scrollToOffset();
+    }
+  }, [stocks, scrollToOffset, toIndex]);
+
+  React.useEffect(() => {
     dispatch(
-      actions.fetchStocks({ search: debounceSearchTerm, checkListId: clId }),
+      actions.fetchStocks({
+        search: debounceSearchTerm,
+        checkListId: clId,
+        filter: filterValue,
+      }),
     );
-  }, [debounceSearchTerm, clId, dispatch]);
+  }, [debounceSearchTerm, clId, dispatch, filterValue]);
 
-  const renderItem = ({ item, index }) => (
-    <List.Item
-      title={item.stock_name}
-      titleNumberOfLines={3}
-      onPress={() => {
-        setToIndex(index);
-        navigation.navigate('FormScreen', {
-          itemId: item.id,
-          clId,
-          shopId,
-          clType,
-          stockName: item.stock_name,
-        });
-      }}
-      right={props =>
-        !isEmpty(item.data) ? (
-          <List.Icon {...props} icon="check-circle" color="green" />
-        ) : (
-          <List.Icon {...props} icon="square-edit-outline" />
-        )
-      }
-    />
-  );
+  const getItemLayout = (data, index) => {
+    return { length: stocks.length, offset: 56 * index, index };
+  };
 
-  const keyExtractor = item => item.id.toString();
+  const scrollToOffset = React.useCallback(() => {
+    if (toIndex > 0 && flatListRef) {
+      console.log('scrollToOffset inside', toIndex);
+      let offset = 56 * toIndex;
+      flatListRef.scrollToOffset({ animated: true, offset: offset });
+    }
+  }, [flatListRef, toIndex]);
 
-  const _onSearchStockItem = text => {
+  const renderItem = ({ item, index }) => {
+    return (
+      <List.Item
+        title={item.stock_name}
+        titleNumberOfLines={3}
+        onPress={() => {
+          setToIndex(index);
+          navigation.navigate('FormScreen', {
+            itemId: item.id,
+            clId,
+            shopId,
+            clType,
+            stockName: item.stock_name,
+          });
+        }}
+        right={(props) =>
+          !isEmpty(item.data) ? (
+            <List.Icon {...props} icon="check-circle" color="green" />
+          ) : (
+            <List.Icon {...props} icon="square-edit-outline" />
+          )
+        }
+      />
+    );
+  };
+
+  const keyExtractor = (item) => item.id.toString();
+
+  const _onSearchStockItem = (text) => {
     setSearchText(text);
   };
 
@@ -106,22 +147,27 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     dispatch(actions.fetchCheckList({ shopId }));
   };
 
-  React.useEffect(() => {
-    if(toIndex > 0) {
-      scrollToOffset();
-    }
-  }, [stocks]);
+  const showDialog = () => setVisibleFilter(true);
 
-  const getItemLayout = (data, index) => {
-    return { length: stocks.length, offset: (56 * index), index };
-  }
+  const hideDialog = () => {
+    setVisibleFilter(false);
+  };
 
-  const scrollToOffset = () => {
-    if(toIndex > 0 && flatListRef) {
-      let offset = 56 * toIndex;
-      flatListRef.scrollToOffset({animated: true, offset: offset});
-    }
-  }
+  const submitFilter = () => {
+    setSelectedOption(selectedOption);
+    setFilterValue(selectedOption);
+    setVisibleFilter(false);
+  };
+
+  const clearFilter = () => {
+    setSelectedOption('');
+    setFilterValue('');
+    setVisibleFilter(false);
+  };
+
+  const changeOption = (value) => {
+    setSelectedOption(value);
+  };
 
   return (
     <>
@@ -130,20 +176,14 @@ const CheckListItemsScreen = ({ navigation, route }) => {
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
         {/* With clType is OOS then alway allow send report */}
         {isOOS ? (
+          <Appbar.Action icon={'upload'} onPress={onDoneAll} />
+        ) : (
           <Appbar.Action
             icon={'upload'}
             onPress={onDoneAll}
-          />
-          ) : (
-          <Appbar.Action
-            icon={'upload'}
-            disabled={
-              stocksHasDataNull ? stocksHasDataNull.length : isLoading || true
-            }
-            onPress={onDoneAll}
+            disabled={stocksHasDataNull ? true : false}
           />
         )}
-
       </Appbar.Header>
       {isLoading ? (
         <LoadingIndicator />
@@ -164,11 +204,19 @@ const CheckListItemsScreen = ({ navigation, route }) => {
               autoCompleteType="off"
               spellCheck={false}
             />
+            <IconButton
+              icon="filter"
+              color="gray"
+              size={20}
+              onPress={showDialog}
+            />
           </View>
           <View style={[styles.container]}>
             <FlatList
               data={stocks}
-              ref={(ref) => {flatListRef = ref; }}
+              ref={(ref) => {
+                flatListRef = ref;
+              }}
               renderItem={renderItem}
               getItemLayout={getItemLayout}
               ItemSeparatorComponent={Divider}
@@ -180,6 +228,30 @@ const CheckListItemsScreen = ({ navigation, route }) => {
               initialNumToRender={toIndex || 15}
             />
           </View>
+          <Portal>
+            <Dialog visible={visibleFilter} onDismiss={hideDialog}>
+              <Dialog.Title>Filter by</Dialog.Title>
+              <Dialog.ScrollArea style={{ height: '40%' }}>
+                <ScrollView>
+                  <RadioButton.Group
+                    onValueChange={(value) => changeOption(value)}
+                    value={selectedOption}>
+                    {categories &&
+                      categories.length > 0 &&
+                      categories.map((item) => (
+                        <RadioButton.Item label={item} value={item} />
+                      ))}
+                  </RadioButton.Group>
+                </ScrollView>
+              </Dialog.ScrollArea>
+              <Dialog.Actions>
+                <Button color="red" onPress={clearFilter}>
+                  Clear
+                </Button>
+                <Button onPress={submitFilter}>Done</Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </>
       )}
     </>

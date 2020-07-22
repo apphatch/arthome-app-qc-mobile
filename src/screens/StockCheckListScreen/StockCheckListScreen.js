@@ -24,6 +24,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const safeArea = useSafeArea();
   const { colors } = useTheme();
+
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const checkList = useSelector(selectors.makeSelectCheckList());
   const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
@@ -106,9 +107,9 @@ const StockCheckListScreen = ({ navigation, route }) => {
     />
   );
 
-  const keyExtractor = item => item.id.toString();
+  const keyExtractor = (item) => item.id.toString();
 
-  const _onSearchStockItem = text => {
+  const _onSearchStockItem = (text) => {
     setSearchText(text);
   };
 

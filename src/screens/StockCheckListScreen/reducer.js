@@ -68,6 +68,7 @@ function fetchStocks(state, action) {
 function stocksResponse(state, action) {
   state.isLoading = false;
   state.stocks = action.payload.stocks;
+  state.categories = action.payload.categories;
 }
 
 function fetchStocksFailed(state, action) {

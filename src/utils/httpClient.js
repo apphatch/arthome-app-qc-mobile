@@ -18,10 +18,10 @@ internals.get = (url, params, options) => {
   };
   config = Object.assign(config, options);
   return instance(config)
-    .then(response => {
+    .then((response) => {
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log('internals.get -> error', error);
       throw new Error(error);
     });
@@ -35,10 +35,10 @@ internals.post = (url, payload, options) => {
   };
   config = Object.assign(config, options);
   return instance(config)
-    .then(response => {
+    .then((response) => {
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log('internals.post -> error', error);
       throw new Error(error);
     });
@@ -52,10 +52,10 @@ internals.put = (url, payload, options) => {
   };
   config = Object.assign(config, options);
   return instance(config)
-    .then(response => {
+    .then((response) => {
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log('internals.put -> error', error);
       throw new Error(error);
     });
@@ -64,21 +64,22 @@ internals.put = (url, payload, options) => {
 export default internals;
 // export { instance };
 
-const setupInterceptors = store => {
+const setupInterceptors = (store) => {
   console.log('store', store);
   instance.interceptors.request.use(
-    config => {
+    (config) => {
       return config;
     },
-    error => {
+    (error) => {
       return Promise.reject(error);
     },
   );
   instance.interceptors.response.use(
-    response => {
+    (response) => {
       return response;
     },
-    error => {
+    (error) => {
+      console.log(error);
       const { status } = error.response;
       console.log('status', status);
       if (status === UNAUTHORIZED) {

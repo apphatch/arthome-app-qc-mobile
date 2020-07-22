@@ -51,18 +51,15 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
     );
     const token = yield select(loginSelectors.makeSelectToken());
     const currentCl = yield select(selectors.makeSelectCheckListById(clId));
-
     const { template } = currentCl;
     let data = [];
     const formData = new FormData();
 
-    console.log('currentCl.checklist_type', currentCl.checklist_type);
     if (currentCl.checklist_type.toUpperCase() === 'OOS') {
-      data = stocksHasDataNull.map(item => {
+      data = stocksHasDataNull.map((item) => {
         return {
           id: item.id,
-          data: mapValues(template, o => {
-            console.log('o.type', o.type);
+          data: mapValues(template, (o) => {
             if (o.type === 'select') {
               return o.values[0];
             }
@@ -71,10 +68,10 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
         };
       });
     } else {
-      data = stocksHasDataNull.map(item => {
+      data = stocksHasDataNull.map((item) => {
         return {
           id: item.id,
-          data: mapValues(template, o => {
+          data: mapValues(template, (o) => {
             if (o.type === 'input') {
               return '';
             }
@@ -96,7 +93,23 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
 export function* fetchStocks({ payload }) {
   try {
     const res = yield call(API.fetchStockByCheckList, { ...payload });
-    yield put(actions.stocksResponse({ stocks: res.data }));
+    var categories = [];
+
+    res.data.forEach(function (item) {
+      var existing = categories.filter(function (v, i) {
+        return v === item.category;
+      });
+      if (existing.length <= 0) {
+        categories.push(item.category);
+      }
+    });
+    var newData;
+    if (payload.filter !== '') {
+      newData = res.data.filter((item) => item.category === payload.filter);
+    } else {
+      newData = res.data;
+    }
+    yield put(actions.stocksResponse({ stocks: newData, categories }));
   } catch (error) {
     yield put(actions.fetchStocksFailed(error.message));
   }

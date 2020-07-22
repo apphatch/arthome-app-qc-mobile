@@ -36,7 +36,7 @@ const CheckOutScreen = ({ navigation, route }) => {
     setValue,
     handleSubmit,
     errors,
-    triggerValidation,
+    trigger,
     formState,
   } = useForm({ mode: 'onChange' });
 
@@ -47,7 +47,7 @@ const CheckOutScreen = ({ navigation, route }) => {
   }, [isCheckIn, navigation]);
 
   const onSubmitCheckList = React.useCallback(
-    values => {
+    (values) => {
       dispatch(actions.requestCheckOut({ ...values, shopId }));
     },
     [dispatch, shopId],
@@ -65,7 +65,7 @@ const CheckOutScreen = ({ navigation, route }) => {
         <TextInput
           label="Ghi chú"
           ref={register({ name: 'note' })}
-          onChangeText={text => setValue('note', text, true)}
+          onChangeText={(text) => setValue('note', text, true)}
           disabled={isLoading}
         />
 
@@ -73,7 +73,7 @@ const CheckOutScreen = ({ navigation, route }) => {
           setValue={setValue}
           isSubmitting={isLoading}
           register={register}
-          triggerValidation={triggerValidation}
+          triggerValidation={trigger}
           shop={currentShopChecked}
         />
         {errors.photo ? <Paragraph>Cần chụp hình</Paragraph> : null}

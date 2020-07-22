@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import TextInput from '../TextInput';
 
-const NumberInput = props => {
+const NumberInput = (props) => {
   const {
     name,
     register,
@@ -13,24 +13,24 @@ const NumberInput = props => {
     label,
     rules,
     error,
-    clearError,
+    clearErrors,
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
     setValue(name, localValue);
-  }, [name, register, rules]);
+  }, [name, register, rules, localValue, setValue]);
 
   const handleInputChange = React.useCallback(
-    val => {
+    (val) => {
       if (val.match(/^\d{0,}(\.\d{0,2})?$/)) {
         setValue(name, val, true);
         setLocalValue(val);
-        clearError(name);
+        clearErrors(name);
       }
     },
-    [name, setValue, clearError],
+    [name, setValue, clearErrors],
   );
 
   return (

@@ -19,15 +19,21 @@ import * as API from './services';
 export function* fetchShops({ payload: { userId, search } }) {
   try {
     let shops = [];
-    const { data } = yield call(API.searchShops, { search });
+    const { data } = yield call(API.fetchShops, { userId });
     shops = data;
-    // if (search) {
-    //   const { data } = yield call(API.searchShops, { search });
-    //   shops = data;
-    // } else {
-    //   const { data } = yield call(API.fetchShops, { userId });
-    //   shops = data;
-    // }
+
+    console.log(search);
+    // let shops = [];
+    // const { data } = yield call(API.searchShops, { search });
+    // shops = data;
+    // console.log(userId);
+    if (search !== '') {
+      const { data } = yield call(API.searchShops, { search });
+      shops = data;
+    } else {
+      const { data } = yield call(API.fetchShops, { userId });
+      shops = data;
+    }
     yield put(actions.fetchShopsSuccess({ shops }));
   } catch (error) {
     yield put(actions.fetchShopsFailed(error.message));

@@ -22,7 +22,7 @@ const options = {
   },
 };
 
-const TakePhoto = props => {
+const TakePhoto = (props) => {
   const { setValue, isSubmitting, register, triggerValidation, shop } = props;
 
   const [photo, setPhoto] = React.useState(null);
@@ -34,7 +34,7 @@ const TakePhoto = props => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.launchCamera(options, response => {
+    ImagePicker.launchCamera(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
         setIsLoading(false);
@@ -47,7 +47,6 @@ const TakePhoto = props => {
         const now = moment()
           .tz('Asia/Ho_Chi_Minh')
           .format('HH:mm:ss DD-MM-YYYY');
-        const { name: shopName } = shop;
         const { uri, error, originalRotation } = response;
         let rotation = 0;
         if (uri && !error) {
@@ -59,7 +58,7 @@ const TakePhoto = props => {
         }
 
         ImageResizer.createResizedImage(uri, 640, 480, 'JPEG', 100, rotation)
-          .then(res => {
+          .then((res) => {
             Marker.markText({
               src: res.uri,
               color: '#FF0000',
@@ -68,11 +67,10 @@ const TakePhoto = props => {
               Y: 30,
               scale: 1,
               quality: 100,
-              text: `${shopName}
-              ${now}`,
+              text: `${now}`,
               position: Position.topLeft,
             })
-              .then(path => {
+              .then((path) => {
                 const source = {
                   uri: Platform.OS === 'android' ? 'file://' + path : path,
                 };
@@ -82,18 +80,18 @@ const TakePhoto = props => {
                 setValue('photo', source.uri);
                 triggerValidation('photo');
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err, 'err');
                 setIsLoading(false);
               });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err, 'err');
             setIsLoading(false);
           });
       }
     });
-  }, [setValue, shop, triggerValidation]);
+  }, [setValue, triggerValidation]);
 
   const onRemovePhoto = React.useCallback(() => {
     setPhoto(null);

@@ -1,17 +1,17 @@
 import { createAction } from '../../utils';
 import * as actionTypes from './actionTypes';
 
-export const requestCheckIn = data =>
+export const requestCheckIn = (data) =>
   createAction(actionTypes.CHECK_IN_REQUEST, { ...data });
-export const onCheckInResponse = response =>
+export const onCheckInResponse = (response) =>
   createAction(actionTypes.CHECK_IN_RESPONSE, { ...response });
 
 export const checkInFailed = () =>
   createAction(actionTypes.CHECK_IN_FAILED, {});
 
-export const requestCheckOut = data =>
+export const requestCheckOut = (data) =>
   createAction(actionTypes.CHECK_OUT_REQUEST, { ...data });
-export const onCheckOutResponse = response =>
+export const onCheckOutResponse = (response) =>
   createAction(actionTypes.CHECK_OUT_RESPONSE, { ...response });
 
 export const checkOutFailed = () =>

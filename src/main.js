@@ -1,15 +1,15 @@
 import React from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { I18nManager } from 'react-native';
-import { useColorScheme } from 'react-native-appearance';
+import {Provider as PaperProvider} from 'react-native-paper';
+import {I18nManager} from 'react-native';
+import {useColorScheme} from 'react-native-appearance';
 
-import { PreferencesContext } from './context/preferencesContext';
+import {PreferencesContext} from './context/preferencesContext';
 import {
   defaultTheme,
   // darkTheme
 } from './theme';
 
-import { RootNavigator } from './rootNavigator';
+import {RootNavigator} from './rootNavigator';
 
 export const Main = () => {
   const colorScheme = useColorScheme();

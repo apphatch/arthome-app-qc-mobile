@@ -1,6 +1,12 @@
 import React, { memo } from 'react';
 import { Appbar, FAB, Snackbar, Title } from 'react-native-paper';
-import { StyleSheet, View, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
@@ -27,15 +33,22 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
-  
+
   // const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
   const item = useSelector(selectors.makeSelectStockById(itemId));
 
   const [showSnack, setShowSnack] = React.useState(false);
 
-  const { handleSubmit, register, setValue, errors, clearError, getValues } = useForm({});
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    errors,
+    clearErrors,
+    getValues,
+  } = useForm({});
 
-  console.log("data item", item);
+  console.log('data item', item);
 
   React.useEffect(() => {
     if (!isLoading) {
@@ -54,7 +67,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
   }, [dispatch]);
 
   const onSubmitCheckList = React.useCallback(
-    values => {
+    (values) => {
       dispatch(actions.submit({ itemId, data: values, shopId }));
     },
     [dispatch, itemId, shopId],
@@ -71,7 +84,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           <View style={styles.form}>
             <Title style={styles.caption}>{stockName}</Title>
-            {Object.keys(template).map(fieldName => {
+            {Object.keys(template).map((fieldName) => {
               const type = template[fieldName].type;
               if (type === 'input') {
                 if (isSOS) {
@@ -86,7 +99,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       disabled={isLoading}
                       rules={{ required: true }}
                       error={errors[fieldName]}
-                      clearError={clearError}
+                      clearErrors={clearErrors}
                     />
                   );
                 } else {
@@ -99,7 +112,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       setValue={setValue}
                       value={item.data ? item.data[fieldName] : ''}
                       disabled={isLoading}
-                      clearError={clearError}
+                      clearErrors={clearErrors}
                     />
                   );
                 }
@@ -115,8 +128,8 @@ const StockCheckListScreen = ({ navigation, route }) => {
                     rules={{ required: true }}
                     error={errors[fieldName]}
                     value={item.data ? item.data[fieldName] : false}
-                    disabled={sLoading}
-                    clearError={clearError}
+                    disabled={isLoading}
+                    clearErrors={clearErrors}
                   />
                 );
               }
@@ -124,8 +137,15 @@ const StockCheckListScreen = ({ navigation, route }) => {
                 return (
                   <CustomSelect
                     key={fieldName}
-                    options={template[fieldName].values.map(val => {
-                      return { value: val, label: val, color: (item.data != null && item.data[fieldName] == val) ? 'purple' : 'black'};
+                    options={template[fieldName].values.map((val) => {
+                      return {
+                        value: val,
+                        label: val,
+                        color:
+                          item.data != null && item.data[fieldName] === val
+                            ? 'purple'
+                            : 'black',
+                      };
                     })}
                     register={register}
                     setValue={setValue}
@@ -133,9 +153,9 @@ const StockCheckListScreen = ({ navigation, route }) => {
                     label={fieldName}
                     rules={{ required: true }}
                     error={errors[fieldName]}
-                    value={item.data ? item.data[fieldName] : undefined}
+                    value={item.data ? item.data[fieldName] : null}
                     disabled={isLoading}
-                    clearError={clearError}
+                    clearErrors={clearErrors}
                   />
                 );
               }
@@ -152,7 +172,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
           }
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
-      
 
       <Snackbar
         visible={showSnack}

@@ -3,7 +3,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { StyleSheet, View } from 'react-native';
 import { Caption, Text } from 'react-native-paper';
 
-const CustomSelect = props => {
+const CustomSelect = (props) => {
   const {
     options,
     register,
@@ -14,15 +14,15 @@ const CustomSelect = props => {
     error,
     value,
     disabled = false,
-    clearError,
+    clearErrors,
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
   const [localOptions, setLocalOptions] = React.useState(options);
 
   const updateStyleSelected = (val) => {
-    localOptions.forEach(ele => {
-      if(ele.value == val) {
+    localOptions.forEach((ele) => {
+      if (ele.value === val) {
         ele.color = 'purple';
       } else {
         ele.color = 'black';
@@ -35,17 +35,25 @@ const CustomSelect = props => {
   React.useEffect(() => {
     register({ name }, rules);
     setValue(name, localValue);
-  }, [name, register, rules]);
+  }, [name, register, rules, localValue, setValue]);
 
   return (
     <>
       <View style={[styles.container]}>
         <Caption>{label}</Caption>
         <RNPickerSelect
-          onValueChange={val => {
+          style={{
+            inputAndroid: {
+              color: 'black',
+            },
+            inputIOS: {
+              color: 'black',
+            },
+          }}
+          onValueChange={(val) => {
             setValue(name, val, true);
             setLocalValue(val);
-            clearError(name);
+            clearErrors(name);
             updateStyleSelected(val);
           }}
           items={localOptions}

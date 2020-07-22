@@ -1,7 +1,7 @@
 import React from 'react';
 import TextInput from '../TextInput';
 
-const FormTextInput = props => {
+const FormTextInput = (props) => {
   const {
     name,
     register,
@@ -9,23 +9,23 @@ const FormTextInput = props => {
     value,
     disabled,
     label,
-    clearError,
+    clearErrors,
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
     setValue(name, localValue);
-  }, [name, register]);
+  }, [name, register, localValue, setValue]);
 
   return (
     <TextInput
       label={label}
       ref={register({ name: name })}
-      onChangeText={text => {
+      onChangeText={(text) => {
         setValue(name, text, true);
         setLocalValue(text);
-        clearError(name);
+        clearErrors(name);
       }}
       value={localValue}
       disabled={disabled}

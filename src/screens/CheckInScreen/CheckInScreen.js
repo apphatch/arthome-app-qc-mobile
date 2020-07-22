@@ -34,7 +34,7 @@ const CheckInScreen = ({ navigation, route }) => {
     handleSubmit,
     errors,
     formState,
-    triggerValidation,
+    trigger,
   } = useForm({
     mode: 'onChange',
   });
@@ -51,7 +51,7 @@ const CheckInScreen = ({ navigation, route }) => {
   }, [isCheckIn, navigation, shopId, shopName]);
 
   const onSubmitCheckList = React.useCallback(
-    values => {
+    (values) => {
       dispatch(actions.requestCheckIn({ ...values, shopId, setError }));
     },
     [dispatch, shopId],
@@ -66,18 +66,18 @@ const CheckInScreen = ({ navigation, route }) => {
 
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Caption style={styles.caption}>Thông tin</Caption>
-        {/* <TextInput
+        {/*<TextInput
           label="Ghi chú"
           ref={register({ name: 'note' })}
           onChangeText={text => setValue('note', text, true)}
           disabled={isLoading}
-        /> */}
+        />*/}
 
         <TakePhoto
           setValue={setValue}
           isSubmitting={isLoading}
           register={register}
-          triggerValidation={triggerValidation}
+          triggerValidation={trigger}
           shop={currentShopChecked}
         />
         {errors.photo ? <Paragraph>Cần chụp hình</Paragraph> : null}

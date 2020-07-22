@@ -12,7 +12,6 @@ import {
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-// import Reactotron from 'reactotron-react-native';
 import _ from 'lodash';
 
 // ###
@@ -31,7 +30,7 @@ const ShopScreen = ({ navigation, route }) => {
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const shops = useSelector(selectors.makeSelectShops());
-  // const userId = useSelector(loginSelectors.makeSelectUserId());
+  const userId = useSelector(loginSelectors.makeSelectUserId());
   const isLoggedIn = useSelector(loginSelectors.makeSelectIsLoggedIn());
   const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
   const checkInData = useSelector(checkInSelectors.makeSelectCheckInData());
@@ -45,27 +44,26 @@ const ShopScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (isLoggedIn) {
       if (!isCheckIn) {
-        dispatch(actions.fetchShops({ search: debounceSearchTerm }));
+        dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
+      } else {
+        navigation.navigate('StockCheckListScreen', {
+          screen: 'StockCheckListScreen',
+          params: { shopId: checkInData.shop_id, shopName: checkInData.name },
+        });
       }
     } else {
       navigation.navigate('LoginScreen');
     }
   }, [
+    userId,
     dispatch,
     isLoggedIn,
     navigation,
     debounceSearchTerm,
     isCheckIn,
-    checkInData.shop_id,
     checkInData.name,
+    checkInData.shop_id,
   ]);
-
-  if (isCheckIn) {
-    navigation.navigate('StockCheckListScreen', {
-      screen: 'StockCheckListScreen',
-      params: { shopId: checkInData.shop_id, shopName: checkInData.name },
-    });
-  }
 
   const renderItem = ({ item }) => (
     <List.Item
@@ -100,7 +98,7 @@ const ShopScreen = ({ navigation, route }) => {
           }
         }
       }}
-      right={props =>
+      right={(props) =>
         item.id === checkInData?.shop_id && isCheckIn ? (
           <List.Icon {...props} icon="account-check" color="green" />
         ) : null
@@ -108,9 +106,9 @@ const ShopScreen = ({ navigation, route }) => {
     />
   );
 
-  const keyExtractor = item => item.id.toString();
+  const keyExtractor = (item) => item.id.toString();
 
-  const _onSearchStockItem = text => {
+  const _onSearchStockItem = (text) => {
     setSearchText(text);
   };
 
@@ -128,7 +126,6 @@ const ShopScreen = ({ navigation, route }) => {
     <>
       <Appbar.Header>
         <TouchableOpacity
-          // eslint-disable-next-line react-native/no-inline-styles
           style={{ marginLeft: 10 }}
           onPress={() => {
             navigation.openDrawer();
