@@ -1,4 +1,4 @@
-# OSA Checker
+# Arthome QC app
 
 For more info see [React Native](https://reactnative.dev/)
 
