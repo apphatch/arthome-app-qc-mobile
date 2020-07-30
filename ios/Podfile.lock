@@ -62,6 +62,10 @@ PODS:
     - DoubleConversion
     - Folly/Default (= 2020.01.13.00)
     - glog
+  - Folly/Default (2020.01.13.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
   - glog (0.3.5)
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
@@ -220,6 +224,11 @@ PODS:
     - Folly (= 2020.01.13.00)
     - glog
     - React-jsi/Default (= 0.63.1)
+  - React-jsi/Default (0.63.1):
+    - boost-for-react-native (= 1.63.0)
+    - DoubleConversion
+    - Folly (= 2020.01.13.00)
+    - glog
   - React-jsiexecutor (0.63.1):
     - DoubleConversion
     - Folly (= 2020.01.13.00)
@@ -229,13 +238,13 @@ PODS:
   - React-jsinspector (0.63.1)
   - react-native-appearance (0.3.4):
     - React
-  - react-native-camera (3.32.0):
+  - react-native-camera (3.35.0):
     - React
-    - react-native-camera/RCT (= 3.32.0)
-    - react-native-camera/RN (= 3.32.0)
-  - react-native-camera/RCT (3.32.0):
+    - react-native-camera/RCT (= 3.35.0)
+    - react-native-camera/RN (= 3.35.0)
+  - react-native-camera/RCT (3.35.0):
     - React
-  - react-native-camera/RN (3.32.0):
+  - react-native-camera/RN (3.35.0):
     - React
   - react-native-image-picker (2.3.3):
     - React
@@ -309,9 +318,9 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (5.6.2):
+  - RNDeviceInfo (5.6.3):
     - React
-  - RNGestureHandler (1.6.1):
+  - RNGestureHandler (1.7.0):
     - React
   - RNImageCropPicker (0.32.2):
     - React-Core
@@ -324,7 +333,7 @@ PODS:
     - TOCropViewController
   - RNImageMarker (0.6.1):
     - React
-  - RNReanimated (1.9.0):
+  - RNReanimated (1.10.1):
     - React
   - RNScreens (2.9.0):
     - React
@@ -527,7 +536,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7ab9cdcdd18d57652fb041f8a147fe9658d4e00a
   React-jsinspector: 2e28bb487e42dda6c94dbfa0c648d1343767a0fb
   react-native-appearance: fc2014516054585d531e07aa0b40ab0de1d2be85
-  react-native-camera: 4e47bcac13263ef3cde5bbb4daa3c72703d6e256
+  react-native-camera: 9dd96065b956306de03ef2a2efc3583019f95941
   react-native-image-picker: a6c3d644751a388b0fc8b56822ff7cbd398a3008
   react-native-image-resizer: 3a0a2ab15953b2aec5dda20338e3c6bd6c26e528
   react-native-safe-area-context: 4c3249e4840225c61fcd215b136af0a737bccb79
@@ -544,17 +553,17 @@ SPEC CHECKSUMS:
   ReactCommon: 2905859f84a94a381bb0d8dd3921ccb1a0047cb8
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDeviceInfo: e9b45b08fd1d733c3940879ed286c37d90bff7a0
-  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNDeviceInfo: c5fa705c8914c42800ff36e86d25d277e8eb16ff
+  RNGestureHandler: b6b359bb800ae399a9c8b27032bdbf7c18f08a08
   RNImageCropPicker: f0557a908758c4a3f83978894ec7227651529b45
   RNImageMarker: 3d2ad96afe3db0965ecff23ca97d65b812d06b47
-  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
+  RNReanimated: c2bb7438b57a3d987bb2e4e6e4bca94787e30b02
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   TOCropViewController: 20a14b6a7a098308bf369e7c8d700dc983a974e6
   Yoga: d5bd05a2b6b94c52323745c2c2b64557c8c66f64
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e7149814b52da2ca61afb7685fdb7ce2573417ee
+PODFILE CHECKSUM: e437cef84c14b989578fc10ac63e87727575c18b
 
 COCOAPODS: 1.9.3
