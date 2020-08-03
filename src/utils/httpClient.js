@@ -3,6 +3,7 @@ import { actions as loginActions } from '../screens/LoginScreen';
 
 const internals = {};
 const UNAUTHORIZED = 401;
+const EXPIRED = 500;
 
 // create an instance of axios
 const instance = axios.create({
@@ -28,7 +29,6 @@ internals.get = (url, params, options) => {
 };
 
 internals.post = (url, payload, options) => {
-  console.log(payload);
   let config = {
     method: 'POST',
     url: url,
@@ -82,7 +82,7 @@ const setupInterceptors = (store) => {
       console.log(error);
       const { status } = error.response;
       console.log('status', status);
-      if (status === UNAUTHORIZED) {
+      if (status === UNAUTHORIZED || status === EXPIRED) {
         store.dispatch(loginActions.logout());
       }
       return Promise.reject(error);

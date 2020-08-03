@@ -37,10 +37,6 @@ export function* fetchShops({ payload: { userId, search } }) {
       shops = data;
       newHeaders = headers;
     } else {
-      const token = yield select(loginSelectors.makeSelectToken());
-      const authorization = yield select(
-        loginSelectors.makeSelectAuthorization(),
-      );
       const { data, headers } = yield call(API.fetchShops, {
         userId,
         token,

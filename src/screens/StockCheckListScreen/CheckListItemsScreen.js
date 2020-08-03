@@ -6,15 +6,15 @@ import {
   Divider,
   Searchbar,
   IconButton,
-  Dialog,
-  Portal,
-  RadioButton,
-  Button,
 } from 'react-native-paper';
-import { StyleSheet, View, FlatList, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, FlatList, Alert, Vibration } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEmpty, zipObjectDeep } from 'lodash';
+import { isEmpty } from 'lodash';
+import {
+  useBarcodeRead,
+  BarcodeMaskWithOuterLayout,
+} from '@nartc/react-native-barcode-mask';
 
 import { LoadingIndicator } from '../../components/LoadingIndicator';
 
@@ -22,6 +22,7 @@ import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
 import { logger, useDebounce } from '../../utils';
 import * as actions from './actions';
+import { RNCamera } from 'react-native-camera';
 
 const CheckListItemsScreen = ({ navigation, route }) => {
   const safeArea = useSafeArea();
@@ -41,13 +42,13 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     selectors.makeSelectStocksHasDataNull(),
   );
 
-  const [visibleFilter, setVisibleFilter] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState('');
   const [filterValue, setFilterValue] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const debounceSearchTerm = useDebounce(searchText, 1000);
   const [toIndex, setToIndex] = React.useState(0);
+  const [isBarcodeRead, setIsBarcodeRead] = React.useState(false);
+  const [isShowScanBarCode, setIsShowScanBarCode] = React.useState(false);
 
   const searchRef = React.createRef();
   const isOOS = clType.toUpperCase() === 'OOS';
@@ -68,6 +69,30 @@ const CheckListItemsScreen = ({ navigation, route }) => {
       }),
     );
   }, [debounceSearchTerm, clId, dispatch, filterValue]);
+
+  const {
+    // barcodeRead,
+    onBarcodeRead,
+    onBarcodeFinderLayoutChange,
+  } = useBarcodeRead(
+    true,
+    (data) => data,
+    (processed) => {
+      scanProcessed(processed);
+    },
+  );
+
+  const scanProcessed = React.useCallback(
+    (barCode) => {
+      if (!isBarcodeRead) {
+        Vibration.vibrate();
+        setIsBarcodeRead(true);
+        setIsShowScanBarCode(false);
+        setSearchText(barCode);
+      }
+    },
+    [isBarcodeRead],
+  );
 
   const getItemLayout = (data, index) => {
     return { length: stocks.length, offset: 56 * index, index };
@@ -111,6 +136,11 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     setSearchText(text);
   };
 
+  const _onHandleScanBarCode = React.useCallback(() => {
+    setIsShowScanBarCode(true);
+    setIsBarcodeRead(false);
+  }, []);
+
   const _onFocus = () => {
     setIsFocusSearchInput(true);
   };
@@ -141,30 +171,13 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   }, [isSubmittedDoneAll, showAlert]);
 
   const _onPressGoBack = () => {
-    navigation.goBack();
-    dispatch(actions.fetchCheckList({ shopId }));
-  };
-
-  const showDialog = () => setVisibleFilter(true);
-
-  const hideDialog = () => {
-    setVisibleFilter(false);
-  };
-
-  const submitFilter = () => {
-    setSelectedOption(selectedOption);
-    setFilterValue(selectedOption);
-    setVisibleFilter(false);
-  };
-
-  const clearFilter = () => {
-    setSelectedOption('');
-    setFilterValue('');
-    setVisibleFilter(false);
-  };
-
-  const changeOption = (value) => {
-    setSelectedOption(value);
+    console.log(isShowScanBarCode);
+    if (isShowScanBarCode) {
+      setIsShowScanBarCode(false);
+    } else {
+      navigation.goBack();
+      dispatch(actions.fetchCheckList({ shopId }));
+    }
   };
 
   return (
@@ -187,69 +200,77 @@ const CheckListItemsScreen = ({ navigation, route }) => {
         <LoadingIndicator />
       ) : (
         <>
-          <View style={styles.row}>
-            <Searchbar
-              placeholder="Tìm kiếm..."
-              onChangeText={_onSearchStockItem}
-              value={searchText}
-              style={styles.searchbar}
-              icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
-              onFocus={_onFocus}
-              onBlur={_onBlur}
-              onIconPress={_onIconPress}
-              ref={searchRef}
-              autoCorrect={false}
-              autoCompleteType="off"
-              spellCheck={false}
-            />
-            <IconButton
-              icon="filter"
-              color="gray"
-              size={20}
-              onPress={showDialog}
-            />
-          </View>
           <View style={[styles.container]}>
-            <FlatList
-              data={stocks}
-              ref={(ref) => {
-                flatListRef = ref;
-              }}
-              renderItem={renderItem}
-              getItemLayout={getItemLayout}
-              ItemSeparatorComponent={Divider}
-              keyExtractor={keyExtractor}
-              contentContainerStyle={{
-                backgroundColor: colors.background,
-                paddingBottom: safeArea.bottom,
-              }}
-              initialNumToRender={toIndex || 15}
-            />
+            {isShowScanBarCode ? (
+              <View style={styles.camContainer}>
+                <RNCamera
+                  type={RNCamera.Constants.Type.back}
+                  flashMode={RNCamera.Constants.FlashMode.on}
+                  androidCameraPermissionOptions={{
+                    title: 'Permission to use camera',
+                    message: 'We need your permission to use your camera',
+                    buttonPositive: 'Ok',
+                    buttonNegative: 'Cancel',
+                  }}
+                  androidRecordAudioPermissionOptions={{
+                    title: 'Permission to use audio recording',
+                    message: 'We need your permission to use your audio',
+                    buttonPositive: 'Ok',
+                    buttonNegative: 'Cancel',
+                  }}
+                  style={styles.preview}
+                  captureAudio={false}
+                  onBarCodeRead={onBarcodeRead}>
+                  <BarcodeMaskWithOuterLayout
+                    maskOpacity={0.5}
+                    width={'90%'}
+                    height={'60%'}
+                    onLayoutChange={onBarcodeFinderLayoutChange}
+                    showAnimatedLine={false}
+                  />
+                </RNCamera>
+              </View>
+            ) : (
+              <>
+                <View style={styles.row}>
+                  <Searchbar
+                    placeholder="Tìm kiếm..."
+                    onChangeText={_onSearchStockItem}
+                    value={searchText}
+                    style={styles.searchbar}
+                    icon={isFocusSearchInput ? 'keyboard-backspace' : 'magnify'}
+                    onFocus={_onFocus}
+                    onBlur={_onBlur}
+                    onIconPress={_onIconPress}
+                    ref={searchRef}
+                    autoCorrect={false}
+                    autoCompleteType="off"
+                    spellCheck={false}
+                  />
+                  <IconButton
+                    icon="barcode-scan"
+                    onPress={_onHandleScanBarCode}
+                    size={28}
+                  />
+                </View>
+                <FlatList
+                  data={stocks}
+                  ref={(ref) => {
+                    flatListRef = ref;
+                  }}
+                  renderItem={renderItem}
+                  getItemLayout={getItemLayout}
+                  ItemSeparatorComponent={Divider}
+                  keyExtractor={keyExtractor}
+                  contentContainerStyle={{
+                    backgroundColor: colors.background,
+                    paddingBottom: safeArea.bottom,
+                  }}
+                  initialNumToRender={toIndex || 15}
+                />
+              </>
+            )}
           </View>
-          <Portal>
-            <Dialog visible={visibleFilter} onDismiss={hideDialog}>
-              <Dialog.Title>Filter by</Dialog.Title>
-              <Dialog.ScrollArea style={{ height: '40%' }}>
-                <ScrollView>
-                  <RadioButton.Group
-                    onValueChange={(value) => changeOption(value)}
-                    value={selectedOption}>
-                    {categories &&
-                      categories.length > 0 &&
-                      categories.map((item) => (
-                        <RadioButton.Item label={item} value={item} />
-                      ))}
-                  </RadioButton.Group>
-                </ScrollView>
-              </Dialog.ScrollArea>
-              <Dialog.Actions>
-                <Button color="red" onPress={clearFilter}>
-                  Clear
-                </Button>
-                <Button onPress={submitFilter}>Done</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
         </>
       )}
     </>
@@ -273,6 +294,16 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 0,
     backgroundColor: 'transparent',
+  },
+  camContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 });
 

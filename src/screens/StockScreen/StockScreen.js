@@ -66,14 +66,14 @@ const StockScreen = ({ navigation, route }) => {
   } = useBarcodeRead(
     true,
     // eslint-disable-next-line no-shadow
-    data => data,
-    processed => {
+    (data) => data,
+    (processed) => {
       scanProcessed(processed);
     },
   );
 
   const scanProcessed = React.useCallback(
-    barCode => {
+    (barCode) => {
       if (!isBarcodeRead) {
         Vibration.vibrate();
         setIsBarcodeRead(true);
@@ -98,9 +98,9 @@ const StockScreen = ({ navigation, route }) => {
     />
   );
 
-  const keyExtractor = item => item.id;
+  const keyExtractor = (item) => item.id;
 
-  const _onSearchStockItem = text => {
+  const _onSearchStockItem = (text) => {
     setSearchText(text);
   };
 
