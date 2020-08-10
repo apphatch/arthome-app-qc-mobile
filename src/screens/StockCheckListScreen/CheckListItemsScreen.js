@@ -171,7 +171,6 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   }, [isSubmittedDoneAll, showAlert]);
 
   const _onPressGoBack = () => {
-    console.log(isShowScanBarCode);
     if (isShowScanBarCode) {
       setIsShowScanBarCode(false);
     } else {
@@ -192,7 +191,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           <Appbar.Action
             icon={'upload'}
             onPress={onDoneAll}
-            disabled={stocksHasDataNull ? true : false}
+            // disabled={stocksHasDataNull ? true : false}
           />
         )}
       </Appbar.Header>

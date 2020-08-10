@@ -1,26 +1,29 @@
 import React, { memo } from 'react';
-import { Appbar, FAB, Snackbar, Title } from 'react-native-paper';
+import moment from 'moment';
+import { Appbar, FAB, Snackbar, Title, Paragraph } from 'react-native-paper';
 import {
   StyleSheet,
   View,
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
+import ImagePicker from '../..//components/ImagePicker';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { isEmpty } from 'lodash';
 
 // ###
-import CustomSwitch from '../../components/Switch';
 import CustomSelect from '../../components/Select';
-import FormTextInput from '../../components/FormTextInput';
 import NumberInput from '../../components/NumberInput';
+import CustomToggleButton from '../../components/ToggleButton';
+import DateTimePicker from '../../components/DateTimePicker';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
-import { logger } from '../../utils';
+import * as shopSelectors from '../ShopScreen/selectors';
 
 const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -33,6 +36,9 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
+  const currentShopChecked = useSelector(
+    shopSelectors.makeSelectShopById(shopId),
+  );
 
   // const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
   const item = useSelector(selectors.makeSelectStockById(itemId));
@@ -45,7 +51,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
     setValue,
     errors,
     clearErrors,
-    getValues,
+    trigger,
   } = useForm({});
 
   React.useEffect(() => {
@@ -71,21 +77,22 @@ const StockCheckListScreen = ({ navigation, route }) => {
     [dispatch, itemId, shopId],
   );
 
-  const isSOS = clType.toUpperCase() === 'SOS';
+  const isOOS = clType.toLowerCase() === 'oos';
+  const isSOS = clType.toLowerCase() === 'sos';
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Kiểm tra lỗi'} subtitle="" />
       </Appbar.Header>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <View style={styles.form}>
-            <Title style={styles.caption}>{stockName}</Title>
-            {Object.keys(template).map((fieldName) => {
-              const type = template[fieldName].type;
-              if (type === 'input') {
-                if (isSOS) {
+      <ScrollView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <View style={styles.form}>
+              <Title style={styles.caption}>{stockName}</Title>
+              {Object.keys(template).map((fieldName) => {
+                const type = template[fieldName].type;
+                if (type === 'input') {
                   return (
                     <NumberInput
                       key={fieldName}
@@ -100,77 +107,91 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       clearErrors={clearErrors}
                     />
                   );
-                } else {
+                }
+                if (type === 'select') {
                   return (
-                    <FormTextInput
+                    <CustomSelect
                       key={fieldName}
-                      name={fieldName}
-                      label={fieldName}
+                      options={template[fieldName].values.map((val) => {
+                        return {
+                          value: val,
+                          label: val,
+                          color:
+                            item.data != null && item.data[fieldName] === val
+                              ? 'purple'
+                              : 'black',
+                        };
+                      })}
                       register={register}
                       setValue={setValue}
+                      name={fieldName}
+                      label={fieldName}
+                      rules={{ required: true }}
+                      error={errors[fieldName]}
+                      value={item.data ? item.data[fieldName] : null}
+                      disabled={isLoading}
+                      clearErrors={clearErrors}
+                    />
+                  );
+                }
+                if (type === 'radio') {
+                  return (
+                    <CustomToggleButton
+                      options={template[fieldName].values}
+                      register={register}
+                      setValue={setValue}
+                      name={fieldName}
+                      label={fieldName}
+                      key={fieldName}
+                      rules={{ required: true }}
+                      error={errors[fieldName]}
                       value={item.data ? item.data[fieldName] : ''}
                       disabled={isLoading}
                       clearErrors={clearErrors}
                     />
                   );
                 }
-              }
-              if (type === 'checkbox') {
-                return (
-                  <CustomSwitch
-                    register={register}
-                    setValue={setValue}
-                    name={fieldName}
-                    label={fieldName}
-                    key={fieldName}
-                    rules={{ required: true }}
-                    error={errors[fieldName]}
-                    value={item.data ? item.data[fieldName] : false}
-                    disabled={isLoading}
-                    clearErrors={clearErrors}
-                  />
-                );
-              }
-              if (type === 'select') {
-                return (
-                  <CustomSelect
-                    key={fieldName}
-                    options={template[fieldName].values.map((val) => {
-                      return {
-                        value: val,
-                        label: val,
-                        color:
-                          item.data != null && item.data[fieldName] === val
-                            ? 'purple'
-                            : 'black',
-                      };
-                    })}
-                    register={register}
-                    setValue={setValue}
-                    name={fieldName}
-                    label={fieldName}
-                    rules={{ required: true }}
-                    error={errors[fieldName]}
-                    value={item.data ? item.data[fieldName] : null}
-                    disabled={isLoading}
-                    clearErrors={clearErrors}
-                  />
-                );
-              }
-            })}
-          </View>
-          {
-            <FAB
-              visible={true}
-              style={[styles.fab]}
-              icon="check-all"
-              label="Gửi"
-              onPress={handleSubmit(onSubmitCheckList)}
-            />
-          }
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-
+                if (type === 'date') {
+                  return (
+                    <DateTimePicker
+                      register={register}
+                      setValue={setValue}
+                      name={fieldName}
+                      label={fieldName}
+                      key={fieldName}
+                      rules={{ required: true }}
+                      error={errors[fieldName]}
+                      value={
+                        item.data
+                          ? item.data[fieldName]
+                          : moment(new Date()).format('DD/MM/YYYY')
+                      }
+                      disabled={isLoading}
+                      clearErrors={clearErrors}
+                    />
+                  );
+                }
+              })}
+              {!isOOS && !isSOS && (
+                <ImagePicker
+                  setValue={setValue}
+                  isSubmitting={isLoading}
+                  register={register}
+                  triggerValidation={trigger}
+                />
+              )}
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+      {
+        <FAB
+          visible={true}
+          style={[styles.fab]}
+          icon="content-save-all"
+          onPress={handleSubmit(onSubmitCheckList)}
+        />
+      }
       <Snackbar
         visible={showSnack}
         onDismiss={() => setShowSnack(false)}
@@ -196,6 +217,13 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingHorizontal: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    backgroundColor: defaultTheme.colors.background,
   },
 });
 

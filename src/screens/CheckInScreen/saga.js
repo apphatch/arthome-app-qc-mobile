@@ -17,37 +17,30 @@ import {
 export function* checkIn({ payload }) {
   try {
     const { note, photo, shopId } = payload;
-    // const formData = new FormData();
+    const formData = new FormData();
     const photoName = yield UUIDGenerator.getRandomUUID();
     const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
 
-    const formData = {
-      photo: {
+    formData.append(
+      'photo',
+      JSON.stringify({
         uri: photo,
         type: 'image/jpeg',
         name: photoName,
-      },
-      note: note,
-      time: moment().format('DD/MM/YYYY'),
-    };
-
-    // formData.append('photo', {
-    //   uri: photo,
-    //   type: 'image/jpeg',
-    //   name: photoName,
-    // });
-    // formData.append('note', note);
-    // formData.append('time', moment().format('DD/MM/YYYY'));
+      }),
+    );
+    formData.append('note', JSON.stringify(note));
+    formData.append('time', JSON.stringify(moment().format('DD/MM/YYYY')));
     const response = yield call(API.checkIn, {
       formData,
       token,
       authorization,
       shopId,
     });
-    console.log(response);
+
     yield put(
       actions.onCheckInResponse({
         checkInData: response.data.last_checkin_checkout,
@@ -68,24 +61,18 @@ export function* checkOut({ payload }) {
       loginSelectors.makeSelectAuthorization(),
     );
     const { note, photo, shopId } = payload;
-    // const formData = new FormData();
+    const formData = new FormData();
     const photoName = yield UUIDGenerator.getRandomUUID();
-    const formData = {
-      photo: {
+    formData.append(
+      'photo',
+      JSON.stringify({
         uri: photo,
         type: 'image/jpeg',
         name: photoName,
-      },
-      note: note,
-      time: moment().format('DD/MM/YYYY'),
-    };
-    // formData.append('photo', {
-    //   uri: photo,
-    //   type: 'image/jpeg',
-    //   name: photoName,
-    // });
-    // formData.append('note', note);
-    // formData.append('time', moment().format('DD/MM/YYYY'));
+      }),
+    );
+    formData.append('note', JSON.stringify(note));
+    formData.append('time', JSON.stringify(moment().format('DD/MM/YYYY')));
     const response = yield call(API.checkOut, {
       formData,
       token,
@@ -93,9 +80,7 @@ export function* checkOut({ payload }) {
       shopId,
     });
     yield put(actions.onCheckOutResponse(response));
-    yield put(
-      loginActions.updateAuthorization(response.headers['authorization']),
-    );
+    yield put(loginActions.updateAuthorization(response.headers.authorization));
   } catch (error) {
     console.log('function*checkOut -> error', error);
     yield put(actions.checkOutFailed(error.message));

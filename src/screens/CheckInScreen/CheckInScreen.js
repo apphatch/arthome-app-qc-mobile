@@ -80,7 +80,6 @@ const CheckInScreen = ({ navigation, route }) => {
           triggerValidation={trigger}
           shop={currentShopChecked}
         />
-        {errors.photo ? <Paragraph>Cần chụp hình</Paragraph> : null}
 
         <Button
           mode="contained"
