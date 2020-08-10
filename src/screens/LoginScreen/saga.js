@@ -1,10 +1,7 @@
-import { put, call, select, delay, all, takeLatest } from 'redux-saga/effects';
-import _ from 'lodash';
+import { put, call, delay, all, takeLatest } from 'redux-saga/effects';
 
 import * as actions from './actions';
-import * as selectors from './selectors';
 import * as actionTypes from './actionTypes';
-import { actions as checkInActions } from '../CheckInScreen';
 
 // ## API
 import * as API from './services';
@@ -14,21 +11,12 @@ export function* login({ payload }) {
   try {
     const response = yield call(API.login, { username, password });
     const {
-      data: { user_id, last_checkin_checkout = {} },
+      data: { user_id },
     } = response;
-    yield delay(2000);
     yield put(
       actions.onLoginResponse({
         token: response.headers['x-csrf-token'],
         user_id,
-      }),
-    );
-    yield put(
-      checkInActions.onCheckInResponse({
-        checkInData: last_checkin_checkout,
-        isCheckIn: _.isEmpty(last_checkin_checkout)
-          ? false
-          : last_checkin_checkout.is_checkin,
       }),
     );
     yield put(actions.updateAuthorization(response.headers.authorization));
@@ -42,7 +30,6 @@ export function* logout() {
   try {
     const response = yield call(API.logout);
     yield put(actions.onLogoutSuccess());
-    yield put(checkInActions.onCheckOutResponse(response));
   } catch (error) {
     console.log('TCL: function*logout -> error', error);
     yield put(actions.logoutFailed(''));

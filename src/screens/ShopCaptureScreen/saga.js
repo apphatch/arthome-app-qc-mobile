@@ -54,7 +54,7 @@ export function* checkOut({ payload }) {
         }),
       );
       yield put(
-        loginActions.updateAuthorization(response.headers['authorization']),
+        loginActions.updateAuthorization(response.headers.authorization),
       );
       navigation.dispatch(CommonActions.goBack());
     }

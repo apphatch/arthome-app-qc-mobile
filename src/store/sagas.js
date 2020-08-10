@@ -4,7 +4,6 @@ import { saga as loginSaga } from '../screens/LoginScreen';
 import { shopSaga } from '../screens/ShopScreen';
 import { stockSaga } from '../screens/StockScreen';
 import { stockCheckListSaga } from '../screens/StockCheckListScreen';
-import { checkInSaga } from '../screens/CheckInScreen';
 import { shopCaptureSaga } from '../screens/ShopCaptureScreen';
 
 const rootSaga = function* rootSaga() {
@@ -14,10 +13,9 @@ const rootSaga = function* rootSaga() {
       shopSaga(),
       stockSaga(),
       stockCheckListSaga(),
-      checkInSaga(),
       shopCaptureSaga(),
       // sagas
-    ].map(saga => fork(saga)),
+    ].map((saga) => fork(saga)),
   );
 };
 

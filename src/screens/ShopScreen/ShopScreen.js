@@ -12,7 +12,6 @@ import {
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
 
 // ###
 import { defaultTheme } from '../../theme';
@@ -20,7 +19,6 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 import { LoadingIndicator } from '../../components/LoadingIndicator';
 import { selectors as loginSelectors } from '../LoginScreen';
-import { selectors as checkInSelectors } from '../CheckInScreen';
 import { useDebounce } from '../../utils';
 
 const ShopScreen = ({ navigation, route }) => {
@@ -32,8 +30,6 @@ const ShopScreen = ({ navigation, route }) => {
   const shops = useSelector(selectors.makeSelectShops());
   const userId = useSelector(loginSelectors.makeSelectUserId());
   const isLoggedIn = useSelector(loginSelectors.makeSelectIsLoggedIn());
-  const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
-  const checkInData = useSelector(checkInSelectors.makeSelectCheckInData());
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
@@ -43,63 +39,24 @@ const ShopScreen = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      if (!isCheckIn) {
-        dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
-      } else {
-        navigation.navigate('StockCheckListScreen', {
-          screen: 'StockCheckListScreen',
-          params: { shopId: checkInData.shop_id, shopName: checkInData.name },
-        });
-      }
+      dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
     } else {
       navigation.navigate('LoginScreen');
     }
-  }, [
-    userId,
-    dispatch,
-    isLoggedIn,
-    navigation,
-    debounceSearchTerm,
-    isCheckIn,
-    checkInData.name,
-    checkInData.shop_id,
-  ]);
+  }, [userId, dispatch, isLoggedIn, navigation, debounceSearchTerm]);
 
   const renderItem = ({ item }) => (
     <List.Item
       title={item.name}
       description={item.full_address}
       onPress={() => {
-        if (item.id === checkInData?.shop_id) {
-          if (isCheckIn) {
-            navigation.navigate('StockCheckListScreen', {
-              screen: 'StockCheckListScreen',
-              params: { shopId: item.id, shopName: item.name },
-            });
-          } else {
-            navigation.navigate('CheckInScreen', {
-              shopId: item.id,
-              shopName: item.name,
-            });
-          }
-        } else {
-          if (!isCheckIn) {
-            navigation.navigate('CheckInScreen', {
-              shopId: item.id,
-              shopName: item.name,
-            });
-          } else {
-            if (_.isEmpty(checkInData)) {
-              navigation.navigate('CheckInScreen', {
-                shopId: item.id,
-                shopName: item.name,
-              });
-            }
-          }
-        }
+        navigation.navigate('StockCheckListScreen', {
+          screen: 'StockCheckListScreen',
+          params: { shopId: item.id, shopName: item.name },
+        });
       }}
       right={(props) =>
-        item.id === checkInData?.shop_id && isCheckIn ? (
+        item.completed ? (
           <List.Icon {...props} icon="account-check" color="green" />
         ) : null
       }

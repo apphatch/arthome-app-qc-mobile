@@ -21,7 +21,6 @@ import { data } from './data';
 export function* fetchStocks() {
   try {
     // const response = yield call(API.fetchShops);
-    yield delay(3000);
     yield put(actions.fetchStocksSuccess({ stocks: data }));
   } catch (error) {
     yield put(actions.fetchStocksFailed(error.message));

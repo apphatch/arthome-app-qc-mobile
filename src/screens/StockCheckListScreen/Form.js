@@ -29,7 +29,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId, shopId, clType, stockName },
+    params: { clId, itemId, shopId, clType, stockName, category },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
@@ -93,20 +93,22 @@ const StockCheckListScreen = ({ navigation, route }) => {
               {Object.keys(template).map((fieldName) => {
                 const type = template[fieldName].type;
                 if (type === 'input') {
-                  return (
-                    <NumberInput
-                      key={fieldName}
-                      name={fieldName}
-                      label={fieldName}
-                      register={register}
-                      setValue={setValue}
-                      value={item.data ? item.data[fieldName] : ''}
-                      disabled={isLoading}
-                      rules={{ required: true }}
-                      error={errors[fieldName]}
-                      clearErrors={clearErrors}
-                    />
-                  );
+                  if (category !== 'hpc') {
+                    return (
+                      <NumberInput
+                        key={fieldName}
+                        name={fieldName}
+                        label={fieldName}
+                        register={register}
+                        setValue={setValue}
+                        value={item.data ? item.data[fieldName] : ''}
+                        disabled={isLoading}
+                        rules={{ required: true }}
+                        error={errors[fieldName]}
+                        clearErrors={clearErrors}
+                      />
+                    );
+                  }
                 }
                 if (type === 'select') {
                   return (

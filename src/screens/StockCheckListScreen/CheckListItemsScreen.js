@@ -117,6 +117,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
             shopId,
             clType,
             stockName: item.stock_name,
+            category: item.category,
           });
         }}
         right={(props) =>

@@ -17,7 +17,6 @@ import { LoadingIndicator } from '../../components/LoadingIndicator';
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
-import { selectors as checkInSelectors } from '../CheckInScreen';
 import { useDebounce } from '../../utils';
 
 const StockCheckListScreen = ({ navigation, route }) => {
@@ -27,7 +26,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const checkList = useSelector(selectors.makeSelectCheckList());
-  const isCheckIn = useSelector(checkInSelectors.makeSelectIsCheckIn());
 
   const {
     params: { shopId, shopName },
@@ -49,41 +47,22 @@ const StockCheckListScreen = ({ navigation, route }) => {
       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, [onBackPress]);
 
+  React.useEffect(() => {
+    if (checkList.length === 1) {
+      checkList.forEach((item) => {
+        navigation.navigate('CheckListItemsScreen', {
+          clId: item.id,
+          shopId,
+          clType: item.checklist_type,
+          shopName,
+        });
+      });
+    }
+  }, [checkList, navigation, shopId, shopName]);
+
   const [openFAB, setOpenFAB] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
-  const [FABItems, setFABItems] = React.useState([]);
-
-  React.useEffect(() => {
-    if (checkList && checkList.length > 0) {
-      setFABItems([
-        {
-          icon: 'camera',
-          label: 'Chụp hình',
-          onPress: () => {
-            navigation.navigate('ShopCaptureScreen', { shopId, shopName });
-          },
-        },
-      ]);
-    } else {
-      setFABItems([
-        {
-          icon: 'camera',
-          label: 'Chụp hình',
-          onPress: () => {
-            navigation.navigate('ShopCaptureScreen', { shopId, shopName });
-          },
-        },
-        {
-          icon: 'account-off-outline',
-          label: 'Check out',
-          onPress: () => {
-            navigation.navigate('CheckOutScreen', { shopId, shopName });
-          },
-        },
-      ]);
-    }
-  }, [checkList, navigation, shopId, shopName]);
 
   const debouncedSearchTerm = useDebounce(searchText, 500);
   console.log(
@@ -126,18 +105,11 @@ const StockCheckListScreen = ({ navigation, route }) => {
   return (
     <>
       <Appbar.Header>
-        {isCheckIn ? null : (
-          <Appbar.BackAction
-            onPress={() => {
-              if (isCheckIn) {
-                navigation.navigate('ShopScreen');
-              } else {
-                navigation.goBack();
-              }
-            }}
-          />
-        )}
-
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
         <Appbar.Content title={'Check list'} subtitle="" />
       </Appbar.Header>
       <View style={styles.row}>
@@ -179,7 +151,15 @@ const StockCheckListScreen = ({ navigation, route }) => {
         onPress={() => {}}
         onStateChange={({ open }) => setOpenFAB(open)}
         open={openFAB}
-        actions={FABItems}
+        actions={[
+          {
+            icon: 'camera',
+            label: 'Chụp hình',
+            onPress: () => {
+              navigation.navigate('ShopCaptureScreen', { shopId, shopName });
+            },
+          },
+        ]}
         visible={true}
       />
     </>

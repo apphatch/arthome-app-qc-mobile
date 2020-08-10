@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 // ###
 import TextInput from '../../components/TextInput';
 import Button from '../../components/Button';
-import Paragraph from '../../components/Paragraph';
 import ImagePicker from '../../components/ImagePicker';
 
 import { defaultTheme } from '../../theme';
@@ -23,14 +22,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    errors,
-    // formState,
-    triggerValidation,
-  } = useForm({
+  const { register, setValue, handleSubmit, triggerValidation } = useForm({
     mode: 'onChange',
   });
 

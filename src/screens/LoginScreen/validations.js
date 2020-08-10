@@ -1,4 +1,4 @@
-export const emailValidator = username => {
+export const emailValidator = (username) => {
   // const re = /\S+@\S+\.\S+/;
 
   if (!username || username.length <= 0) {
@@ -11,7 +11,7 @@ export const emailValidator = username => {
   return '';
 };
 
-export const passwordValidator = password => {
+export const passwordValidator = (password) => {
   if (!password || password.length <= 0) {
     return 'Vui lòng nhập mật khẩu.';
   }

@@ -6,13 +6,7 @@ import { useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 // ### screens
-import {
-  LoginScreen,
-  ShopNavigator,
-  CheckInScreen,
-  CheckOutScreen,
-  ShopCaptureScreen,
-} from './screens';
+import { LoginScreen, ShopNavigator, ShopCaptureScreen } from './screens';
 
 import { StockStack } from './screens/StockCheckListScreen/Stack';
 import { selectors as loginSelectors } from './screens/LoginScreen';
@@ -34,16 +28,6 @@ export const RootNavigator = () => {
             <Stack.Screen
               name="ShopScreen"
               component={ShopNavigator}
-              options={{ gestureEnabled: false, animationEnabled: false }}
-            />
-            <Stack.Screen
-              name="CheckInScreen"
-              component={CheckInScreen}
-              options={{ gestureEnabled: false, animationEnabled: false }}
-            />
-            <Stack.Screen
-              name="CheckOutScreen"
-              component={CheckOutScreen}
               options={{ gestureEnabled: false, animationEnabled: false }}
             />
             <Stack.Screen
