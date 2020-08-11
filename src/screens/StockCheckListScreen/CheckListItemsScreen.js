@@ -65,10 +65,9 @@ const CheckListItemsScreen = ({ navigation, route }) => {
       actions.fetchStocks({
         search: debounceSearchTerm,
         checkListId: clId,
-        filter: filterValue,
       }),
     );
-  }, [debounceSearchTerm, clId, dispatch, filterValue]);
+  }, [debounceSearchTerm, clId, dispatch]);
 
   const {
     // barcodeRead,
@@ -192,7 +191,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           <Appbar.Action
             icon={'upload'}
             onPress={onDoneAll}
-            // disabled={stocksHasDataNull ? true : false}
+            disabled={stocksHasDataNull ? true : false}
           />
         )}
       </Appbar.Header>

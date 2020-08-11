@@ -129,23 +129,7 @@ export function* fetchStocks({ payload }) {
       token,
       authorization,
     });
-    var categories = [];
-
-    res.data.forEach(function (item) {
-      var existing = categories.filter(function (v, i) {
-        return v === item.category;
-      });
-      if (existing.length <= 0) {
-        categories.push(item.category);
-      }
-    });
-    var newData;
-    if (payload.filter !== '') {
-      newData = res.data.filter((item) => item.category === payload.filter);
-    } else {
-      newData = res.data;
-    }
-    yield put(actions.stocksResponse({ stocks: newData, categories }));
+    yield put(actions.stocksResponse({ stocks: res.data }));
     yield put(loginActions.updateAuthorization(res.headers.authorization));
   } catch (error) {
     yield put(actions.fetchStocksFailed(error.message));

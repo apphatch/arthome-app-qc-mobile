@@ -12,6 +12,7 @@ import {
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 // ###
 import { defaultTheme } from '../../theme';
@@ -37,13 +38,15 @@ const ShopScreen = ({ navigation, route }) => {
 
   const searchRef = React.createRef();
 
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
-    } else {
-      navigation.navigate('LoginScreen');
-    }
-  }, [userId, dispatch, isLoggedIn, navigation, debounceSearchTerm]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isLoggedIn) {
+        dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
+      } else {
+        navigation.navigate('LoginScreen');
+      }
+    }, [userId, dispatch, isLoggedIn, navigation, debounceSearchTerm]),
+  );
 
   const renderItem = ({ item }) => (
     <List.Item

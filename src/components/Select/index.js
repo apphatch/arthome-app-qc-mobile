@@ -15,6 +15,7 @@ const CustomSelect = (props) => {
     value,
     disabled = false,
     clearErrors,
+    placeholder = '',
   } = props;
 
   const [localValue, setLocalValue] = React.useState(value);
@@ -58,7 +59,7 @@ const CustomSelect = (props) => {
           }}
           items={localOptions}
           placeholder={{
-            label: 'Chọn 1 item',
+            label: placeholder === '' ? 'Chọn 1 item' : placeholder,
             value: null,
             color: '#9EA0A4',
           }}

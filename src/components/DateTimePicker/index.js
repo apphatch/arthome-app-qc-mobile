@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Caption, Text } from 'react-native-paper';
+import { Caption, Text, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -16,10 +16,13 @@ const DateTimePicker = (props) => {
     disabled = false,
     clearErrors,
   } = props;
-  const newValue = value.toString().split('/');
+  let newValue;
   let newDate;
-  if (newValue.length > 0) {
-    newDate = new Date(newValue[2], newValue[1] - 1, newValue[0]);
+  if (value) {
+    newValue = value.toString().split('/');
+    if (newValue.length > 0) {
+      newDate = new Date(newValue[2], newValue[1] - 1, newValue[0]);
+    }
   }
   const [date, setDate] = React.useState(newDate);
   const [visible, setVisible] = React.useState(false);
@@ -41,9 +44,14 @@ const DateTimePicker = (props) => {
     <>
       <View style={[styles.container]}>
         <Caption>{label}</Caption>
-        <Text style={{ padding: 10 }} onPress={() => setVisible(label)}>
-          {moment(date).format('DD/MM/YYYY')}
-        </Text>
+        <Button
+          mode="text"
+          color="black"
+          uppercase={false}
+          onPress={() => setVisible(label)}>
+          {date ? moment(date).format('DD/MM/YYYY') : 'Chọn ngày'}
+        </Button>
+
         <DateTimePickerModal
           isVisible={visible === label ? true : false}
           mode="date"

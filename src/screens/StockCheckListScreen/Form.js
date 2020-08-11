@@ -130,7 +130,11 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       label={fieldName}
                       rules={{ required: true }}
                       error={errors[fieldName]}
-                      value={item.data ? item.data[fieldName] : null}
+                      value={
+                        item.data
+                          ? item.data[fieldName]
+                          : template[fieldName].values[0]
+                      }
                       disabled={isLoading}
                       clearErrors={clearErrors}
                     />
@@ -163,11 +167,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       key={fieldName}
                       rules={{ required: true }}
                       error={errors[fieldName]}
-                      value={
-                        item.data
-                          ? item.data[fieldName]
-                          : moment(new Date()).format('DD/MM/YYYY')
-                      }
+                      value={item.data ? item.data[fieldName] : null}
                       disabled={isLoading}
                       clearErrors={clearErrors}
                     />
