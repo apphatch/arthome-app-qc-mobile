@@ -26,7 +26,10 @@ const CustomImagePicker = ({
   setValue,
   isSubmitting,
   register,
-  triggerValidation,
+  clearError,
+  rules,
+  name,
+  error,
 }) => {
   let actionSheet = React.useRef({});
   let [photos, setPhotos] = React.useState([]);
@@ -35,8 +38,9 @@ const CustomImagePicker = ({
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name: 'photos' }, { required: true });
-  }, [register]);
+    register({ name: name }, rules);
+    setValue(name, photos);
+  }, [register, rules, name, setValue, photos]);
 
   const onTakePhoto = () => {
     setIsLoading(true);
@@ -52,7 +56,7 @@ const CustomImagePicker = ({
           setIsLoading(false);
           setPhotos(photos);
           setValue('photos', photos);
-          triggerValidation('photos');
+          clearError('photos');
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -77,7 +81,7 @@ const CustomImagePicker = ({
           setIsLoading(false);
           setPhotos(photos);
           setValue('photos', photos);
-          triggerValidation('photos');
+          clearError('photos');
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -97,14 +101,14 @@ const CustomImagePicker = ({
           );
           setPhotos(newPhotos);
           setValue('photos', newPhotos);
-          triggerValidation('photos');
+          clearError('photos');
         })
         .catch((e) => {
           setIsDeleting(false);
           alert(e);
         });
     },
-    [photos, setPhotos, setValue, triggerValidation],
+    [photos, setPhotos, setValue, clearError],
   );
 
   const hideDialog = () => {
@@ -124,6 +128,7 @@ const CustomImagePicker = ({
       onChooseAlbum();
     }
   };
+
   return (
     <View style={styles.root}>
       <View style={styles.itemBox}>
@@ -133,7 +138,7 @@ const CustomImagePicker = ({
           onPress={showActionSheet}
           disabled={isLoading || isDeleting}
         />
-        {!photos.length ? (
+        {error ? (
           <Paragraph style={{ color: 'red', textAlign: 'center' }}>
             Cần chọn hình ảnh
           </Paragraph>

@@ -20,7 +20,7 @@ import { LoadingIndicator } from '../../components/LoadingIndicator';
 
 import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
-import { logger, useDebounce } from '../../utils';
+import { useDebounce } from '../../utils';
 import * as actions from './actions';
 import { RNCamera } from 'react-native-camera';
 
@@ -34,15 +34,11 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   } = route;
 
   const stocks = useSelector(selectors.makeSelectStocks());
-  const categories = useSelector(selectors.makeSelectCategoriesOfStocks());
-  logger('CheckListItemsScreen -> stocks', stocks);
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
   const stocksHasDataNull = useSelector(
     selectors.makeSelectStocksHasDataNull(),
   );
-
-  const [filterValue, setFilterValue] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const debounceSearchTerm = useDebounce(searchText, 1000);
@@ -110,7 +106,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
         titleNumberOfLines={3}
         onPress={() => {
           setToIndex(index);
-          navigation.navigate('FormScreen', {
+          navigation.navigate('CheckProblemScreen', {
             itemId: item.id,
             clId,
             shopId,
@@ -184,16 +180,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={_onPressGoBack} disabled={isLoading} />
         <Appbar.Content title={'Sản phẩm'} subtitle="" />
-        {/* With clType is OOS then alway allow send report */}
-        {isOOS ? (
-          <Appbar.Action icon={'upload'} onPress={onDoneAll} />
-        ) : (
-          <Appbar.Action
-            icon={'upload'}
-            onPress={onDoneAll}
-            disabled={stocksHasDataNull ? true : false}
-          />
-        )}
+        {/* <Appbar.Action icon={'upload'} onPress={onDoneAll} /> */}
       </Appbar.Header>
       {isLoading ? (
         <LoadingIndicator />

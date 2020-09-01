@@ -45,8 +45,8 @@ export function* fetchShops({ payload: { userId, search } }) {
       shops = data;
       newHeaders = headers;
     }
-    yield put(actions.fetchShopsSuccess({ shops }));
     yield put(loginActions.updateAuthorization(newHeaders.authorization));
+    yield put(actions.fetchShopsSuccess({ shops }));
   } catch (error) {
     yield put(actions.fetchShopsFailed(error.message));
   }

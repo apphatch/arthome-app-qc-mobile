@@ -33,8 +33,8 @@ export function* submitCheckList({ payload }) {
     });
     // const response = yield call(API.fetchCheckList, { shopId });
     // yield put(actions.checkListResponse({ checkList: response.data }));
+    yield put(loginActions.updateAuthorization(res.headers.authorization));
     yield put(actions.submitSuccess({ itemId, data }));
-    yield put(loginActions.updateAuthorization(res.headers['authorization']));
   } catch (error) {
     console.log('function*submitCheckList -> error', error);
     yield put(actions.submitFailed(error.message));
@@ -53,10 +53,8 @@ export function* fetchCheckList({ payload }) {
       token,
       authorization,
     });
+    yield put(loginActions.updateAuthorization(response.headers.authorization));
     yield put(actions.checkListResponse({ checkList: response.data }));
-    yield put(
-      loginActions.updateAuthorization(response.headers['authorization']),
-    );
   } catch (error) {
     console.log('function*fetchCheckList -> error', error);
     yield put(actions.fetchCheckListFailed(error.message));
@@ -110,8 +108,8 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
       authorization,
       clId,
     });
-    yield put(actions.markDoneAllSuccess());
     yield put(loginActions.updateAuthorization(res.headers.authorization));
+    yield put(actions.markDoneAllSuccess());
     yield put(actions.fetchStocks({ search: '', checkListId: clId }));
   } catch (error) {
     yield put(actions.markDoneAllFailed(error.message));
@@ -129,8 +127,8 @@ export function* fetchStocks({ payload }) {
       token,
       authorization,
     });
-    yield put(actions.stocksResponse({ stocks: res.data }));
     yield put(loginActions.updateAuthorization(res.headers.authorization));
+    yield put(actions.stocksResponse({ stocks: res.data }));
   } catch (error) {
     yield put(actions.fetchStocksFailed(error.message));
   }

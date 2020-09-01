@@ -24,7 +24,7 @@ const NumberInput = (props) => {
 
   const handleInputChange = React.useCallback(
     (val) => {
-      if (val.match(/^\d{0,}(\.\d{0,2})?$/)) {
+      if (val.match(/^-?\d{0,}(\.\d{0,2})?$/)) {
         setValue(name, val, true);
         setLocalValue(val);
         clearErrors(name);

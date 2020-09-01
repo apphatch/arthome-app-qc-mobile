@@ -3,11 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import StockCheckListScreen from './StockCheckListScreen';
 import CheckListItemsScreen from './CheckListItemsScreen';
+import CheckProblemScreen from './CheckProblemScreen';
 import FormScreen from './Form';
 
 const Stack = createStackNavigator();
 
-export const StockStack = props => {
+export const StockStack = (props) => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen
@@ -18,6 +19,11 @@ export const StockStack = props => {
       <Stack.Screen
         name="CheckListItemsScreen"
         component={CheckListItemsScreen}
+        options={{ gestureEnabled: false, animationEnabled: false }}
+      />
+      <Stack.Screen
+        name="CheckProblemScreen"
+        component={CheckProblemScreen}
         options={{ gestureEnabled: false, animationEnabled: false }}
       />
       <Stack.Screen

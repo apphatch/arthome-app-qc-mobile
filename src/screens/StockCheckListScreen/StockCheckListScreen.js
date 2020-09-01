@@ -47,19 +47,6 @@ const StockCheckListScreen = ({ navigation, route }) => {
       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, [onBackPress]);
 
-  React.useEffect(() => {
-    if (checkList.length === 1) {
-      checkList.forEach((item) => {
-        navigation.navigate('CheckListItemsScreen', {
-          clId: item.id,
-          shopId,
-          clType: item.checklist_type,
-          shopName,
-        });
-      });
-    }
-  }, [checkList, navigation, shopId, shopName]);
-
   const [openFAB, setOpenFAB] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);

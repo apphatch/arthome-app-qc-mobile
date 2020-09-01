@@ -43,6 +43,7 @@ export function* checkOut({ payload }) {
       authorization,
       shopId,
     });
+    yield put(loginActions.updateAuthorization(response.headers.authorization));
     logger('function*login -> error', response);
     if (response?.data?.status === 'failed') {
       setError('Gửi không thành công');
@@ -52,9 +53,6 @@ export function* checkOut({ payload }) {
         actions.onShopPictureResponse({
           data: response.data,
         }),
-      );
-      yield put(
-        loginActions.updateAuthorization(response.headers.authorization),
       );
       navigation.dispatch(CommonActions.goBack());
     }

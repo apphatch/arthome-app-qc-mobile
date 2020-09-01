@@ -23,25 +23,18 @@ import DateTimePicker from '../../components/DateTimePicker';
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
 import * as selectors from './selectors';
-import * as shopSelectors from '../ShopScreen/selectors';
 
-const StockCheckListScreen = ({ navigation, route }) => {
+const FormScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId, shopId, clType, stockName, category },
+    params: { clId, itemId, shopId, clType, stockName, category, record },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
   const template = useSelector(selectors.makeSelectTemplate(clId));
-  const currentShopChecked = useSelector(
-    shopSelectors.makeSelectShopById(shopId),
-  );
-
-  // const item = useSelector(selectors.makeSelectCheckListItemById(clId, itemId));
-  const item = useSelector(selectors.makeSelectStockById(itemId));
 
   const [showSnack, setShowSnack] = React.useState(false);
 
@@ -51,7 +44,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
     setValue,
     errors,
     clearErrors,
-    trigger,
+    getValues,
   } = useForm({});
 
   React.useEffect(() => {
@@ -79,6 +72,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const isOOS = clType.toLowerCase() === 'oos';
   const isSOS = clType.toLowerCase() === 'sos';
+  const warningLevel = Object.keys(template)[4];
   return (
     <>
       <Appbar.Header>
@@ -101,7 +95,9 @@ const StockCheckListScreen = ({ navigation, route }) => {
                         label={fieldName}
                         register={register}
                         setValue={setValue}
-                        value={item.data ? item.data[fieldName] : ''}
+                        value={
+                          record && record[fieldName] ? record[fieldName] : ''
+                        }
                         disabled={isLoading}
                         rules={{ required: true }}
                         error={errors[fieldName]}
@@ -119,7 +115,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
                           value: val,
                           label: val,
                           color:
-                            item.data != null && item.data[fieldName] === val
+                            record != null && record[fieldName] === val
                               ? 'purple'
                               : 'black',
                         };
@@ -131,8 +127,8 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       rules={{ required: true }}
                       error={errors[fieldName]}
                       value={
-                        item.data
-                          ? item.data[fieldName]
+                        record && record[fieldName]
+                          ? record[fieldName]
                           : template[fieldName].values[0]
                       }
                       disabled={isLoading}
@@ -151,7 +147,9 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       key={fieldName}
                       rules={{ required: true }}
                       error={errors[fieldName]}
-                      value={item.data ? item.data[fieldName] : ''}
+                      value={
+                        record && record[fieldName] ? record[fieldName] : ''
+                      }
                       disabled={isLoading}
                       clearErrors={clearErrors}
                     />
@@ -165,9 +163,10 @@ const StockCheckListScreen = ({ navigation, route }) => {
                       name={fieldName}
                       label={fieldName}
                       key={fieldName}
-                      rules={{ required: true }}
                       error={errors[fieldName]}
-                      value={item.data ? item.data[fieldName] : null}
+                      value={
+                        record && record[fieldName] ? record[fieldName] : null
+                      }
                       disabled={isLoading}
                       clearErrors={clearErrors}
                     />
@@ -176,24 +175,31 @@ const StockCheckListScreen = ({ navigation, route }) => {
               })}
               {!isOOS && !isSOS && (
                 <ImagePicker
-                  setValue={setValue}
-                  isSubmitting={isLoading}
                   register={register}
-                  triggerValidation={trigger}
+                  setValue={setValue}
+                  name="photos"
+                  isSubmitting={isLoading}
+                  error={errors.photos}
+                  rules={{
+                    required:
+                      getValues(warningLevel) &&
+                      getValues(warningLevel) === 'Xanh'
+                        ? false
+                        : true,
+                  }}
+                  clearErrors={clearErrors}
                 />
               )}
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </ScrollView>
-      {
-        <FAB
-          visible={true}
-          style={[styles.fab]}
-          icon="content-save-all"
-          onPress={handleSubmit(onSubmitCheckList)}
-        />
-      }
+      <FAB
+        visible={true}
+        style={[styles.fab]}
+        icon="content-save-all"
+        onPress={handleSubmit(onSubmitCheckList)}
+      />
       <Snackbar
         visible={showSnack}
         onDismiss={() => setShowSnack(false)}
@@ -229,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(StockCheckListScreen);
+export default memo(FormScreen);

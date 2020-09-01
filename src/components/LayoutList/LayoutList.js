@@ -1,13 +1,15 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Card, List, Text} from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
+import { Card, List, Text } from '@ui-kitten/components';
 
-export const LayoutList = props => {
-  const {contentContainerStyle, onItemPress, ...listProps} = props;
-  const renderItem = info => (
+export const LayoutList = (props) => {
+  const { contentContainerStyle, onItemPress, ...listProps } = props;
+  const renderItem = (info) => (
     <Card
       style={styles.itemContainer}
-      onPress={() => onItemPress({itemId: info.index, name: info.item.title})}>
+      onPress={() =>
+        onItemPress({ itemId: info.index, name: info.item.title })
+      }>
       <Text category="s1">{info.item.title}</Text>
       <Text style={styles.itemDescription} appearance="hint">
         {info.item.description}
