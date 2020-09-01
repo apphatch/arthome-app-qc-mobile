@@ -29,6 +29,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
       </Appbar.Header>
       <ScrollView>
         {item.data &&
+          item.data.records &&
           item.data.records.length > 0 &&
           item.data.records.map((data, i) => {
             return (
