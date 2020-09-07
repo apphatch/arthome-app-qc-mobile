@@ -8,6 +8,7 @@ import {
   useTheme,
   Searchbar,
   Caption,
+  Switch,
 } from 'react-native-paper';
 import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -34,6 +35,8 @@ const ShopScreen = ({ navigation, route }) => {
 
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
+  const [isFilter, setIsFilter] = React.useState(false);
+
   const debounceSearchTerm = useDebounce(searchText, 1000);
 
   const searchRef = React.createRef();
@@ -41,11 +44,24 @@ const ShopScreen = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       if (isLoggedIn) {
-        dispatch(actions.fetchShops({ userId, search: debounceSearchTerm }));
+        dispatch(
+          actions.fetchShops({
+            userId,
+            search: debounceSearchTerm,
+            filter: isFilter,
+          }),
+        );
       } else {
         navigation.navigate('LoginScreen');
       }
-    }, [userId, dispatch, isLoggedIn, navigation, debounceSearchTerm]),
+    }, [
+      userId,
+      dispatch,
+      isLoggedIn,
+      navigation,
+      debounceSearchTerm,
+      isFilter,
+    ]),
   );
 
   const renderItem = ({ item }) => (
@@ -82,16 +98,20 @@ const ShopScreen = ({ navigation, route }) => {
     searchRef.current && searchRef.current.blur();
   };
 
+  const onToggleFilter = () => {
+    setIsFilter(!isFilter);
+  };
+
   return (
     <>
       <Appbar.Header>
-        <TouchableOpacity
-          style={{ marginLeft: 10 }}
+        <Appbar.Action
+          icon="menu"
+          size={25}
           onPress={() => {
             navigation.openDrawer();
-          }}>
-          <Avatar.Icon size={40} icon="menu" />
-        </TouchableOpacity>
+          }}
+        />
         <Appbar.Content title="Danh sách cửa hàng" subtitle="" />
       </Appbar.Header>
 
@@ -110,6 +130,7 @@ const ShopScreen = ({ navigation, route }) => {
           autoCompleteType="off"
           spellCheck={false}
         />
+        <Switch value={isFilter} onValueChange={onToggleFilter} />
       </View>
 
       <View style={[styles.container]}>

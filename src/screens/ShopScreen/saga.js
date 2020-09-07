@@ -20,7 +20,7 @@ import * as API from './services';
 // dump
 // import { data } from './data';
 
-export function* fetchShops({ payload: { userId, search } }) {
+export function* fetchShops({ payload: { userId, search, filter } }) {
   try {
     let shops = [];
     let newHeaders = {};
@@ -44,6 +44,10 @@ export function* fetchShops({ payload: { userId, search } }) {
       });
       shops = data;
       newHeaders = headers;
+    }
+    console.log(filter);
+    if (filter) {
+      shops = shops.filter((shop) => shop.completed !== true);
     }
     yield put(loginActions.updateAuthorization(newHeaders.authorization));
     yield put(actions.fetchShopsSuccess({ shops }));

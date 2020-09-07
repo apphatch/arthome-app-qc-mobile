@@ -7,6 +7,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Platform,
 } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,7 +83,9 @@ const FormScreen = ({ navigation, route }) => {
       </Appbar.Header>
       <ScrollView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
             <View style={styles.form}>
               <Title style={styles.caption}>{stockName}</Title>
               {Object.keys(template).map((fieldName) => {
