@@ -26,7 +26,7 @@ const CustomImagePicker = ({
   setValue,
   isSubmitting,
   register,
-  clearError,
+  clearErrors,
   rules,
   name,
   error,
@@ -38,7 +38,7 @@ const CustomImagePicker = ({
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name: name }, rules);
+    register({ name }, rules);
     setValue(name, photos);
   }, [register, rules, name, setValue, photos]);
 
@@ -56,7 +56,7 @@ const CustomImagePicker = ({
           setIsLoading(false);
           setPhotos(photos);
           setValue('photos', photos);
-          clearError('photos');
+          clearErrors('photos');
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -81,7 +81,7 @@ const CustomImagePicker = ({
           setIsLoading(false);
           setPhotos(photos);
           setValue('photos', photos);
-          clearError('photos');
+          clearErrors('photos');
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -101,14 +101,14 @@ const CustomImagePicker = ({
           );
           setPhotos(newPhotos);
           setValue('photos', newPhotos);
-          clearError('photos');
+          clearErrors('photos');
         })
         .catch((e) => {
           setIsDeleting(false);
           alert(e);
         });
     },
-    [photos, setPhotos, setValue, clearError],
+    [photos, setPhotos, setValue, clearErrors],
   );
 
   const hideDialog = () => {

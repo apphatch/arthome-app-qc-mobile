@@ -47,7 +47,6 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   const [isShowScanBarCode, setIsShowScanBarCode] = React.useState(false);
 
   const searchRef = React.createRef();
-  const isOOS = clType.toUpperCase() === 'OOS';
   let flatListRef = React.createRef();
 
   React.useEffect(() => {
@@ -71,7 +70,10 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     onBarcodeFinderLayoutChange,
   } = useBarcodeRead(
     true,
-    (data) => data,
+    (data) => {
+      console.log(data);
+      return data;
+    },
     (processed) => {
       scanProcessed(processed);
     },
@@ -112,11 +114,13 @@ const CheckListItemsScreen = ({ navigation, route }) => {
             shopId,
             clType,
             stockName: item.stock_name,
-            category: item.category,
+            role: item.role,
           });
         }}
         right={(props) =>
-          !isEmpty(item.data) ? (
+          !isEmpty(item.data) &&
+          item.data.records &&
+          item.data.records.length > 0 ? (
             <List.Icon {...props} icon="check-circle" color="green" />
           ) : (
             <List.Icon {...props} icon="square-edit-outline" />
@@ -179,7 +183,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={_onPressGoBack} disabled={isLoading} />
-        <Appbar.Content title={'Sản phẩm'} subtitle="" />
+        <Appbar.Content title={'Sản phẩm'} />
         {/* <Appbar.Action icon={'upload'} onPress={onDoneAll} /> */}
       </Appbar.Header>
       {isLoading ? (

@@ -23,14 +23,22 @@ const options = {
 };
 
 const TakePhoto = (props) => {
-  const { setValue, isSubmitting, register, triggerValidation } = props;
+  const {
+    setValue,
+    isSubmitting,
+    register,
+    triggerValidation,
+    rules,
+    value,
+  } = props;
 
-  const [photo, setPhoto] = React.useState(null);
+  const [photo, setPhoto] = React.useState(value);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name: 'photo' }, { required: true });
-  }, [register]);
+    register({ name: 'photo' }, rules);
+    setValue('photo', photo);
+  }, [register, rules, setValue, photo]);
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
@@ -69,7 +77,10 @@ const TakePhoto = (props) => {
             })
               .then((path) => {
                 const source = {
-                  uri: Platform.OS === 'android' ? 'file://' + path : path,
+                  uri:
+                    Platform.OS === 'android'
+                      ? 'file://' + path
+                      : 'file:///' + path,
                 };
                 logger('source', source);
                 setIsLoading(false);

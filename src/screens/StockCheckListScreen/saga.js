@@ -16,14 +16,29 @@ import {
 } from '../LoginScreen';
 
 export function* submitCheckList({ payload }) {
-  const { itemId, data, shopId } = payload;
+  const { itemId, data, recordId } = payload;
   try {
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(data));
+    let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
     const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
+    const formData = new FormData();
+    if (records.length > 0) {
+      if (recordId === undefined) {
+        records = [...records, data];
+      } else {
+        records = records.map((record, i) => {
+          if (i === recordId) {
+            record = data;
+          }
+          return record;
+        });
+      }
+    } else {
+      records.push(data);
+    }
+    formData.append('data', JSON.stringify({ records }));
 
     const res = yield call(API.submitCheckListItemData, {
       itemId,
@@ -31,13 +46,45 @@ export function* submitCheckList({ payload }) {
       token,
       authorization,
     });
-    // const response = yield call(API.fetchCheckList, { shopId });
-    // yield put(actions.checkListResponse({ checkList: response.data }));
+
     yield put(loginActions.updateAuthorization(res.headers.authorization));
-    yield put(actions.submitSuccess({ itemId, data }));
+    yield put(actions.submitSuccess({ itemId, data: { records } }));
   } catch (error) {
     console.log('function*submitCheckList -> error', error);
     yield put(actions.submitFailed(error.message));
+  }
+}
+
+export function* removeRecord({ payload }) {
+  const { itemId, recordId } = payload;
+  try {
+    let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
+    const token = yield select(loginSelectors.makeSelectToken());
+    const authorization = yield select(
+      loginSelectors.makeSelectAuthorization(),
+    );
+    const formData = new FormData();
+    if (records.length > 1) {
+      if (recordId) {
+        records = records.filter((record, i) => i !== recordId);
+      }
+    } else {
+      records = [];
+    }
+    formData.append('data', JSON.stringify({ records }));
+
+    const res = yield call(API.submitCheckListItemData, {
+      itemId,
+      data: formData,
+      token,
+      authorization,
+    });
+
+    yield put(loginActions.updateAuthorization(res.headers.authorization));
+    yield put(actions.removeSuccess({ itemId, data: { records } }));
+  } catch (error) {
+    console.log('function*removeRecord -> error', error);
+    yield put(actions.removeFailed(error.message));
   }
 }
 
@@ -138,6 +185,7 @@ export default function root() {
   return function* watch() {
     yield all([
       yield takeLatest(actionTypes.SUBMIT, submitCheckList),
+      yield takeLatest(actionTypes.REMOVE, removeRecord),
       yield takeLatest(actionTypes.FETCH_CHECK_LIST, fetchCheckList),
       yield takeLatest(actionTypes.MARK_DONE_ALL, markDoneAllCheckListItems),
       yield takeLatest(actionTypes.FETCH_STOCKS, fetchStocks),

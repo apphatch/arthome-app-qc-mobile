@@ -8,12 +8,19 @@ export const markDoneAllSuccess = (response) =>
 export const markDoneAllFailed = (errorMessage) =>
   createAction(actionTypes.MARK_DONE_ALL_FAILED, { errorMessage });
 
-export const submit = ({ itemId, data, shopId }) =>
-  createAction(actionTypes.SUBMIT, { itemId, data, shopId });
+export const submit = ({ itemId, data, recordId }) =>
+  createAction(actionTypes.SUBMIT, { itemId, data, recordId });
 export const submitSuccess = (response) =>
   createAction(actionTypes.SUBMIT_SUCCESS, { ...response });
 export const submitFailed = (errorMessage) =>
   createAction(actionTypes.SUBMIT_FAILED, { errorMessage });
+
+export const remove = ({ itemId, recordId }) =>
+  createAction(actionTypes.REMOVE, { itemId, recordId });
+export const removeSuccess = (response) =>
+  createAction(actionTypes.REMOVE_SUCCESS, { ...response });
+export const removeFailed = (errorMessage) =>
+  createAction(actionTypes.REMOVE_FAILED, { errorMessage });
 
 export const fetchCheckList = (data) =>
   createAction(actionTypes.FETCH_CHECK_LIST, { ...data });

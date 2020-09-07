@@ -16,12 +16,16 @@ const DateTimePicker = (props) => {
     disabled = false,
     clearErrors,
   } = props;
-  let newValue;
   let newDate;
   if (value) {
-    newValue = value.toString().split('/');
-    if (newValue.length > 0) {
-      newDate = new Date(newValue[2], newValue[1] - 1, newValue[0]);
+    const splitValue = value.toString().split('T');
+    if (splitValue.length > 2) {
+      newDate = value;
+    } else {
+      const newValue = splitValue[0].split('-');
+      if (newValue.length > 0) {
+        newDate = new Date(newValue[0], newValue[1] - 1, newValue[2]);
+      }
     }
   }
   const [date, setDate] = React.useState(newDate);
@@ -32,10 +36,10 @@ const DateTimePicker = (props) => {
     setValue(name, date, true);
   }, [name, register, rules, date, setValue]);
 
-  const onConfirm = (newDate) => {
+  const onConfirm = (dateValue) => {
     setVisible(false);
-    const formatDate = moment(newDate).format('DD/MM/YYYY');
-    setDate(newDate);
+    const formatDate = moment(dateValue).format();
+    setDate(dateValue);
     setValue(name, formatDate, true);
     clearErrors(name);
   };

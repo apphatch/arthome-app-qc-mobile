@@ -21,7 +21,7 @@ const LoginScreen = ({ navigation }) => {
   // const isLoggedIn = useSelector(selectors.makeSelectIsLoggedIn());
   // const userId = useSelector(selectors.makeSelectUserId());
 
-  const [username, setUsername] = useState({ value: 'tvv08', error: '' });
+  const [username, setUsername] = useState({ value: 'QCLOC', error: '' });
   const [password, setPassword] = useState({ value: 'password', error: '' });
   const [error, setError] = useState('');
 

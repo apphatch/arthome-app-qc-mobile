@@ -8,19 +8,27 @@ import {
   Caption,
 } from 'react-native-paper';
 import { StyleSheet, View, ScrollView } from 'react-native';
+import moment from 'moment';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { defaultTheme } from '../../theme';
 import * as selectors from './selectors';
+import * as actions from './actions';
 
 const CheckProblemScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const {
-    params: { clId, itemId, shopId, clType },
+    params: { clId, itemId, shopId, clType, role },
   } = route;
 
   const template = useSelector(selectors.makeSelectTemplate(clId));
   const item = useSelector(selectors.makeSelectStockById(itemId));
+
+  const removeError = (recordId) => {
+    dispatch(actions.remove({ itemId, recordId }));
+  };
+
   return (
     <>
       <Appbar.Header>
@@ -28,7 +36,8 @@ const CheckProblemScreen = ({ navigation, route }) => {
         <Appbar.Content title={'Danh sách lỗi'} subtitle="" />
       </Appbar.Header>
       <ScrollView>
-        {item.data &&
+        {item &&
+          item.data &&
           item.data.records &&
           item.data.records.length > 0 &&
           item.data.records.map((data, i) => {
@@ -43,8 +52,9 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     shopId,
                     clType,
                     stockName: item.stock_name,
-                    category: item.category,
+                    role: item.role,
                     record: data,
+                    recordId: i,
                   });
                 }}>
                 <Card.Content>
@@ -53,9 +63,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     <IconButton
                       icon="close"
                       size={20}
-                      onPress={() => {
-                        console.log('remove');
-                      }}
+                      onPress={() => removeError(i)}
                     />
                   </View>
                   <View style={styles.cardRow}>
@@ -63,19 +71,27 @@ const CheckProblemScreen = ({ navigation, route }) => {
                       {Object.keys(template)[4]}:{' '}
                       {data[Object.keys(template)[4]]}
                     </Caption>
-                    <Caption>
-                      {Object.keys(template)[3]}:{' '}
-                      {data[Object.keys(template)[3]]}
-                    </Caption>
+                    {role !== 'hpc' && (
+                      <Caption>
+                        {Object.keys(template)[3]}:{' '}
+                        {data[Object.keys(template)[3]]}
+                      </Caption>
+                    )}
                   </View>
                   <View style={styles.cardRow}>
                     <Caption>
                       {Object.keys(template)[1]}:{' '}
-                      {data[Object.keys(template)[1]]}
+                      {data[Object.keys(template)[1]] &&
+                        moment(data[Object.keys(template)[1]]).format(
+                          'DD/MM/YYYY',
+                        )}
                     </Caption>
                     <Caption>
                       {Object.keys(template)[2]}:{' '}
-                      {data[Object.keys(template)[2]]}
+                      {data[Object.keys(template)[2]] &&
+                        moment(data[Object.keys(template)[2]]).format(
+                          'DD/MM/YYYY',
+                        )}
                     </Caption>
                   </View>
                 </Card.Content>
@@ -94,7 +110,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
             shopId,
             clType,
             stockName: item.stock_name,
-            category: item.category,
+            role: item.role,
           });
         }}
       />

@@ -40,6 +40,15 @@ const makeSelectStockById = (stockId) =>
     selectStockCheckListDomain(),
     (state) => state.stocks.filter((stock) => stockId === stock.id)[0],
   );
+const makeSelectRecordsOfStockById = (stockId) =>
+  createSelector(selectStockCheckListDomain(), (state) => {
+    const records = state.stocks.filter((stock) => stockId === stock.id)[0].data
+      .records;
+    if (records) {
+      return records;
+    }
+    return [];
+  });
 
 const makeSelectStocksHasDataNull = () =>
   createSelector(selectStockCheckListDomain(), (state) =>
@@ -76,4 +85,5 @@ export {
   makeSelectStockById,
   makeSelectStocksHasDataNull,
   makeSelectCategoriesOfStocks,
+  makeSelectRecordsOfStockById,
 };

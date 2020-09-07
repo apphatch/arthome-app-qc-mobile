@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import moment from 'moment';
 import { Appbar, FAB, Snackbar, Title, Paragraph } from 'react-native-paper';
 import {
   StyleSheet,
@@ -9,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
-import ImagePicker from '../..//components/ImagePicker';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
@@ -19,6 +17,8 @@ import CustomSelect from '../../components/Select';
 import NumberInput from '../../components/NumberInput';
 import CustomToggleButton from '../../components/ToggleButton';
 import DateTimePicker from '../../components/DateTimePicker';
+import FormTextInput from '../../components/FormTextInput';
+import TakePhoto from '../../components/TakePhoto';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
@@ -28,7 +28,7 @@ const FormScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const {
-    params: { clId, itemId, shopId, clType, stockName, category, record },
+    params: { clId, itemId, clType, stockName, role, record, recordId },
   } = route;
 
   const isLoading = useSelector(selectors.makeSelectIsLoading());
@@ -45,6 +45,7 @@ const FormScreen = ({ navigation, route }) => {
     errors,
     clearErrors,
     getValues,
+    trigger,
   } = useForm({});
 
   React.useEffect(() => {
@@ -65,14 +66,14 @@ const FormScreen = ({ navigation, route }) => {
 
   const onSubmitCheckList = React.useCallback(
     (values) => {
-      dispatch(actions.submit({ itemId, data: values, shopId }));
+      dispatch(actions.submit({ itemId, data: values, recordId }));
     },
-    [dispatch, itemId, shopId],
+    [dispatch, itemId, recordId],
   );
 
   const isOOS = clType.toLowerCase() === 'oos';
   const isSOS = clType.toLowerCase() === 'sos';
-  const warningLevel = Object.keys(template)[4];
+  const warningLevel = Object.keys(template)[Object.keys(template).length - 1];
   return (
     <>
       <Appbar.Header>
@@ -86,8 +87,8 @@ const FormScreen = ({ navigation, route }) => {
               <Title style={styles.caption}>{stockName}</Title>
               {Object.keys(template).map((fieldName) => {
                 const type = template[fieldName].type;
-                if (type === 'input') {
-                  if (category !== 'hpc') {
+                if (type === 'number') {
+                  if (role !== 'hpc') {
                     return (
                       <NumberInput
                         key={fieldName}
@@ -105,6 +106,24 @@ const FormScreen = ({ navigation, route }) => {
                       />
                     );
                   }
+                }
+                if (type === 'input') {
+                  return (
+                    <FormTextInput
+                      key={fieldName}
+                      name={fieldName}
+                      label={fieldName}
+                      register={register}
+                      setValue={setValue}
+                      value={
+                        record && record[fieldName] ? record[fieldName] : ''
+                      }
+                      disabled={isLoading}
+                      rules={{ required: true }}
+                      error={errors[fieldName]}
+                      clearErrors={clearErrors}
+                    />
+                  );
                 }
                 if (type === 'select') {
                   return (
@@ -174,21 +193,24 @@ const FormScreen = ({ navigation, route }) => {
                 }
               })}
               {!isOOS && !isSOS && (
-                <ImagePicker
-                  register={register}
-                  setValue={setValue}
-                  name="photos"
-                  isSubmitting={isLoading}
-                  error={errors.photos}
-                  rules={{
-                    required:
-                      getValues(warningLevel) &&
-                      getValues(warningLevel) === 'Xanh'
-                        ? false
-                        : true,
-                  }}
-                  clearErrors={clearErrors}
-                />
+                <>
+                  <TakePhoto
+                    setValue={setValue}
+                    isSubmitting={isLoading}
+                    register={register}
+                    triggerValidation={trigger}
+                    value={record && record.photo ? record.photo : null}
+                    rules={{
+                      required:
+                        getValues(warningLevel) === 'Xanh' ? false : true,
+                    }}
+                  />
+                  {errors.photo ? (
+                    <Paragraph style={{ color: 'red', textAlign: 'center' }}>
+                      Cần chụp hình
+                    </Paragraph>
+                  ) : null}
+                </>
               )}
             </View>
           </KeyboardAvoidingView>

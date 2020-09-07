@@ -19,6 +19,10 @@ const handlers = {
   [actionTypes.SUBMIT_SUCCESS]: submitSuccess,
   [actionTypes.SUBMIT_FAILED]: submitFailed,
 
+  [actionTypes.REMOVE]: remove,
+  [actionTypes.REMOVE_SUCCESS]: removeSuccess,
+  [actionTypes.REMOVE_FAILED]: removeFailed,
+
   [actionTypes.CHECK_LIST_RESPONSE]: checkListResponse,
 
   [actionTypes.FETCH_STOCKS]: fetchStocks,
@@ -40,7 +44,7 @@ function submitSuccess(state, action) {
   state.isLoading = false;
   state.isSubmitted = true;
   const { itemId, data } = action.payload;
-  state.stocks = state.stocks.map(stock => {
+  state.stocks = state.stocks.map((stock) => {
     if (stock.id === itemId) {
       return {
         ...stock,
@@ -51,6 +55,32 @@ function submitSuccess(state, action) {
   });
 }
 function submitFailed(state, action) {
+  state.isLoading = false;
+  state.isSubmitted = false;
+  state.errorMessage = action.payload.errorMessage;
+}
+
+function remove(state, action) {
+  state.isLoading = true;
+  state.isSubmitted = false;
+  state.errorMessage = '';
+}
+
+function removeSuccess(state, action) {
+  state.isLoading = false;
+  state.isSubmitted = true;
+  const { itemId, data } = action.payload;
+  state.stocks = state.stocks.map((stock) => {
+    if (stock.id === itemId) {
+      return {
+        ...stock,
+        data,
+      };
+    }
+    return stock;
+  });
+}
+function removeFailed(state, action) {
   state.isLoading = false;
   state.isSubmitted = false;
   state.errorMessage = action.payload.errorMessage;

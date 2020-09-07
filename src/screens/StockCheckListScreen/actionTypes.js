@@ -4,6 +4,10 @@ export const SUBMIT = `${prefix}/SUBMIT`;
 export const SUBMIT_SUCCESS = `${prefix}/SUBMIT_SUCCESS`;
 export const SUBMIT_FAILED = `${prefix}/SUBMIT_FAILED`;
 
+export const REMOVE = `${prefix}/REMOVE`;
+export const REMOVE_SUCCESS = `${prefix}/REMOVE_SUCCESS`;
+export const REMOVE_FAILED = `${prefix}/REMOVE_FAILED`;
+
 export const SUBMIT_MULTI = `${prefix}/SUBMIT_MULTI`;
 export const SUBMIT_MULTI_SUCCESS = `${prefix}/SUBMIT_MULTI_SUCCESS`;
 export const SUBMIT_MULTI_FAILED = `${prefix}/SUBMIT_MULTI_FAILED`;
