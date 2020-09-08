@@ -82,16 +82,16 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     <Caption style={styles.col}>
                       {Object.keys(template)[1]}:{' '}
                       {data[Object.keys(template)[1]] &&
-                        moment(data[Object.keys(template)[1]]).format(
-                          'DD/MM/YYYY',
-                        )}
+                        moment(data[Object.keys(template)[1]])
+                          .utc()
+                          .format('DD/MM/YYYY')}
                     </Caption>
                     <Caption style={styles.col}>
                       {Object.keys(template)[2]}:{' '}
                       {data[Object.keys(template)[2]] &&
-                        moment(data[Object.keys(template)[2]]).format(
-                          'DD/MM/YYYY',
-                        )}
+                        moment(data[Object.keys(template)[2]])
+                          .utc()
+                          .format('DD/MM/YYYY')}
                     </Caption>
                   </View>
                 </Card.Content>

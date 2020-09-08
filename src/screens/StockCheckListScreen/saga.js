@@ -23,6 +23,7 @@ export function* submitCheckList({ payload }) {
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
+    console.log(data);
     const formData = new FormData();
     if (records.length > 0) {
       if (recordId === undefined) {
