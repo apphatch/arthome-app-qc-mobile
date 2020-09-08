@@ -67,26 +67,26 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     />
                   </View>
                   <View style={styles.cardRow}>
-                    <Caption>
-                      {Object.keys(template)[4]}:{' '}
-                      {data[Object.keys(template)[4]]}
+                    <Caption style={styles.col}>
+                      {Object.keys(template)[3]}:{' '}
+                      {data[Object.keys(template)[3]]}
                     </Caption>
-                    {role !== 'hpc' && (
-                      <Caption>
-                        {Object.keys(template)[3]}:{' '}
-                        {data[Object.keys(template)[3]]}
+                    {item.role === 'ic' && (
+                      <Caption style={styles.col}>
+                        {Object.keys(template)[4]}:{' '}
+                        {data[Object.keys(template)[4]]}
                       </Caption>
                     )}
                   </View>
                   <View style={styles.cardRow}>
-                    <Caption>
+                    <Caption style={styles.col}>
                       {Object.keys(template)[1]}:{' '}
                       {data[Object.keys(template)[1]] &&
                         moment(data[Object.keys(template)[1]]).format(
                           'DD/MM/YYYY',
                         )}
                     </Caption>
-                    <Caption>
+                    <Caption style={styles.col}>
                       {Object.keys(template)[2]}:{' '}
                       {data[Object.keys(template)[2]] &&
                         moment(data[Object.keys(template)[2]]).format(
@@ -149,6 +149,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingBottom: 10,
+  },
+  col: {
+    flex: 1,
+    flexDirection: 'column',
   },
 });
 

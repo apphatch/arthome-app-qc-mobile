@@ -85,11 +85,12 @@ const FormScreen = ({ navigation, route }) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={styles.form}>
               <Title style={styles.caption}>{stockName}</Title>
               {Object.keys(template).map((fieldName) => {
                 const type = template[fieldName].type;
+                const required = template[fieldName].required;
                 if (type === 'number') {
                   if (role !== 'hpc') {
                     return (
@@ -103,7 +104,7 @@ const FormScreen = ({ navigation, route }) => {
                           record && record[fieldName] ? record[fieldName] : ''
                         }
                         disabled={isLoading}
-                        rules={{ required: true }}
+                        rules={{ required }}
                         error={errors[fieldName]}
                         clearErrors={clearErrors}
                       />
@@ -122,7 +123,7 @@ const FormScreen = ({ navigation, route }) => {
                         record && record[fieldName] ? record[fieldName] : ''
                       }
                       disabled={isLoading}
-                      rules={{ required: true }}
+                      rules={{ required }}
                       error={errors[fieldName]}
                       clearErrors={clearErrors}
                     />
@@ -146,7 +147,7 @@ const FormScreen = ({ navigation, route }) => {
                       setValue={setValue}
                       name={fieldName}
                       label={fieldName}
-                      rules={{ required: true }}
+                      rules={{ required }}
                       error={errors[fieldName]}
                       value={
                         record && record[fieldName]
@@ -167,7 +168,7 @@ const FormScreen = ({ navigation, route }) => {
                       name={fieldName}
                       label={fieldName}
                       key={fieldName}
-                      rules={{ required: true }}
+                      rules={{ required }}
                       error={errors[fieldName]}
                       value={
                         record && record[fieldName] ? record[fieldName] : ''
@@ -185,6 +186,7 @@ const FormScreen = ({ navigation, route }) => {
                       name={fieldName}
                       label={fieldName}
                       key={fieldName}
+                      rules={{ required }}
                       error={errors[fieldName]}
                       value={
                         record && record[fieldName] ? record[fieldName] : null
@@ -198,6 +200,7 @@ const FormScreen = ({ navigation, route }) => {
               {!isOOS && !isSOS && (
                 <>
                   <TakePhoto
+                    name="photo"
                     setValue={setValue}
                     isSubmitting={isLoading}
                     register={register}
@@ -205,7 +208,10 @@ const FormScreen = ({ navigation, route }) => {
                     value={record && record.photo ? record.photo : null}
                     rules={{
                       required:
-                        getValues(warningLevel) === 'Xanh' ? false : true,
+                        getValues(warningLevel) === 'Xanh' ||
+                        getValues(warningLevel) === undefined
+                          ? false
+                          : true,
                     }}
                   />
                   {errors.photo ? (

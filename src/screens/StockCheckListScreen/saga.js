@@ -36,7 +36,7 @@ export function* submitCheckList({ payload }) {
         });
       }
     } else {
-      records.push(data);
+      records = [...records, data];
     }
     formData.append('data', JSON.stringify({ records }));
 

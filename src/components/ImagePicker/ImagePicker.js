@@ -55,8 +55,8 @@ const CustomImagePicker = ({
           onTakePhoto();
           setIsLoading(false);
           setPhotos(photos);
-          setValue('photos', photos);
-          clearErrors('photos');
+          setValue(name, photos);
+          clearErrors(name);
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -80,8 +80,8 @@ const CustomImagePicker = ({
           setPhotos(photos);
           setIsLoading(false);
           setPhotos(photos);
-          setValue('photos', photos);
-          clearErrors('photos');
+          setValue(name, photos);
+          clearErrors(name);
         } else {
           setVisible(true);
           setIsLoading(false);
@@ -100,15 +100,15 @@ const CustomImagePicker = ({
             (item) => item.localIdentifier !== photo.localIdentifier,
           );
           setPhotos(newPhotos);
-          setValue('photos', newPhotos);
-          clearErrors('photos');
+          setValue(name, newPhotos);
+          clearErrors(name);
         })
         .catch((e) => {
           setIsDeleting(false);
           alert(e);
         });
     },
-    [photos, setPhotos, setValue, clearErrors],
+    [photos, setPhotos, setValue, clearErrors, name],
   );
 
   const hideDialog = () => {

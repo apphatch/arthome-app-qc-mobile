@@ -70,10 +70,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
     onBarcodeFinderLayoutChange,
   } = useBarcodeRead(
     true,
-    (data) => {
-      console.log(data);
-      return data;
-    },
+    (data) => data,
     (processed) => {
       scanProcessed(processed);
     },

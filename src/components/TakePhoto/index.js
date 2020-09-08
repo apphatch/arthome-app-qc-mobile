@@ -30,15 +30,16 @@ const TakePhoto = (props) => {
     triggerValidation,
     rules,
     value,
+    name,
   } = props;
 
   const [photo, setPhoto] = React.useState(value);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name: 'photo' }, rules);
-    setValue('photo', photo);
-  }, [register, rules, setValue, photo]);
+    register({ name }, rules);
+    setValue(name, photo);
+  }, [register, rules, setValue, photo, name]);
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
@@ -85,8 +86,8 @@ const TakePhoto = (props) => {
                 logger('source', source);
                 setIsLoading(false);
                 setPhoto(source);
-                setValue('photo', source.uri);
-                triggerValidation('photo');
+                setValue(name, source.uri);
+                triggerValidation(name);
               })
               .catch(() => {
                 setIsLoading(false);
@@ -97,13 +98,13 @@ const TakePhoto = (props) => {
           });
       }
     });
-  }, [setValue, triggerValidation]);
+  }, [setValue, triggerValidation, name]);
 
   const onRemovePhoto = React.useCallback(() => {
     setPhoto(null);
-    setValue('photo', null);
-    triggerValidation('photo');
-  }, [setValue, triggerValidation]);
+    setValue(name, null);
+    triggerValidation(name);
+  }, [setValue, triggerValidation, name]);
 
   return (
     <>

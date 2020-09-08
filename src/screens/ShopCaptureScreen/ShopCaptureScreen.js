@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Appbar, Caption, Snackbar } from 'react-native-paper';
+import { Appbar, Caption, Snackbar, Paragraph } from 'react-native-paper';
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 // ###
 import TextInput from '../../components/TextInput';
 import Button from '../../components/Button';
-import ImagePicker from '../../components/ImagePicker';
+import TakePhoto from '../../components/TakePhoto';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
@@ -69,7 +69,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
             disabled={isLoading}
           />
 
-          <ImagePicker
+          {/* <ImagePicker
             setValue={setValue}
             isSubmitting={isLoading}
             register={register}
@@ -77,7 +77,23 @@ const ShopCaptureScreen = ({ navigation, route }) => {
             error={errors.photos}
             clearErrors={clearErrors}
             rules={{ required: true }}
+          /> */}
+
+          <TakePhoto
+            name="photos"
+            setValue={setValue}
+            isSubmitting={isLoading}
+            register={register}
+            triggerValidation={trigger}
+            rules={{
+              required: true,
+            }}
           />
+          {errors.photo ? (
+            <Paragraph style={{ color: 'red', textAlign: 'center' }}>
+              Cần chụp hình
+            </Paragraph>
+          ) : null}
 
           <Button
             mode="contained"
