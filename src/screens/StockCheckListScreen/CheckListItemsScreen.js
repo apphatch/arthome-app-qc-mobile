@@ -108,10 +108,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           navigation.navigate('CheckProblemScreen', {
             itemId: item.id,
             clId,
-            shopId,
             clType,
-            stockName: item.stock_name,
-            role: item.role,
           });
         }}
         right={(props) =>

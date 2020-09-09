@@ -81,11 +81,12 @@ const FormScreen = ({ navigation, route }) => {
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Kiểm tra lỗi'} subtitle="" />
       </Appbar.Header>
-      <ScrollView>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView>
             <View style={styles.form}>
               <Title style={styles.caption}>{stockName}</Title>
               {Object.keys(template).map((fieldName) => {
@@ -222,9 +223,9 @@ const FormScreen = ({ navigation, route }) => {
                 </>
               )}
             </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
       <FAB
         visible={true}
         style={[styles.fab]}

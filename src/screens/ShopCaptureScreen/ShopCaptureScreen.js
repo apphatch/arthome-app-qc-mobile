@@ -27,15 +27,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const errorMessage = useSelector(selectors.makeSelectErrorMessage());
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    errors,
-    clearErrors,
-    getValues,
-    trigger,
-  } = useForm({
+  const { handleSubmit, register, setValue, errors, trigger } = useForm({
     mode: 'onChange',
   });
 
@@ -104,6 +96,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
           </Button>
         </ScrollView>
       </KeyboardAvoidingView>
+
       <Snackbar
         visible={!isLoading && !!errorMessage}
         onDismiss={onDismiss}
@@ -119,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultTheme.colors.background,
     paddingHorizontal: 10,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   caption: {
     paddingHorizontal: 16,

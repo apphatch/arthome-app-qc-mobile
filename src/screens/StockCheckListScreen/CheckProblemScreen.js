@@ -6,6 +6,7 @@ import {
   IconButton,
   Card,
   Caption,
+  Snackbar,
 } from 'react-native-paper';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import moment from 'moment';
@@ -19,11 +20,27 @@ import * as actions from './actions';
 const CheckProblemScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const {
-    params: { clId, itemId, shopId, clType, role },
+    params: { clId, itemId, clType },
   } = route;
 
   const template = useSelector(selectors.makeSelectTemplate(clId));
   const item = useSelector(selectors.makeSelectStockById(itemId));
+  const isLoading = useSelector(selectors.makeSelectIsLoading());
+  const isSubmitted = useSelector(selectors.makeSelectIsSubmitted());
+  const errorMessage = useSelector(selectors.makeSelectErrorMessage());
+  const [showSnack, setShowSnack] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      if (isSubmitted) {
+        dispatch(actions.resetProps());
+      } else {
+        if (errorMessage && errorMessage.length) {
+          setShowSnack(true);
+        }
+      }
+    }
+  }, [dispatch, isLoading, isSubmitted, navigation, errorMessage]);
 
   const removeError = (recordId) => {
     dispatch(actions.remove({ itemId, recordId }));
@@ -33,7 +50,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={'Danh sách lỗi'} subtitle="" />
+        <Appbar.Content title={'Danh sách lỗi'} />
       </Appbar.Header>
       <ScrollView>
         {item &&
@@ -49,7 +66,6 @@ const CheckProblemScreen = ({ navigation, route }) => {
                   navigation.navigate('FormScreen', {
                     itemId: item.id,
                     clId,
-                    shopId,
                     clType,
                     stockName: item.stock_name,
                     role: item.role,
@@ -82,16 +98,16 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     <Caption style={styles.col}>
                       {Object.keys(template)[1]}:{' '}
                       {data[Object.keys(template)[1]] &&
-                        moment(data[Object.keys(template)[1]])
-                          .utc()
-                          .format('DD/MM/YYYY')}
+                        moment(data[Object.keys(template)[1]]).format(
+                          'DD/MM/YYYY',
+                        )}
                     </Caption>
                     <Caption style={styles.col}>
                       {Object.keys(template)[2]}:{' '}
                       {data[Object.keys(template)[2]] &&
-                        moment(data[Object.keys(template)[2]])
-                          .utc()
-                          .format('DD/MM/YYYY')}
+                        moment(data[Object.keys(template)[2]]).format(
+                          'DD/MM/YYYY',
+                        )}
                     </Caption>
                   </View>
                 </Card.Content>
@@ -107,13 +123,18 @@ const CheckProblemScreen = ({ navigation, route }) => {
           navigation.navigate('FormScreen', {
             itemId: item.id,
             clId,
-            shopId,
             clType,
             stockName: item.stock_name,
             role: item.role,
           });
         }}
       />
+      <Snackbar
+        visible={showSnack}
+        onDismiss={() => setShowSnack(false)}
+        duration={4000}>
+        Xoá không thành công
+      </Snackbar>
     </>
   );
 };

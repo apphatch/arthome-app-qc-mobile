@@ -15,7 +15,7 @@ const Background = ({ children }) => {
       style={styles.background}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {children}
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -23,19 +23,14 @@ const Background = ({ children }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
   background: {
     flex: 1,
     width: '100%',
     backgroundColor: 'white',
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    width: '100%',
-    maxWidth: 340,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

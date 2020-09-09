@@ -23,7 +23,6 @@ export function* submitCheckList({ payload }) {
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
-    console.log(data);
     const formData = new FormData();
     if (records.length > 0) {
       if (recordId === undefined) {
@@ -65,10 +64,9 @@ export function* removeRecord({ payload }) {
       loginSelectors.makeSelectAuthorization(),
     );
     const formData = new FormData();
+
     if (records.length > 1) {
-      if (recordId) {
-        records = records.filter((record, i) => i !== recordId);
-      }
+      records = records.filter((record, i) => i !== recordId);
     } else {
       records = [];
     }

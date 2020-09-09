@@ -18,7 +18,9 @@ const DateTimePicker = (props) => {
   } = props;
   let newDate;
   if (value) {
-    newDate = moment(value).utc();
+    const formatDate = moment(value).format('YYYY-MM-DD');
+    const splitDate = formatDate.split('-');
+    newDate = new Date(splitDate[0], splitDate[1], splitDate[2]);
   }
   const [date, setDate] = React.useState(newDate);
   const [visible, setVisible] = React.useState(false);
