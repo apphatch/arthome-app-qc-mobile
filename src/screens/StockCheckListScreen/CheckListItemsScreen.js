@@ -36,9 +36,6 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   const stocks = useSelector(selectors.makeSelectStocks());
   const isLoading = useSelector(selectors.makeSelectIsLoading());
   const isSubmittedDoneAll = useSelector(selectors.makeSelectIsDoneAlled());
-  const stocksHasDataNull = useSelector(
-    selectors.makeSelectStocksHasDataNull(),
-  );
   const [searchText, setSearchText] = React.useState('');
   const [isFocusSearchInput, setIsFocusSearchInput] = React.useState(false);
   const debounceSearchTerm = useDebounce(searchText, 1000);
@@ -65,12 +62,15 @@ const CheckListItemsScreen = ({ navigation, route }) => {
   }, [debounceSearchTerm, clId, dispatch]);
 
   const {
-    // barcodeRead,
+    barcodeRead,
     onBarcodeRead,
     onBarcodeFinderLayoutChange,
   } = useBarcodeRead(
     true,
-    (data) => data,
+    (data) => {
+      // console.log(data);
+      return data;
+    },
     (processed) => {
       scanProcessed(processed);
     },
@@ -188,23 +188,27 @@ const CheckListItemsScreen = ({ navigation, route }) => {
             {isShowScanBarCode ? (
               <View style={styles.camContainer}>
                 <RNCamera
-                  type={RNCamera.Constants.Type.back}
-                  flashMode={RNCamera.Constants.FlashMode.on}
                   androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                  }}
-                  androidRecordAudioPermissionOptions={{
-                    title: 'Permission to use audio recording',
-                    message: 'We need your permission to use your audio',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
+                    title: 'permissionCamera',
+                    message: 'permissionCameraMessage',
+                    buttonPositive: 'ok',
+                    buttonNegative: 'cancel',
                   }}
                   style={styles.preview}
+                  type={RNCamera.Constants.Type.back}
+                  onBarCodeRead={onBarcodeRead}
                   captureAudio={false}
-                  onBarCodeRead={onBarcodeRead}>
+                  onGoogleVisionBarcodesDetected={({ barcodes }) => {
+                    if (
+                      barcodes &&
+                      barcodes.length > 0 &&
+                      barcodes[0].type.toUpperCase() !== 'UNKNOWN_FORMAT'
+                    ) {
+                      console.log(barcodes);
+
+                      scanProcessed(barcodes[0].data);
+                    }
+                  }}>
                   <BarcodeMaskWithOuterLayout
                     maskOpacity={0.5}
                     width={'90%'}
