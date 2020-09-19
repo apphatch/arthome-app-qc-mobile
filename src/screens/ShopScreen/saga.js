@@ -1,11 +1,4 @@
-import {
-  put,
-  call,
-  select,
-  // delay,
-  all,
-  takeLatest,
-} from 'redux-saga/effects';
+import { put, call, select, delay, all, takeLatest } from 'redux-saga/effects';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -22,6 +15,7 @@ import * as API from './services';
 
 export function* fetchShops({ payload: { userId, search, filter } }) {
   try {
+    yield delay(1000);
     let shops = [];
     let newHeaders = {};
     const token = yield select(loginSelectors.makeSelectToken());
@@ -45,7 +39,6 @@ export function* fetchShops({ payload: { userId, search, filter } }) {
       shops = data;
       newHeaders = headers;
     }
-    console.log(filter);
     if (filter) {
       shops = shops.filter((shop) => shop.completed !== true);
     }

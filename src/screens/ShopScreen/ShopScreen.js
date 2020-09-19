@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import {
   Appbar,
-  Avatar,
   List,
   Colors,
   Divider,
@@ -10,7 +9,7 @@ import {
   Caption,
   Switch,
 } from 'react-native-paper';
-import { TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';

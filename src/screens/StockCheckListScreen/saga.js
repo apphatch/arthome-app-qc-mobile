@@ -1,4 +1,4 @@
-import { put, call, select, all, takeLatest } from 'redux-saga/effects';
+import { put, call, select, all, takeLatest, delay } from 'redux-saga/effects';
 import { mapValues } from 'lodash';
 
 import * as actions from './actions';
@@ -18,6 +18,7 @@ import {
 export function* submitCheckList({ payload }) {
   const { itemId, data, recordId } = payload;
   try {
+    yield delay(1000);
     let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
     const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(

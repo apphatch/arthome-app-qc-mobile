@@ -9,6 +9,7 @@ import * as API from './services';
 export function* login({ payload }) {
   const { username, password, setError } = payload;
   try {
+    yield delay(1000);
     const response = yield call(API.login, { username, password });
     const {
       data: { user_id },
