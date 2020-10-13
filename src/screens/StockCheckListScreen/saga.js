@@ -1,5 +1,6 @@
 import { put, call, select, all, takeLatest, delay } from 'redux-saga/effects';
 import { mapValues } from 'lodash';
+import UUIDGenerator from 'react-native-uuid-generator';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -15,36 +16,68 @@ import {
   actions as loginActions,
 } from '../LoginScreen';
 
-export function* submitCheckList({ payload }) {
-  const { itemId, data, recordId } = payload;
+export function* uploadPhoto({ payload }) {
+  const { photo } = payload;
   try {
     yield delay(1000);
-    let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
-    const token = yield select(loginSelectors.makeSelectToken());
+    const formData = new FormData();
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
+
+    const photoName = yield UUIDGenerator.getRandomUUID();
+    formData.append('photo', {
+      uri: photo.uri,
+      type: 'image/jpeg',
+      name: photoName,
+    });
+    const response = yield call(API.uploadPhoto, {
+      formData,
+      authorization,
+    });
+    yield put(loginActions.updateAuthorization(response.headers.authorization));
+    yield put(actions.uploadPhotoSuccess({ photo: response.data }));
+  } catch (error) {
+    yield put(actions.uploadPhotoFailed('Upload photo failed'));
+  }
+}
+
+export function* submitCheckList({ payload }) {
+  const { itemId, data, recordId } = payload;
+  const { photo } = data;
+  try {
+    yield delay(1000);
+    let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
+    const authorization = yield select(
+      loginSelectors.makeSelectAuthorization(),
+    );
+    const photo_uri = yield select(selectors.makeSelectPhoto());
+
+    const newData = {
+      ...data,
+      photo_uri,
+    };
+
     const formData = new FormData();
     if (records.length > 0) {
       if (recordId === undefined) {
-        records = [...records, data];
+        records = [...records, newData];
       } else {
         records = records.map((record, i) => {
           if (i === recordId) {
-            record = data;
+            record = newData;
           }
           return record;
         });
       }
     } else {
-      records = [...records, data];
+      records = [...records, newData];
     }
     formData.append('data', JSON.stringify({ records }));
 
     const res = yield call(API.submitCheckListItemData, {
       itemId,
       data: formData,
-      token,
       authorization,
     });
 
@@ -60,7 +93,7 @@ export function* removeRecord({ payload }) {
   const { itemId, recordId } = payload;
   try {
     let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
-    const token = yield select(loginSelectors.makeSelectToken());
+
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
@@ -76,7 +109,6 @@ export function* removeRecord({ payload }) {
     const res = yield call(API.submitCheckListItemData, {
       itemId,
       data: formData,
-      token,
       authorization,
     });
 
@@ -90,14 +122,12 @@ export function* removeRecord({ payload }) {
 
 export function* fetchCheckList({ payload }) {
   try {
-    const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
     const { shopId } = payload;
     const response = yield call(API.fetchCheckList, {
       shopId,
-      token,
       authorization,
     });
     yield put(loginActions.updateAuthorization(response.headers.authorization));
@@ -113,7 +143,6 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
     const stocksHasDataNull = yield select(
       selectors.makeSelectStocksHasDataNull(),
     );
-    const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
@@ -151,7 +180,6 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
     formData.append('checklist_items', JSON.stringify(data));
     const res = yield call(API.markDoneAll, {
       data: formData,
-      token,
       authorization,
       clId,
     });
@@ -165,13 +193,11 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
 
 export function* fetchStocks({ payload }) {
   try {
-    const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
     const res = yield call(API.fetchStockByCheckList, {
       ...payload,
-      token,
       authorization,
     });
     yield put(loginActions.updateAuthorization(res.headers.authorization));
@@ -184,6 +210,7 @@ export function* fetchStocks({ payload }) {
 export default function root() {
   return function* watch() {
     yield all([
+      yield takeLatest(actionTypes.UPLOAD_PHOTO, uploadPhoto),
       yield takeLatest(actionTypes.SUBMIT, submitCheckList),
       yield takeLatest(actionTypes.REMOVE, removeRecord),
       yield takeLatest(actionTypes.FETCH_CHECK_LIST, fetchCheckList),

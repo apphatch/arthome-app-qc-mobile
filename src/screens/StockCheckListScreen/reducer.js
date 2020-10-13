@@ -8,12 +8,17 @@ const initialState = {
   stocks: [],
   isSubmitted: false,
   isDoneAll: false,
+  photo: null,
 };
 
 const handlers = {
   [actionTypes.MARK_DONE_ALL]: markDoneAll,
   [actionTypes.MARK_DONE_ALL_RESPONSE]: markDoneAllSuccess,
   [actionTypes.MARK_DONE_ALL_FAILED]: markDoneAllFailed,
+
+  [actionTypes.UPLOAD_PHOTO]: uploadPhoto,
+  [actionTypes.UPLOAD_PHOTO_SUCCESS]: uploadPhotoSuccess,
+  [actionTypes.UPLOAD_PHOTO_FAILED]: uploadPhotoFailed,
 
   [actionTypes.SUBMIT]: submit,
   [actionTypes.SUBMIT_SUCCESS]: submitSuccess,
@@ -33,6 +38,20 @@ const handlers = {
 };
 
 export default createReducer(initialState, handlers);
+
+function uploadPhoto(state, action) {
+  state.isLoading = true;
+  state.errorMessage = '';
+}
+
+function uploadPhotoSuccess(state, action) {
+  state.isLoading = false;
+  state.photo = action.payload.photo;
+}
+function uploadPhotoFailed(state, action) {
+  state.isLoading = false;
+  state.errorMessage = action.payload.errorMessage;
+}
 
 function submit(state, action) {
   state.isLoading = true;

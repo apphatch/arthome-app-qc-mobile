@@ -16,7 +16,6 @@ export function* login({ payload }) {
     } = response;
     yield put(
       actions.onLoginResponse({
-        token: response.headers['x-csrf-token'],
         user_id,
       }),
     );

@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 import { orderBy } from 'lodash';
 
+const makeSelectPhoto = () => (state) => state.photo;
+
 const selectStockCheckListDomain = () => (state) => state.stockCheckList;
 
 const makeSelectIsLoading = () =>
@@ -65,7 +67,7 @@ const makeSelectTemplate = (id) =>
     selectStockCheckListDomain(),
     (state) => state.checkList.filter((item) => item.id === id)[0]?.template,
   );
-export const makeSelectCheckListItemById = (clId, itemId) =>
+const makeSelectCheckListItemById = (clId, itemId) =>
   createSelector(
     makeSelectCheckListById(clId),
     (cl) => cl.checklist_items.filter((item) => item.id === itemId)[0],
@@ -86,4 +88,6 @@ export {
   makeSelectStocksHasDataNull,
   makeSelectCategoriesOfStocks,
   makeSelectRecordsOfStockById,
+  makeSelectCheckListItemById,
+  makeSelectPhoto,
 };

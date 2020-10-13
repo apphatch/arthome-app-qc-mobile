@@ -18,14 +18,12 @@ export function* fetchShops({ payload: { userId, search, filter } }) {
     yield delay(1000);
     let shops = [];
     let newHeaders = {};
-    const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
     if (search !== '') {
       const { data, headers } = yield call(API.searchShops, {
         search,
-        token,
         authorization,
       });
       shops = data;
@@ -33,7 +31,6 @@ export function* fetchShops({ payload: { userId, search, filter } }) {
     } else {
       const { data, headers } = yield call(API.fetchShops, {
         userId,
-        token,
         authorization,
       });
       shops = data;

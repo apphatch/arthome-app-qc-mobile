@@ -1,6 +1,13 @@
 import { createAction } from '../../utils';
 import * as actionTypes from './actionTypes';
 
+export const uploadPhoto = ({ photo }) =>
+  createAction(actionTypes.UPLOAD_PHOTO, { photo });
+export const uploadPhotoSuccess = (response) =>
+  createAction(actionTypes.UPLOAD_PHOTO_SUCCESS, { ...response });
+export const uploadPhotoFailed = (errorMessage) =>
+  createAction(actionTypes.UPLOAD_PHOTO_FAILED, { errorMessage });
+
 export const markDoneAll = ({ ...rest }) =>
   createAction(actionTypes.MARK_DONE_ALL, { ...rest });
 export const markDoneAllSuccess = (response) =>

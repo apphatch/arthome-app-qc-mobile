@@ -47,7 +47,9 @@ const FormScreen = ({ navigation, route }) => {
     clearErrors,
     getValues,
     trigger,
-  } = useForm({});
+  } = useForm({ mode: 'onChange' });
+
+  const photo = getValues('photo');
 
   React.useEffect(() => {
     if (!isLoading) {
@@ -65,6 +67,12 @@ const FormScreen = ({ navigation, route }) => {
     return () => dispatch(actions.resetProps());
   }, [dispatch]);
 
+  React.useEffect(() => {
+    if (photo && photo !== null) {
+      dispatch(actions.uploadPhoto({ photo }));
+    }
+  }, [photo, dispatch]);
+
   const onSubmitCheckList = React.useCallback(
     (values) => {
       dispatch(actions.submit({ itemId, data: values, recordId }));
@@ -75,6 +83,7 @@ const FormScreen = ({ navigation, route }) => {
   const isOOS = clType.toLowerCase() === 'oos';
   const isSOS = clType.toLowerCase() === 'sos';
   const warningLevel = Object.keys(template)[Object.keys(template).length - 1];
+
   return (
     <>
       <Appbar.Header>

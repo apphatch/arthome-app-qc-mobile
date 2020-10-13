@@ -1,3 +1,4 @@
+import Config from 'react-native-config';
 import axios from 'axios';
 import { actions as loginActions } from '../screens/LoginScreen';
 
@@ -7,7 +8,8 @@ const EXPIRED = 500;
 
 // create an instance of axios
 const instance = axios.create({
-  baseURL: 'http://54.251.164.171',
+  // baseURL: 'http://54.251.164.171',
+  baseURL: Config.API_HOST,
   headers: { 'Content-Type': 'application/json', App: 'qc' },
 });
 

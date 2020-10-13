@@ -22,7 +22,6 @@ export function* checkOut({ payload }) {
     yield delay(1000);
     const formData = new FormData();
 
-    const token = yield select(loginSelectors.makeSelectToken());
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
@@ -40,7 +39,6 @@ export function* checkOut({ payload }) {
     formData.append('time', moment().format('DD/MM/YYYY'));
     const response = yield call(API.checkOut, {
       formData,
-      token,
       authorization,
       shopId,
     });

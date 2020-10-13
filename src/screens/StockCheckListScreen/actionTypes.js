@@ -1,5 +1,9 @@
 const prefix = '@stockCheckListScreen';
 
+export const UPLOAD_PHOTO = `${prefix}/UPLOAD_PHOTO`;
+export const UPLOAD_PHOTO_SUCCESS = `${prefix}/UPLOAD_PHOTO_SUCCESS`;
+export const UPLOAD_PHOTO_FAILED = `${prefix}/UPLOAD_PHOTO_FAILED`;
+
 export const SUBMIT = `${prefix}/SUBMIT`;
 export const SUBMIT_SUCCESS = `${prefix}/SUBMIT_SUCCESS`;
 export const SUBMIT_FAILED = `${prefix}/SUBMIT_FAILED`;
