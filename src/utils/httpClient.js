@@ -10,7 +10,7 @@ const EXPIRED = 500;
 const instance = axios.create({
   // baseURL: 'http://54.251.164.171',
   baseURL: Config.API_HOST,
-  headers: { 'Content-Type': 'application/json', App: 'qc' },
+  headers: { 'Content-Type': 'application/json', App: 'qc-mobile' },
 });
 
 internals.get = (url, params, options) => {
