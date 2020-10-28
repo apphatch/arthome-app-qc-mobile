@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
 import { orderBy } from 'lodash';
 
-const makeSelectPhoto = () => (state) => state.photo;
-
 const selectStockCheckListDomain = () => (state) => state.stockCheckList;
+
+const makeSelectPhoto = () =>
+  createSelector(selectStockCheckListDomain(), (state) => state.photo);
 
 const makeSelectIsLoading = () =>
   createSelector(selectStockCheckListDomain(), (state) => state.isLoading);

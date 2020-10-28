@@ -130,6 +130,7 @@ function resetProps(state, action) {
   state.errorMessage = '';
   state.isSubmitted = false;
   state.isDoneAll = false;
+  state.photo = '';
 }
 
 function markDoneAll(state, action) {

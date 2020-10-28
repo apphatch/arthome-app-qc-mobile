@@ -27,7 +27,7 @@ export function* uploadPhoto({ payload }) {
 
     const photoName = yield UUIDGenerator.getRandomUUID();
     formData.append('photo', {
-      uri: photo.uri,
+      uri: photo,
       type: 'image/jpeg',
       name: photoName,
     });
@@ -44,7 +44,7 @@ export function* uploadPhoto({ payload }) {
 
 export function* submitCheckList({ payload }) {
   const { itemId, data, recordId } = payload;
-  const { photo } = data;
+  const { photo, ...rest } = data;
   try {
     yield delay(1000);
     let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
@@ -54,7 +54,7 @@ export function* submitCheckList({ payload }) {
     const photo_uri = yield select(selectors.makeSelectPhoto());
 
     const newData = {
-      ...data,
+      ...rest,
       photo_uri,
     };
 

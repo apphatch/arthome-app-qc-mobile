@@ -77,16 +77,14 @@ const TakePhoto = (props) => {
               position: Position.topLeft,
             })
               .then((path) => {
-                const source = {
-                  uri:
-                    Platform.OS === 'android'
-                      ? 'file://' + path
-                      : 'file:///' + path,
-                };
+                const source =
+                  Platform.OS === 'android'
+                    ? 'file://' + path
+                    : 'file:///' + path;
                 logger('source', source);
                 setIsLoading(false);
                 setPhoto(source);
-                setValue(name, source.uri);
+                setValue(name, source);
                 triggerValidation(name);
               })
               .catch(() => {
@@ -111,7 +109,7 @@ const TakePhoto = (props) => {
       <View style={styles.row}>
         {isLoading ? (
           <ActivityIndicator animating={true} />
-        ) : photo && photo.uri ? null : (
+        ) : photo ? null : (
           <IconButton
             icon="camera"
             size={30}
@@ -121,11 +119,11 @@ const TakePhoto = (props) => {
         )}
       </View>
       <View styles={styles.content}>
-        {photo && photo.uri ? (
+        {photo ? (
           <Card>
             <Card.Cover
               source={{
-                uri: photo.uri,
+                uri: photo,
               }}
             />
             <Card.Actions>
