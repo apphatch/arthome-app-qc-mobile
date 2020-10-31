@@ -20,7 +20,8 @@ import NumberInput from '../../components/NumberInput';
 import CustomToggleButton from '../../components/ToggleButton';
 import DateTimePicker from '../../components/DateTimePicker';
 import FormTextInput from '../../components/FormTextInput';
-import TakePhoto from '../../components/TakePhoto';
+// import TakePhoto from '../../components/TakePhoto';
+import SelectPhoto from './components/SelectPhoto';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
@@ -50,8 +51,6 @@ const FormScreen = ({ navigation, route }) => {
     trigger,
   } = useForm({ mode: 'onChange' });
 
-  const photo = getValues('photo');
-
   React.useEffect(() => {
     if (!isLoading) {
       if (isSubmitted) {
@@ -64,12 +63,6 @@ const FormScreen = ({ navigation, route }) => {
       }
     }
   }, [isLoading, isSubmitted, navigation, errorMessage, dispatch]);
-
-  React.useEffect(() => {
-    if (photo && photo !== null) {
-      dispatch(actions.uploadPhoto({ photo }));
-    }
-  }, [photo, dispatch]);
 
   const onSubmitCheckList = React.useCallback(
     (values) => {
@@ -207,7 +200,7 @@ const FormScreen = ({ navigation, route }) => {
               })}
               {!isOOS && !isSOS && (
                 <>
-                  <TakePhoto
+                  <SelectPhoto
                     name="photo"
                     setValue={setValue}
                     isSubmitting={isLoading}

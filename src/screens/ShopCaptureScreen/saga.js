@@ -26,15 +26,21 @@ export function* checkOut({ payload }) {
       loginSelectors.makeSelectAuthorization(),
     );
 
-    for (let i = 0; i < photos.length; i++) {
-      const element = photos[i];
-      const photoName = yield UUIDGenerator.getRandomUUID();
-      formData.append('photos[]', {
-        uri: element.path,
-        type: 'image/jpeg',
-        name: photoName,
-      });
-    }
+    // for (let i = 0; i < photos.length; i++) {
+    //   const element = photos[i];
+    //   const photoName = yield UUIDGenerator.getRandomUUID();
+    //   formData.append('photos[]', {
+    //     uri: element.path,
+    //     type: 'image/jpeg',
+    //     name: photoName,
+    //   });
+    // }
+    const photoName = yield UUIDGenerator.getRandomUUID();
+    formData.append('photos[]', {
+      uri: photos,
+      type: 'image/jpeg',
+      name: photoName,
+    });
     formData.append('note', note);
     formData.append('time', moment().format('DD/MM/YYYY'));
     const response = yield call(API.checkOut, {
