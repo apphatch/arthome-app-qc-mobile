@@ -126,6 +126,12 @@ const CheckProblemScreen = ({ navigation, route }) => {
             clType,
             stockName: item.stock_name,
             role: item.role,
+            record:
+              item &&
+              item.data &&
+              item.data.records &&
+              item.data.records.length > 0 &&
+              item.data.records[item.data.records.length - 1],
           });
         }}
       />

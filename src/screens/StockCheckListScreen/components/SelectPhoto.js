@@ -12,6 +12,7 @@ import {
 
 import { useDispatch } from 'react-redux';
 import * as actions from '../actions';
+import { savePicture } from '../../../utils';
 
 const ImagePicker = NativeModules.ImageCropPicker;
 
@@ -53,14 +54,21 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-    }).then((image) => {
-      if (image) {
+      compressImageMaxWidth: 480,
+      compressImageMaxHeight: 800,
+    })
+      .then((image) => {
+        if (image) {
+          setIsLoading(false);
+          setPhoto(image.path);
+          setValue(name, image.path);
+          triggerValidation(name);
+          savePicture(image.path);
+        }
+      })
+      .catch(() => {
         setIsLoading(false);
-        setPhoto(image.path);
-        setValue(name, image.path);
-        triggerValidation(name);
-      }
-    });
+      });
   }, [name, setValue, triggerValidation]);
 
   const onChoosePhoto = React.useCallback(() => {
@@ -69,14 +77,21 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-    }).then((image) => {
-      if (image) {
+      compressImageMaxWidth: 480,
+      compressImageMaxHeight: 800,
+      compressImageQuality: 1,
+    })
+      .then((image) => {
+        if (image) {
+          setIsLoading(false);
+          setPhoto(image.path);
+          setValue(name, image.path);
+          triggerValidation(name);
+        }
+      })
+      .catch(() => {
         setIsLoading(false);
-        setPhoto(image.path);
-        setValue(name, image.path);
-        triggerValidation(name);
-      }
-    });
+      });
   }, [name, setValue, triggerValidation]);
 
   const onRemovePhoto = React.useCallback(() => {
