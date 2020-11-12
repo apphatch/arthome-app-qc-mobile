@@ -54,8 +54,8 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-      compressImageMaxWidth: 480,
-      compressImageMaxHeight: 800,
+      compressImageMaxWidth: 720,
+      compressImageMaxHeight: 960,
     })
       .then((image) => {
         if (image) {
@@ -77,8 +77,8 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-      compressImageMaxWidth: 480,
-      compressImageMaxHeight: 800,
+      compressImageMaxWidth: 720,
+      compressImageMaxHeight: 960,
       compressImageQuality: 1,
     })
       .then((image) => {
