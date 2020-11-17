@@ -53,8 +53,18 @@ const TakePhoto = (props) => {
         const now = moment()
           .tz('Asia/Ho_Chi_Minh')
           .format('HH:mm:ss DD-MM-YYYY');
-        const { uri, error, originalRotation } = response;
+        const {
+          uri,
+          error,
+          originalRotation,
+          fileSize,
+          width,
+          height,
+        } = response;
         let rotation = 0;
+        let reWidth = width;
+        let reHeight = height;
+        let quality = 100;
         if (uri && !error) {
           if (originalRotation === 90) {
             rotation = 90;
@@ -62,8 +72,20 @@ const TakePhoto = (props) => {
             rotation = -90;
           }
         }
+        if (fileSize >= 100000) {
+          reWidth = 720;
+          reHeight = 960;
+          quality = 60;
+        }
 
-        ImageResizer.createResizedImage(uri, 640, 480, 'JPEG', 100, rotation)
+        ImageResizer.createResizedImage(
+          uri,
+          reWidth,
+          reHeight,
+          'JPEG',
+          quality,
+          rotation,
+        )
           .then((res) => {
             Marker.markText({
               src: res.uri,
@@ -81,7 +103,7 @@ const TakePhoto = (props) => {
                   Platform.OS === 'android'
                     ? 'file://' + path
                     : 'file:///' + path;
-                logger('source', source);
+                console.log('source', source);
                 setIsLoading(false);
                 setPhoto(source);
                 setValue(name, source);

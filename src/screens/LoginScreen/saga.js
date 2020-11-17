@@ -28,6 +28,7 @@ export function* login({ payload }) {
 
 export function* logout() {
   try {
+    yield delay(1000);
     const response = yield call(API.logout);
     yield put(actions.onLogoutSuccess());
   } catch (error) {

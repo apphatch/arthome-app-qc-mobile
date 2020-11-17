@@ -1,5 +1,6 @@
 import React from 'react';
 import ActionSheet from 'react-native-actionsheet';
+import ImageResizer from 'react-native-image-resizer';
 
 import { View, StyleSheet, NativeModules } from 'react-native';
 import {
@@ -25,6 +26,7 @@ const SelectPhoto = (props) => {
     rules,
     value,
     name,
+    recordId,
   } = props;
   const dispatch = useDispatch();
   let actionSheetRef = React.useRef(null);
@@ -37,12 +39,14 @@ const SelectPhoto = (props) => {
   }, [name, photo, register, rules, setValue]);
 
   React.useEffect(() => {
-    if (photo) {
-      dispatch(actions.uploadPhoto({ photo }));
-    } else {
-      dispatch(actions.resetProps());
+    if (!recordId) {
+      if (photo) {
+        dispatch(actions.uploadPhoto({ photo }));
+      } else {
+        dispatch(actions.resetProps());
+      }
     }
-  }, [photo, dispatch]);
+  }, [recordId, photo, dispatch]);
 
   const onSelect = () => {
     actionSheetRef.show();
@@ -54,16 +58,27 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-      compressImageMaxWidth: 720,
-      compressImageMaxHeight: 960,
     })
       .then((image) => {
         if (image) {
+          savePicture(image.path);
+
+          if (image.size >= 100000) {
+            ImageResizer.createResizedImage(
+              image.path,
+              720,
+              960,
+              'JPEG',
+              60,
+            ).then((res) => {
+              setPhoto(res.uri);
+            });
+          } else {
+            setPhoto(image.path);
+          }
           setIsLoading(false);
-          setPhoto(image.path);
           setValue(name, image.path);
           triggerValidation(name);
-          savePicture(image.path);
         }
       })
       .catch(() => {
@@ -77,14 +92,23 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-      compressImageMaxWidth: 720,
-      compressImageMaxHeight: 960,
-      compressImageQuality: 1,
     })
       .then((image) => {
         if (image) {
+          if (image.size >= 100000) {
+            ImageResizer.createResizedImage(
+              image.path,
+              720,
+              960,
+              'JPEG',
+              60,
+            ).then((res) => {
+              setPhoto(res.uri);
+            });
+          } else {
+            setPhoto(image.path);
+          }
           setIsLoading(false);
-          setPhoto(image.path);
           setValue(name, image.path);
           triggerValidation(name);
         }

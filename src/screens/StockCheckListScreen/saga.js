@@ -92,6 +92,7 @@ export function* submitCheckList({ payload }) {
 export function* removeRecord({ payload }) {
   const { itemId, recordId } = payload;
   try {
+    yield delay(1000);
     let records = yield select(selectors.makeSelectRecordsOfStockById(itemId));
 
     const authorization = yield select(
@@ -122,6 +123,7 @@ export function* removeRecord({ payload }) {
 
 export function* fetchCheckList({ payload }) {
   try {
+    yield delay(1000);
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );
@@ -140,6 +142,7 @@ export function* fetchCheckList({ payload }) {
 
 export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
   try {
+    yield delay(1000);
     const stocksHasDataNull = yield select(
       selectors.makeSelectStocksHasDataNull(),
     );
@@ -193,6 +196,7 @@ export function* markDoneAllCheckListItems({ payload: { clId, clType } }) {
 
 export function* fetchStocks({ payload }) {
   try {
+    yield delay(1000);
     const authorization = yield select(
       loginSelectors.makeSelectAuthorization(),
     );

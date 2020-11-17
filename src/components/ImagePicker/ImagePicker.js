@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ImageResizer from 'react-native-image-resizer';
 import {
   View,
   StyleSheet,
@@ -19,6 +19,7 @@ import {
 import ActionSheet from 'react-native-actionsheet';
 
 import { objectId } from '../../utils/uniqId';
+import { savePicture } from '../../utils';
 
 const ImagePicker = NativeModules.ImageCropPicker;
 
@@ -48,21 +49,45 @@ const CustomImagePicker = ({
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-    }).then((image) => {
-      if (image) {
-        photos = [...photos, { ...image, localIdentifier: objectId() }];
-        if (photos.length <= 10) {
-          onTakePhoto();
-          setIsLoading(false);
-          setPhotos(photos);
-          setValue(name, photos);
-          clearErrors(name);
-        } else {
-          setVisible(true);
-          setIsLoading(false);
+    })
+      .then((image) => {
+        if (image) {
+          savePicture(image.path);
+          if (image.size >= 100000) {
+            ImageResizer.createResizedImage(
+              image.path,
+              720,
+              960,
+              'JPEG',
+              60,
+            ).then((res) => {
+              const newPhotos = res;
+              newPhotos.path = res.uri;
+              photos = [
+                ...photos,
+                { ...newPhotos, localIdentifier: objectId() },
+              ];
+              setPhotos(photos);
+            });
+          } else {
+            photos = [...photos, { ...image, localIdentifier: objectId() }];
+            setPhotos(photos);
+          }
+
+          if (photos.length <= 10) {
+            onTakePhoto();
+            setIsLoading(false);
+            setValue(name, photos);
+            clearErrors(name);
+          } else {
+            setVisible(true);
+            setIsLoading(false);
+          }
         }
-      }
-    });
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
   };
 
   const onChooseAlbum = () => {
@@ -74,12 +99,29 @@ const CustomImagePicker = ({
       multiple: true,
       maxFiles: 10,
     }).then((image) => {
+      console.log(image);
       if (image) {
-        photos = [...photos, { ...image, localIdentifier: objectId() }];
+        if (image.size >= 100000) {
+          ImageResizer.createResizedImage(
+            image.path,
+            720,
+            960,
+            'JPEG',
+            60,
+          ).then((res) => {
+            const newPhotos = res;
+            newPhotos.path = res.uri;
+            photos = [...photos, { ...newPhotos, localIdentifier: objectId() }];
+            setPhotos(photos);
+          });
+        } else {
+          photos = [...photos, { ...image, localIdentifier: objectId() }];
+          setPhotos(photos);
+        }
+
         if (photos.length <= 10) {
-          setPhotos(photos);
+          onTakePhoto();
           setIsLoading(false);
-          setPhotos(photos);
           setValue(name, photos);
           clearErrors(name);
         } else {

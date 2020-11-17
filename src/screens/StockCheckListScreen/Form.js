@@ -207,7 +207,7 @@ const FormScreen = ({ navigation, route }) => {
                     register={register}
                     triggerValidation={trigger}
                     value={
-                      record && record.photo_uri
+                      recordId && record && record.photo_uri
                         ? `${Config.API_HOST}${record.photo_uri}`
                         : null
                     }
@@ -218,6 +218,7 @@ const FormScreen = ({ navigation, route }) => {
                           ? false
                           : true,
                     }}
+                    recordId={recordId}
                   />
                   {errors.photo ? (
                     <Paragraph style={{ color: 'red', textAlign: 'center' }}>
@@ -235,6 +236,7 @@ const FormScreen = ({ navigation, route }) => {
         style={[styles.fab]}
         icon="content-save-all"
         onPress={handleSubmit(onSubmitCheckList)}
+        disabled={isLoading}
       />
       <Snackbar
         visible={showSnack}
