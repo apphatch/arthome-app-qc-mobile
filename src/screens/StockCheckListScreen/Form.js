@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import Config from 'react-native-config';
+
 import { Appbar, FAB, Snackbar, Title, Paragraph } from 'react-native-paper';
 import {
   StyleSheet,
@@ -207,7 +208,7 @@ const FormScreen = ({ navigation, route }) => {
                     register={register}
                     triggerValidation={trigger}
                     value={
-                      recordId && record && record.photo_uri
+                      recordId !== null && record && record.photo_uri
                         ? `${Config.API_HOST}${record.photo_uri}`
                         : null
                     }
@@ -242,7 +243,7 @@ const FormScreen = ({ navigation, route }) => {
         visible={showSnack}
         onDismiss={() => setShowSnack(false)}
         duration={4000}>
-        Gửi lỗi không thành công
+        {errorMessage}
       </Snackbar>
     </>
   );

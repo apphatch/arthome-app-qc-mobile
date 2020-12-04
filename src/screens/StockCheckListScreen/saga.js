@@ -60,7 +60,7 @@ export function* submitCheckList({ payload }) {
 
     const formData = new FormData();
     if (records.length > 0) {
-      if (recordId === undefined) {
+      if (recordId === null) {
         records = [...records, newData];
       } else {
         records = records.map((record, i) => {
@@ -85,7 +85,7 @@ export function* submitCheckList({ payload }) {
     yield put(actions.submitSuccess({ itemId, data: { records } }));
   } catch (error) {
     console.log('function*submitCheckList -> error', error);
-    yield put(actions.submitFailed(error.message));
+    yield put(actions.submitFailed('Gửi lỗi không thành công'));
   }
 }
 

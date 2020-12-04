@@ -58,6 +58,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
           item.data.records &&
           item.data.records.length > 0 &&
           item.data.records.map((data, i) => {
+            console.log(moment('2020/03/15').format('DD/MM/YYYY'));
             return (
               <Card
                 key={i}
@@ -97,17 +98,11 @@ const CheckProblemScreen = ({ navigation, route }) => {
                   <View style={styles.cardRow}>
                     <Caption style={styles.col}>
                       {Object.keys(template)[1]}:{' '}
-                      {data[Object.keys(template)[1]] &&
-                        moment(data[Object.keys(template)[1]]).format(
-                          'DD/MM/YYYY',
-                        )}
+                      {data[Object.keys(template)[1]]}
                     </Caption>
                     <Caption style={styles.col}>
                       {Object.keys(template)[2]}:{' '}
-                      {data[Object.keys(template)[2]] &&
-                        moment(data[Object.keys(template)[2]]).format(
-                          'DD/MM/YYYY',
-                        )}
+                      {data[Object.keys(template)[2]]}
                     </Caption>
                   </View>
                 </Card.Content>
@@ -132,6 +127,7 @@ const CheckProblemScreen = ({ navigation, route }) => {
               item.data.records &&
               item.data.records.length > 0 &&
               item.data.records[item.data.records.length - 1],
+            recordId: null,
           });
         }}
       />
