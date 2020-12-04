@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import Config from 'react-native-config';
 import {
   Appbar,
   FAB,
@@ -9,7 +10,6 @@ import {
   Snackbar,
 } from 'react-native-paper';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import moment from 'moment';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -58,7 +58,6 @@ const CheckProblemScreen = ({ navigation, route }) => {
           item.data.records &&
           item.data.records.length > 0 &&
           item.data.records.map((data, i) => {
-            console.log(moment('2020/03/15').format('DD/MM/YYYY'));
             return (
               <Card
                 key={i}
@@ -74,38 +73,46 @@ const CheckProblemScreen = ({ navigation, route }) => {
                     recordId: i,
                   });
                 }}>
-                <Card.Content>
-                  <View style={styles.cardRow}>
-                    <Title>{data[Object.keys(template)[0]]}</Title>
-                    <IconButton
-                      icon="close"
-                      size={20}
-                      onPress={() => removeError(i)}
-                    />
+                <View style={styles.cardRow}>
+                  <Card.Cover
+                    style={{ height: '100%', width: '30%' }}
+                    source={{ uri: `${Config.API_HOST}${data.photo_uri}` }}
+                  />
+                  <View style={styles.col}>
+                    <Card.Content style={{ paddingBottom: 10 }}>
+                      <View style={styles.cardRow}>
+                        <Title>{data[Object.keys(template)[0]]}</Title>
+                        <IconButton
+                          icon="close"
+                          size={20}
+                          onPress={() => removeError(i)}
+                        />
+                      </View>
+                      <View style={styles.cardRow}>
+                        <Caption style={styles.col}>
+                          {Object.keys(template)[3]}:{' '}
+                          {data[Object.keys(template)[3]]}
+                        </Caption>
+                        {item.role === 'ic' && (
+                          <Caption style={styles.col}>
+                            {Object.keys(template)[4]}:{' '}
+                            {data[Object.keys(template)[4]]}
+                          </Caption>
+                        )}
+                      </View>
+                      <View style={styles.cardRow}>
+                        <Caption style={styles.col}>
+                          {Object.keys(template)[1]}:{' '}
+                          {data[Object.keys(template)[1]]}
+                        </Caption>
+                        <Caption style={styles.col}>
+                          {Object.keys(template)[2]}:{' '}
+                          {data[Object.keys(template)[2]]}
+                        </Caption>
+                      </View>
+                    </Card.Content>
                   </View>
-                  <View style={styles.cardRow}>
-                    <Caption style={styles.col}>
-                      {Object.keys(template)[3]}:{' '}
-                      {data[Object.keys(template)[3]]}
-                    </Caption>
-                    {item.role === 'ic' && (
-                      <Caption style={styles.col}>
-                        {Object.keys(template)[4]}:{' '}
-                        {data[Object.keys(template)[4]]}
-                      </Caption>
-                    )}
-                  </View>
-                  <View style={styles.cardRow}>
-                    <Caption style={styles.col}>
-                      {Object.keys(template)[1]}:{' '}
-                      {data[Object.keys(template)[1]]}
-                    </Caption>
-                    <Caption style={styles.col}>
-                      {Object.keys(template)[2]}:{' '}
-                      {data[Object.keys(template)[2]]}
-                    </Caption>
-                  </View>
-                </Card.Content>
+                </View>
               </Card>
             );
           })}
@@ -166,12 +173,12 @@ const styles = StyleSheet.create({
   },
   card: {
     margin: 15,
+    overflow: 'hidden',
   },
   cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 10,
   },
   col: {
     flex: 1,
