@@ -1,6 +1,7 @@
 import { put, call, select, all, takeLatest, delay } from 'redux-saga/effects';
 import { mapValues } from 'lodash';
 import UUIDGenerator from 'react-native-uuid-generator';
+import Config from 'react-native-config';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -52,11 +53,29 @@ export function* submitCheckList({ payload }) {
       loginSelectors.makeSelectAuthorization(),
     );
     const photo_uri = yield select(selectors.makeSelectPhoto());
-
-    const newData = {
-      ...rest,
-      photo_uri,
-    };
+    
+    /**
+     * If exit photo_uri => new data image exit.
+     * If not exit phot_uri => update or create but don't have image
+     */
+    let newData = null;
+    if(!photo_uri) {
+      if(photo) {
+        newData = {
+          ...rest,
+          photo_uri: photo.replace(Config.API_HOST, ""),
+        };
+      } else {
+        newData = {
+          ...rest,
+        };
+      }
+    } else {
+      newData = {
+        ...rest,
+        photo_uri
+      };
+    }
 
     const formData = new FormData();
     if (records.length > 0) {

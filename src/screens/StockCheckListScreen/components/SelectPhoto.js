@@ -39,13 +39,13 @@ const SelectPhoto = (props) => {
   }, [name, photo, register, rules, setValue]);
 
   React.useEffect(() => {
-    if (recordId === null) {
+    // if (recordId === null) {
       if (photo) {
         dispatch(actions.uploadPhoto({ photo }));
       } else {
         dispatch(actions.resetProps());
       }
-    }
+    // }
   }, [recordId, photo, dispatch]);
 
   const onSelect = () => {

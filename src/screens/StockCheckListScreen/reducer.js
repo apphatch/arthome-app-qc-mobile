@@ -131,6 +131,7 @@ function resetProps(state, action) {
   state.isSubmitted = false;
   state.isDoneAll = false;
   state.photo = '';
+  state.isChangeImage = false;
 }
 
 function markDoneAll(state, action) {
