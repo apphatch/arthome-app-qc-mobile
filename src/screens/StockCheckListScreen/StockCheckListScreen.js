@@ -97,7 +97,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
             navigation.goBack();
           }}
         />
-        <Appbar.Content title={'Check list'} subtitle="" />
+        <Appbar.Content title={shopName || 'Check list'} subtitle="" />
       </Appbar.Header>
       <View style={styles.row}>
         <Searchbar
