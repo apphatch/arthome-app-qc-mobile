@@ -23,6 +23,7 @@ import DateTimePicker from '../../components/DateTimePicker';
 import FormTextInput from '../../components/FormTextInput';
 // import TakePhoto from '../../components/TakePhoto';
 import SelectPhoto from './components/SelectPhoto';
+import FormDateInput from '../../components/FormDateInput';
 
 import { defaultTheme } from '../../theme';
 import * as actions from './actions';
@@ -66,7 +67,8 @@ const FormScreen = ({ navigation, route }) => {
   }, [isLoading, isSubmitted, navigation, errorMessage, dispatch]);
 
   const onSubmitCheckList = React.useCallback(
-    (values) => {
+    (values) => {   
+      console.log("Form data", values);  
       dispatch(actions.submit({ itemId, data: values, recordId }));
     },
     [dispatch, itemId, recordId],
@@ -74,7 +76,8 @@ const FormScreen = ({ navigation, route }) => {
 
   const isOOS = clType.toLowerCase() === 'oos';
   const isSOS = clType.toLowerCase() === 'sos';
-  const warningLevel = Object.keys(template)[Object.keys(template).length - 1];
+  const warningLevel = (template != null && template != undefined) ? 
+    Object.keys(template)[Object.keys(template).length - 1] : undefined;
 
   return (
     <>
@@ -181,14 +184,32 @@ const FormScreen = ({ navigation, route }) => {
                   );
                 }
                 if (type === 'date') {
+                  // return (
+                  //   <DateTimePicker
+                  //     register={register}
+                  //     setValue={setValue}
+                  //     name={fieldName}
+                  //     label={fieldName}
+                  //     key={fieldName}
+                  //     rules={{ required }}
+                  //     error={errors[fieldName]}
+                  //     value={
+                  //       record && record[fieldName] ? record[fieldName] : null
+                  //     }
+                  //     disabled={isLoading}
+                  //     clearErrors={clearErrors}
+                  //   />
+                  // );
                   return (
-                    <DateTimePicker
+                    <FormDateInput
                       register={register}
                       setValue={setValue}
                       name={fieldName}
                       label={fieldName}
                       key={fieldName}
-                      rules={{ required }}
+                      rules={{
+                        required
+                      }}
                       error={errors[fieldName]}
                       value={
                         record && record[fieldName] ? record[fieldName] : null
