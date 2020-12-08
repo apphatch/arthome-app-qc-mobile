@@ -40,11 +40,11 @@ const SelectPhoto = (props) => {
 
   React.useEffect(() => {
     // if (recordId === null) {
-      if (photo) {
-        dispatch(actions.uploadPhoto({ photo }));
-      } else {
-        dispatch(actions.resetProps());
-      }
+    if (photo) {
+      dispatch(actions.uploadPhoto({ photo }));
+    } else {
+      dispatch(actions.resetProps());
+    }
     // }
   }, [recordId, photo, dispatch]);
 

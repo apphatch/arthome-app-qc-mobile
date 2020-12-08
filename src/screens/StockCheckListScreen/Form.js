@@ -67,8 +67,8 @@ const FormScreen = ({ navigation, route }) => {
   }, [isLoading, isSubmitted, navigation, errorMessage, dispatch]);
 
   const onSubmitCheckList = React.useCallback(
-    (values) => {   
-      console.log("Form data", values);  
+    (values) => {
+      console.log('Form data', values);
       dispatch(actions.submit({ itemId, data: values, recordId }));
     },
     [dispatch, itemId, recordId],
@@ -76,8 +76,10 @@ const FormScreen = ({ navigation, route }) => {
 
   const isOOS = clType.toLowerCase() === 'oos';
   const isSOS = clType.toLowerCase() === 'sos';
-  const warningLevel = (template != null && template != undefined) ? 
-    Object.keys(template)[Object.keys(template).length - 1] : undefined;
+  const warningLevel =
+    template !== null && template !== undefined
+      ? Object.keys(template)[Object.keys(template).length - 1]
+      : undefined;
 
   return (
     <>
@@ -208,7 +210,7 @@ const FormScreen = ({ navigation, route }) => {
                       label={fieldName}
                       key={fieldName}
                       rules={{
-                        required
+                        required,
                       }}
                       error={errors[fieldName]}
                       value={

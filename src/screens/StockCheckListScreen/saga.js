@@ -53,17 +53,17 @@ export function* submitCheckList({ payload }) {
       loginSelectors.makeSelectAuthorization(),
     );
     const photo_uri = yield select(selectors.makeSelectPhoto());
-    
+
     /**
      * If exit photo_uri => new data image exit.
      * If not exit phot_uri => update or create but don't have image
      */
     let newData = null;
-    if(!photo_uri) {
-      if(photo) {
+    if (!photo_uri) {
+      if (photo) {
         newData = {
           ...rest,
-          photo_uri: photo.replace(Config.API_HOST, ""),
+          photo_uri: photo.replace(Config.API_HOST, ''),
         };
       } else {
         newData = {
@@ -73,7 +73,7 @@ export function* submitCheckList({ payload }) {
     } else {
       newData = {
         ...rest,
-        photo_uri
+        photo_uri,
       };
     }
 

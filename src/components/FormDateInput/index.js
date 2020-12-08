@@ -20,10 +20,10 @@ const FormDateInput = (props) => {
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
-    if(localValue) {
-      let date = moment(localValue, "DD-MM-YYYY", true);
+    if (localValue) {
+      let date = moment(localValue, 'DD-MM-YYYY', true);
 
-      if(date.isValid()) {
+      if (date.isValid()) {
         setValue(name, localValue, true);
       }
     }
@@ -31,9 +31,9 @@ const FormDateInput = (props) => {
 
   const handleInputChange = React.useCallback(
     (val) => {
-      let date = moment(val, "DD-MM-YYYY", true);
+      let date = moment(val, 'DD-MM-YYYY', true);
 
-      if(date.isValid()) {
+      if (date.isValid()) {
         setValue(name, val, true);
       }
 
@@ -45,14 +45,12 @@ const FormDateInput = (props) => {
 
   return (
     <>
-      <Text style={styles.label}>
-        {label}
-      </Text>
+      <Text style={styles.label}>{label}</Text>
       <View style={styles.container}>
         <TextInputMask
           type={'datetime'}
           options={{
-            format: 'DD-MM-YYYY'
+            format: 'DD-MM-YYYY',
           }}
           value={localValue}
           onChangeText={handleInputChange}
@@ -60,10 +58,10 @@ const FormDateInput = (props) => {
         />
       </View>
       {error ? (
-          <Text accessibilityRole="text" style={styles.textRed}>
-            Require
-          </Text>
-        ) : null}
+        <Text accessibilityRole="text" style={styles.textRed}>
+          Require
+        </Text>
+      ) : null}
     </>
   );
 };
@@ -82,7 +80,7 @@ const styles = StyleSheet.create({
   label: {
     color: 'grey',
     fontSize: 12,
-  }
+  },
 });
 
 export default React.memo(FormDateInput);
