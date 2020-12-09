@@ -1,5 +1,6 @@
 import React from 'react';
 import ActionSheet from 'react-native-actionsheet';
+import ImageResizer from 'react-native-image-resizer';
 
 import { View, StyleSheet, NativeModules, Dimensions } from 'react-native';
 import {
@@ -57,17 +58,38 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
-      compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
-      compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
-      compressImageQuality: 0.6,
     })
       .then((image) => {
         if (image) {
-          savePicture(image.path);
-          setPhoto(image.path);
-          setIsLoading(false);
-          setValue(name, image.path);
-          triggerValidation(name);
+          const { path, size, width, height } = image;
+          let reWidth = width;
+          let reHeight = height;
+          let quality = 100;
+
+          if (size >= 200000) {
+            reWidth = (width * 2) / 3;
+            reHeight = (height * 2) / 3;
+            quality = 60;
+          }
+
+          ImageResizer.createResizedImage(
+            path,
+            reWidth,
+            reHeight,
+            'JPEG',
+            quality,
+            0,
+          )
+            .then((res) => {
+              savePicture(res.path);
+              setPhoto(res.path);
+              setIsLoading(false);
+              setValue(name, res.path);
+              triggerValidation(name);
+            })
+            .catch(() => {
+              setIsLoading(false);
+            });
         }
       })
       .catch(() => {
