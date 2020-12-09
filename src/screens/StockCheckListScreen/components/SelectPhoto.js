@@ -1,8 +1,7 @@
 import React from 'react';
 import ActionSheet from 'react-native-actionsheet';
-import ImageResizer from 'react-native-image-resizer';
 
-import { View, StyleSheet, NativeModules } from 'react-native';
+import { View, StyleSheet, NativeModules, Dimensions } from 'react-native';
 import {
   IconButton,
   Colors,
@@ -58,24 +57,14 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
+      compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
+      compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
+      compressImageQuality: 0.6,
     })
       .then((image) => {
         if (image) {
           savePicture(image.path);
-
-          if (image.size >= 100000) {
-            ImageResizer.createResizedImage(
-              image.path,
-              720,
-              960,
-              'JPEG',
-              60,
-            ).then((res) => {
-              setPhoto(res.uri);
-            });
-          } else {
-            setPhoto(image.path);
-          }
+          setPhoto(image.path);
           setIsLoading(false);
           setValue(name, image.path);
           triggerValidation(name);
@@ -92,22 +81,13 @@ const SelectPhoto = (props) => {
       cropping: false,
       includeExif: true,
       mediaType: 'photo',
+      compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
+      compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
+      compressImageQuality: 0.6,
     })
       .then((image) => {
         if (image) {
-          if (image.size >= 100000) {
-            ImageResizer.createResizedImage(
-              image.path,
-              720,
-              960,
-              'JPEG',
-              60,
-            ).then((res) => {
-              setPhoto(res.uri);
-            });
-          } else {
-            setPhoto(image.path);
-          }
+          setPhoto(image.path);
           setIsLoading(false);
           setValue(name, image.path);
           triggerValidation(name);

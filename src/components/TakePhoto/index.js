@@ -1,10 +1,9 @@
 import React from 'react';
 import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
 import Marker, { Position } from 'react-native-image-marker';
 import moment from 'moment-timezone';
 
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, Dimensions } from 'react-native';
 import {
   IconButton,
   Colors,
@@ -12,15 +11,6 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native-paper';
-
-import { logger } from '../../utils';
-
-const options = {
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-};
 
 const TakePhoto = (props) => {
   const {
@@ -43,81 +33,54 @@ const TakePhoto = (props) => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.launchCamera(options, (response) => {
-      if (response.didCancel) {
-        setIsLoading(false);
-      } else if (response.error) {
-        setIsLoading(false);
-      } else if (response.customButton) {
-      } else {
-        const now = moment()
-          .tz('Asia/Ho_Chi_Minh')
-          .format('HH:mm:ss DD-MM-YYYY');
-        const {
-          uri,
-          error,
-          originalRotation,
-          fileSize,
-          width,
-          height,
-        } = response;
-        let rotation = 0;
-        let reWidth = width;
-        let reHeight = height;
-        let quality = 100;
-        if (uri && !error) {
-          if (originalRotation === 90) {
-            rotation = 90;
-          } else if (originalRotation === 270) {
-            rotation = -90;
-          }
-        }
-        if (fileSize >= 100000) {
-          reWidth = 720;
-          reHeight = 960;
-          quality = 60;
-        }
+    ImagePicker.launchCamera(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxWidth: (Dimensions.get('window').width * 2) / 3,
+        maxHeight: (Dimensions.get('window').height * 2) / 3,
+        quality: 0.6,
+      },
+      (response) => {
+        if (response.didCancel) {
+          setIsLoading(false);
+        } else if (response.error) {
+          setIsLoading(false);
+        } else if (response.customButton) {
+        } else {
+          const now = moment()
+            .tz('Asia/Ho_Chi_Minh')
+            .format('HH:mm:ss DD-MM-YYYY');
+          const { uri } = response;
 
-        ImageResizer.createResizedImage(
-          uri,
-          reWidth,
-          reHeight,
-          'JPEG',
-          quality,
-          rotation,
-        )
-          .then((res) => {
-            Marker.markText({
-              src: res.uri,
-              color: '#FF0000',
-              fontSize: 14,
-              X: 30,
-              Y: 30,
-              scale: 1,
-              quality: 100,
-              text: `${now}`,
-              position: Position.topLeft,
-            })
-              .then((path) => {
-                const source =
-                  Platform.OS === 'android'
-                    ? 'file://' + path
-                    : 'file:///' + path;
-                console.log('source', source);
-                setIsLoading(false);
-                setPhoto(source);
-                setValue(name, source);
-                triggerValidation(name);
-              })
-              .catch(() => {
-                setIsLoading(false);
-              });
+          Marker.markText({
+            src: uri,
+            color: '#FF0000',
+            fontSize: 14,
+            X: 30,
+            Y: 30,
+            scale: 1,
+            quality: 100,
+            text: `${now}`,
+            position: Position.topLeft,
           })
-          .catch(() => {
-            setIsLoading(false);
-          });
-      }
-    });
+            .then((path) => {
+              const source =
+                Platform.OS === 'android'
+                  ? 'file://' + path
+                  : 'file:///' + path;
+              console.log('source', source);
+              setIsLoading(false);
+              setPhoto(source);
+              setValue(name, source);
+              triggerValidation(name);
+            })
+            .catch(() => {
+              setIsLoading(false);
+            });
+        }
+      },
+    );
   }, [setValue, triggerValidation, name]);
 
   const onRemovePhoto = React.useCallback(() => {
