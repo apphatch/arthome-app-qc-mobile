@@ -81,10 +81,10 @@ const SelectPhoto = (props) => {
             0,
           )
             .then((res) => {
-              savePicture(res.path);
-              setPhoto(res.path);
+              savePicture(res.uri);
+              setPhoto(res.uri);
               setIsLoading(false);
-              setValue(name, res.path);
+              setValue(name, res.uri);
               triggerValidation(name);
             })
             .catch(() => {
