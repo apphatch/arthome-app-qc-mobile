@@ -2,7 +2,13 @@ import React from 'react';
 import ActionSheet from 'react-native-actionsheet';
 import ImageResizer from 'react-native-image-resizer';
 
-import { View, StyleSheet, NativeModules, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  NativeModules,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import {
   IconButton,
   Colors,
@@ -69,7 +75,7 @@ const SelectPhoto = (props) => {
           if (size >= 200000) {
             reWidth = (width * 2) / 3;
             reHeight = (height * 2) / 3;
-            quality = 60;
+            quality = Platform.OS === 'ios' ? 40 : 60;
           }
 
           ImageResizer.createResizedImage(
@@ -105,7 +111,7 @@ const SelectPhoto = (props) => {
       mediaType: 'photo',
       compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
       compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
-      compressImageQuality: 0.6,
+      compressImageQuality: Platform.OS === 'ios' ? 0.4 : 0.6,
     })
       .then((image) => {
         if (image) {

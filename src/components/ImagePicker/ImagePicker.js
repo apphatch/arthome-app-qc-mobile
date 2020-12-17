@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
+  Platform,
 } from 'react-native';
 import {
   IconButton,
@@ -61,7 +62,7 @@ const CustomImagePicker = ({
           if (size >= 200000) {
             reWidth = (width * 2) / 3;
             reHeight = (height * 2) / 3;
-            quality = 60;
+            quality = Platform.OS === 'ios' ? 40 : 60;
           }
 
           ImageResizer.createResizedImage(
@@ -108,7 +109,7 @@ const CustomImagePicker = ({
       maxFiles: 10,
       compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
       compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
-      compressImageQuality: 0.6,
+      compressImageQuality: Platform.OS === 'ios' ? 0.4 : 0.6,
     }).then((image) => {
       if (image) {
         photos = [...photos, { ...image, localIdentifier: objectId() }];
