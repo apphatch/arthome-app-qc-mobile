@@ -59,20 +59,21 @@ const StockCheckListScreen = ({ navigation, route }) => {
 
   const searchRef = React.createRef();
 
-  const renderItem = ({ item }) => (
-    <List.Item
-      title={item.checklist_type}
-      onPress={() =>
-        navigation.navigate('CheckListItemsScreen', {
-          clId: item.id,
-          shopId,
-          clType: item.checklist_type,
-          shopName,
-        })
-      }
-    />
-  );
-
+  const renderItem = ({ item }) => {
+    return (
+      <List.Item
+        title={item.checklist_type}
+        onPress={() =>
+          navigation.navigate('CheckListItemsScreen', {
+            clId: item.id,
+            shopId,
+            clType: item.checklist_type,
+            shopName,
+          })
+        }
+      />
+    );
+  };
   const keyExtractor = (item) => item.id.toString();
 
   const _onSearchStockItem = (text) => {
@@ -96,6 +97,7 @@ const StockCheckListScreen = ({ navigation, route }) => {
           onPress={() => {
             navigation.goBack();
           }}
+          disabled={isLoading}
         />
         <Appbar.Content title={shopName || 'Check list'} subtitle="" />
       </Appbar.Header>

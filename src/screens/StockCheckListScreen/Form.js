@@ -84,7 +84,10 @@ const FormScreen = ({ navigation, route }) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          disabled={isLoading}
+        />
         <Appbar.Content title={'Kiểm tra lỗi'} subtitle="" />
       </Appbar.Header>
 

@@ -28,7 +28,9 @@ const handlers = {
   [actionTypes.REMOVE_SUCCESS]: removeSuccess,
   [actionTypes.REMOVE_FAILED]: removeFailed,
 
+  [actionTypes.FETCH_CHECK_LIST]: fetchCheckList,
   [actionTypes.CHECK_LIST_RESPONSE]: checkListResponse,
+  [actionTypes.FETCH_CHECK_LIST_FAILED]: fetchCheckListFailed,
 
   [actionTypes.FETCH_STOCKS]: fetchStocks,
   [actionTypes.FETCH_STOCKS_RESPONSE]: stocksResponse,
@@ -105,9 +107,18 @@ function removeFailed(state, action) {
   state.errorMessage = action.payload.errorMessage;
 }
 
+function fetchCheckList(state, action) {
+  state.isLoading = true;
+}
+
 function checkListResponse(state, action) {
   state.isLoading = false;
   state.checkList = action.payload.checkList;
+}
+
+function fetchCheckListFailed(state, action) {
+  state.isLoading = false;
+  state.errorMessage = action.payload.errorMessage;
 }
 
 function fetchStocks(state, action) {

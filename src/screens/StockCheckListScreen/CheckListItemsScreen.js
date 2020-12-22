@@ -10,7 +10,7 @@ import {
 import { StyleSheet, View, FlatList, Alert, Vibration } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEmpty } from 'lodash';
+import _ from 'lodash';
 import {
   useBarcodeRead,
   BarcodeMaskWithOuterLayout,
@@ -112,7 +112,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
           });
         }}
         right={(props) =>
-          !isEmpty(item.data) &&
+          !_.isEmpty(item.data) &&
           item.data.records &&
           item.data.records.length > 0 ? (
             <List.Icon {...props} icon="check-circle" color="green" />
@@ -120,6 +120,7 @@ const CheckListItemsScreen = ({ navigation, route }) => {
             <List.Icon {...props} icon="square-edit-outline" />
           )
         }
+        disabled={isLoading}
       />
     );
   };

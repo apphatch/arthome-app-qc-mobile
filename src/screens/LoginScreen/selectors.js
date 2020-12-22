@@ -14,9 +14,13 @@ const makeSelectAuthorization = () =>
 const makeSelectUserId = () =>
   createSelector(selectLoginDomain(), (state) => state.user_id);
 
+const makeSelectAccount = () =>
+  createSelector(selectLoginDomain(), (state) => state.account);
+
 export {
   makeSelectIsLoading,
   makeSelectIsLoggedIn,
   makeSelectAuthorization,
   makeSelectUserId,
+  makeSelectAccount,
 };
