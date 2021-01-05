@@ -226,7 +226,7 @@ export function* fetchStocks({ payload }) {
     });
     const sortData = _.sortBy(res.data, [
       function (o) {
-        return o.importing_id;
+        return Number(o.importing_id);
       },
     ]);
     yield put(loginActions.updateAuthorization(res.headers.authorization));
