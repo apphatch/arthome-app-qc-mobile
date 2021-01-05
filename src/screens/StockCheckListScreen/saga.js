@@ -2,6 +2,7 @@ import { put, call, select, all, takeLatest, delay } from 'redux-saga/effects';
 import { mapValues } from 'lodash';
 import UUIDGenerator from 'react-native-uuid-generator';
 import Config from 'react-native-config';
+import _ from 'lodash';
 
 import * as actions from './actions';
 import * as actionTypes from './actionTypes';
@@ -223,8 +224,13 @@ export function* fetchStocks({ payload }) {
       ...payload,
       authorization,
     });
+    const sortData = _.sortBy(res.data, [
+      function (o) {
+        return o.importing_id;
+      },
+    ]);
     yield put(loginActions.updateAuthorization(res.headers.authorization));
-    yield put(actions.stocksResponse({ stocks: res.data }));
+    yield put(actions.stocksResponse({ stocks: sortData }));
   } catch (error) {
     yield put(actions.fetchStocksFailed(error.message));
   }
