@@ -42,6 +42,10 @@ const SelectPhoto = (props) => {
   React.useEffect(() => {
     register({ name }, rules);
     setValue(name, photo);
+
+    return () => {
+      ImagePicker.clean();
+    };
   }, [name, photo, register, rules, setValue]);
 
   React.useEffect(() => {

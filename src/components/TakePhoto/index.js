@@ -1,5 +1,5 @@
 import React from 'react';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import Marker, { Position } from 'react-native-image-marker';
 import moment from 'moment-timezone';
@@ -34,10 +34,11 @@ const TakePhoto = (props) => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.launchCamera(
+    launchCamera(
       {
         mediaType: 'photo',
         includeBase64: false,
+        saveToPhotos: false,
       },
       (response) => {
         if (response.didCancel) {
