@@ -1,14 +1,8 @@
 import React from 'react';
 import ActionSheet from 'react-native-actionsheet';
-import ImageResizer from 'react-native-image-resizer';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
-import {
-  View,
-  StyleSheet,
-  NativeModules,
-  Dimensions,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import {
   IconButton,
   Colors,
@@ -20,8 +14,6 @@ import {
 import { useDispatch } from 'react-redux';
 import * as actions from '../actions';
 import { savePicture } from '../../../utils';
-
-const ImagePicker = NativeModules.ImageCropPicker;
 
 const SelectPhoto = (props) => {
   const {
@@ -40,12 +32,8 @@ const SelectPhoto = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name }, rules);
+    register(name, rules);
     setValue(name, photo);
-
-    return () => {
-      ImagePicker.clean();
-    };
   }, [name, photo, register, rules, setValue]);
 
   React.useEffect(() => {
@@ -64,70 +52,48 @@ const SelectPhoto = (props) => {
 
   const onTakePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.openCamera({
-      cropping: false,
-      includeExif: true,
-      mediaType: 'photo',
-    })
-      .then((image) => {
-        if (image) {
-          const { path, size, width, height } = image;
-          let reWidth = width;
-          let reHeight = height;
-          let quality = 100;
-
-          if (size >= 200000) {
-            reWidth = (width * 2) / 3;
-            reHeight = (height * 2) / 3;
-            quality = Platform.OS === 'ios' ? 40 : 60;
-          }
-
-          ImageResizer.createResizedImage(
-            path,
-            reWidth,
-            reHeight,
-            'JPEG',
-            quality,
-            0,
-          )
-            .then((res) => {
-              savePicture(res.uri);
-              setPhoto(res.uri);
-              setIsLoading(false);
-              setValue(name, res.uri);
-              triggerValidation(name);
-            })
-            .catch(() => {
-              setIsLoading(false);
-            });
+    launchCamera(
+      {
+        mediaType: 'photo',
+        maxWidth: Dimensions.get('window').width,
+        maxHeight: Dimensions.get('window').height,
+        quality: 1,
+      },
+      (response) => {
+        console.log(response);
+        if (response.uri) {
+          savePicture(response.uri);
+          setPhoto(response.uri);
+          setIsLoading(false);
+          setValue(name, response.uri);
+          triggerValidation(name);
+        } else {
+          setIsLoading(false);
         }
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
+      },
+    );
   }, [name, setValue, triggerValidation]);
 
   const onChoosePhoto = React.useCallback(() => {
     setIsLoading(true);
-    ImagePicker.openPicker({
-      cropping: false,
-      includeExif: true,
-      mediaType: 'photo',
-      compressImageMaxWidth: (Dimensions.get('window').width * 2) / 3,
-      compressImageMaxHeight: (Dimensions.get('window').height * 2) / 3,
-      compressImageQuality: Platform.OS === 'ios' ? 0.4 : 0.6,
-    })
-      .then((image) => {
-        if (image) {
-          setPhoto(image.path);
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        maxWidth: Dimensions.get('window').width,
+        maxHeight: Dimensions.get('window').height,
+        quality: 1,
+      },
+      (response) => {
+        if (response.uri) {
+          setPhoto(response.uri);
           setIsLoading(false);
-          setValue(name, image.path);
+          setValue(name, response.uri);
           triggerValidation(name);
+        } else {
+          setIsLoading(false);
         }
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
+      },
+    );
   }, [name, setValue, triggerValidation]);
 
   const onRemovePhoto = React.useCallback(() => {

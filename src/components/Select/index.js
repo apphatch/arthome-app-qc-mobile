@@ -34,7 +34,7 @@ const CustomSelect = (props) => {
   };
 
   React.useEffect(() => {
-    register({ name }, rules);
+    register(name, rules);
     setValue(name, localValue);
   }, [name, register, rules, localValue, setValue]);
 

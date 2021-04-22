@@ -28,7 +28,7 @@ const TakePhoto = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name }, rules);
+    register(name, rules);
     setValue(name, photo);
   }, [register, rules, setValue, photo, name]);
 

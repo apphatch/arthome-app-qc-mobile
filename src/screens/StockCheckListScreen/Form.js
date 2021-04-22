@@ -47,7 +47,7 @@ const FormScreen = ({ navigation, route }) => {
     handleSubmit,
     register,
     setValue,
-    errors,
+    formState: { errors },
     clearErrors,
     getValues,
     trigger,
@@ -115,7 +115,7 @@ const FormScreen = ({ navigation, route }) => {
                         }
                         disabled={isLoading}
                         rules={{ required }}
-                        error={errors[fieldName]}
+                        error={errors[fieldName] || null}
                         clearErrors={clearErrors}
                       />
                     );
@@ -134,7 +134,7 @@ const FormScreen = ({ navigation, route }) => {
                       }
                       disabled={isLoading}
                       rules={{ required }}
-                      error={errors[fieldName]}
+                      error={errors[fieldName] || null}
                       clearErrors={clearErrors}
                     />
                   );
@@ -158,7 +158,7 @@ const FormScreen = ({ navigation, route }) => {
                       name={fieldName}
                       label={fieldName}
                       rules={{ required }}
-                      error={errors[fieldName]}
+                      error={errors[fieldName] || null}
                       value={
                         record && record[fieldName]
                           ? record[fieldName]
@@ -179,7 +179,7 @@ const FormScreen = ({ navigation, route }) => {
                       label={fieldName}
                       key={fieldName}
                       rules={{ required }}
-                      error={errors[fieldName]}
+                      error={errors[fieldName] || null}
                       value={
                         record && record[fieldName] ? record[fieldName] : ''
                       }
@@ -197,7 +197,7 @@ const FormScreen = ({ navigation, route }) => {
                   //     label={fieldName}
                   //     key={fieldName}
                   //     rules={{ required }}
-                  //     error={errors[fieldName]}
+                  //     error={errors[fieldName] || null}
                   //     value={
                   //       record && record[fieldName] ? record[fieldName] : null
                   //     }
@@ -215,7 +215,7 @@ const FormScreen = ({ navigation, route }) => {
                       rules={{
                         required,
                       }}
-                      error={errors[fieldName]}
+                      error={errors[fieldName] || null}
                       value={
                         record && record[fieldName] ? record[fieldName] : null
                       }

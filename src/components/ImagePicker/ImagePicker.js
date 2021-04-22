@@ -41,7 +41,7 @@ const CustomImagePicker = ({
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    register({ name }, rules);
+    register(name, rules);
     setValue(name, photos);
 
     return () => {

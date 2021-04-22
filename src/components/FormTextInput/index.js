@@ -35,7 +35,7 @@ const FormTextInput = (props) => {
     <>
       <TextInput
         label={label}
-        ref={register({ name }, rules)}
+        ref={register(name, rules)}
         onChangeText={handleInputChange}
         value={localValue}
         disabled={disabled}

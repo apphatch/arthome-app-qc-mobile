@@ -37,7 +37,7 @@ const NumberInput = (props) => {
     <>
       <TextInput
         label={label}
-        ref={register({ name }, rules)}
+        ref={register(name, rules)}
         keyboardType="numeric"
         onChangeText={handleInputChange}
         value={localValue}

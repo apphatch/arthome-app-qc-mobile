@@ -54,7 +54,7 @@ const FormDateInput = (props) => {
           }}
           value={localValue}
           onChangeText={handleInputChange}
-          refInput={register({ name }, rules)}
+          refInput={register(name, rules)}
         />
       </View>
       {error ? (
