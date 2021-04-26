@@ -56,7 +56,7 @@ const ShopCaptureScreen = ({ navigation, route }) => {
           <Caption style={styles.caption}>Thông tin</Caption>
           <TextInput
             label="Ghi chú"
-            ref={register({ name: 'note' })}
+            ref={register('note')}
             onChangeText={(text) => setValue('note', text, true)}
             disabled={isLoading}
           />
